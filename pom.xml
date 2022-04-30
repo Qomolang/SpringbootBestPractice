@@ -6,6 +6,7 @@
     <modules>
         <module>starter</module>
         <module>domain</module>
+        <module>infrastructure</module>
     </modules>
 
     <parent>
@@ -26,6 +27,7 @@
         <org.mapstruct.version>1.5.0.Beta1</org.mapstruct.version>
         <org.projectlombok.version>1.18.20</org.projectlombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <mybatisplus.version>3.5.1</mybatisplus.version>
     </properties>
 
     <!--  仅有开启dependencyManagement此标签后，该模块的子模块才能省略	-->
@@ -58,20 +60,43 @@
                 <scope>test</scope>
             </dependency>
 
-            <!--	数据库	-->
+            <!--	数据库 基本配置   -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>2.2.2</version>
             </dependency>
-
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>8.0.26</version>
                 <scope>runtime</scope>
             </dependency>
-            <!--JUnit and Mockito-->
+            <!--    数据库 之 mybatis-plus     -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatisplus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatisplus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>p6spy</groupId>
+                <artifactId>p6spy</artifactId>
+                <version>3.9.1</version>
+            </dependency>
+
+            <!--     生成器       -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>3.3.2</version>
+            </dependency>
+
+            <!-- 测试 JUnit and Mockito-->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -96,12 +121,33 @@
                 <version>1.7.4</version>
                 <scope>test</scope>
             </dependency>
+
+            <!--   测试 之 下面两个依赖解决无法启动spring test   -->
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>1.12.9</version>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy-agent</artifactId>
+                <version>1.12.9</version>
+                <scope>test</scope>
+            </dependency>
+
             <!--    apache io    -->
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>2.10.0</version>
             </dependency>
+            <!--    apache text    -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>1.9</version>
+            </dependency>
+
             <!--    apache lang3 号称java第二api    -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
