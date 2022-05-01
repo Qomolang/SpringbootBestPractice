@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>starter</module>
-        <module>domain</module>
-        <module>infrastructure</module>
+        <module>practice-project-starter</module>
+        <module>practice-project-domain</module>
+        <module>practice-project-infrastructure</module>
     </modules>
 
     <parent>
@@ -93,7 +93,8 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
-                <version>3.3.2</version>
+<!--                <version>3.3.2</version>-->
+                <version>3.5.1</version>
             </dependency>
 
             <!-- 测试 JUnit and Mockito-->
