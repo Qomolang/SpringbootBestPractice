@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>domain</artifactId>
+    <artifactId>practice-project-domain</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

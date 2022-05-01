@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>starter</artifactId>
+    <artifactId>practice-project-starter</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
