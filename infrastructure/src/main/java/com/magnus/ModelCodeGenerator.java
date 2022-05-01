@@ -51,10 +51,10 @@ public class ModelCodeGenerator {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
-        String projectName = "vocation-exam-center";
-        String parentPackageName = "com.aliyun.edu.exam";
+        String projectName = "practice-project";
+        String parentPackageName = "com.magnus";
 
-        String url = "jdbc:mysql://rm-bp17ygp7z7aa51tjfvo.mysql.rds.aliyuncs.com:3306/vocation-edu-daily?useUnicode=true&useSSL=false&characterEncoding=utf8";
+        String url = "jdbc:mysql://localhost:3306/gstest";
         String username = "root";
         String password = "admin";
 
