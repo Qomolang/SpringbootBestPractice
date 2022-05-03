@@ -90,7 +90,7 @@
 //        mpg.setPackageInfo(pc);
 //
 //        // 自定义配置
-//        InjectionConfig cfg = new InjectionConfig() {
+//        InjectionConfig injectionConfig = new InjectionConfig() {
 //            @Override
 //            public void initMap() {
 //                Map<String, Object> map = new HashMap<>(16);
@@ -105,7 +105,7 @@
 //        String basePath = parentPackageName.replaceAll("\\.", "/");
 //        // 自定义配置会被优先输出
 //        extracted(projectName, projectPath, pc, focList, basePath);
-//        cfg.setFileCreate(new IFileCreate() {
+//        injectionConfig.setFileCreate(new IFileCreate() {
 //            @Override
 //            public boolean isCreate(ConfigBuilder configBuilder, FileType fileType, String filePath) {
 //                new File(filePath).getParentFile().mkdirs();
@@ -122,8 +122,8 @@
 //            }
 //        });
 //
-//        cfg.setFileOutConfigList(focList);
-//        mpg.setCfg(cfg);
+//        injectionConfig.setFileOutConfigList(focList);
+//        mpg.setCfg(injectionConfig);
 //
 //        // 配置模板
 //        TemplateConfig templateConfig = new TemplateConfig();

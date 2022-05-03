@@ -1,7 +1,7 @@
 package ${package.Domain};
 
 import java.time.LocalDateTime;
-<#if swagger>
+<#if swagger2>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
  * @author ${author}
  * @since ${date}
  */
-<#if swagger>
+<#if swagger2>
 @ApiModel(value="${entity}DO对象", description="${table.comment!}")
 </#if>
 @Data
@@ -33,7 +33,7 @@ public class ${entity}  {
     </#if>
 
     <#if field.comment!?length gt 0>
-        <#if swagger>
+        <#if swagger2>
     @ApiModelProperty(value = "${field.comment}")
         <#else>
     /**
