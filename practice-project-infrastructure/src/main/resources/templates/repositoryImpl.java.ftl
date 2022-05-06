@@ -1,8 +1,7 @@
 package ${package.ServiceImpl};
 
-import ${package.Entity}.${entity}DO;
-import ${package.Converter}.${cfg.moduleName}Converter;
-import ${package.Domain}.${entity};
+import ${doPath}.${entity}DO;
+import ${domainEntityPath}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${entity}Repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -34,7 +33,7 @@ open class ${entity}RepositoryImpl : ${superServiceImplClass}<${table.mapperName
 <#else>
 public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.mapperName}, ${entity}DO> implements ${entity}Repository {
     @Resource
-    private ${cfg.moduleName}Converter cv;
+    private ${entity}Converter cv;
 
     @Override
     public ${entity} findOneById(Long id) {
