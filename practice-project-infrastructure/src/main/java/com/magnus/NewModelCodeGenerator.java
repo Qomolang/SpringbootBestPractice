@@ -4,22 +4,19 @@ import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
-import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
+import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.sun.istack.internal.NotNull;
 import org.apache.commons.text.CaseUtils;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+import java.io.File;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * mybatis plus FastAutoGenerator
@@ -28,6 +25,11 @@ import java.util.stream.Collectors;
  * @since 2021-07-22
  */
 public final class NewModelCodeGenerator {
+
+    /**
+     * 斜杠
+     */
+    private static final String sp = File.separator;
 
     /**
      * 数据源配置 Builder
@@ -73,11 +75,11 @@ public final class NewModelCodeGenerator {
         this.templateConfigBuilder = new TemplateConfig.Builder();
     }
 
-    public static NewModelCodeGenerator create(@NotNull String url, String username, String password) {
+    public static NewModelCodeGenerator create(String url, String username, String password) {
         return new NewModelCodeGenerator(new DataSourceConfig.Builder(url, username, password));
     }
 
-    public static NewModelCodeGenerator create(@NotNull DataSourceConfig.Builder dataSourceConfigBuilder) {
+    public static NewModelCodeGenerator create(DataSourceConfig.Builder dataSourceConfigBuilder) {
         return new NewModelCodeGenerator(dataSourceConfigBuilder);
     }
 
@@ -211,87 +213,109 @@ public final class NewModelCodeGenerator {
 
     public static void main(String[] args) throws Exception {
         String projectName = "practice-project";
+        //unix下如:/home/gs/github/mybatis-practice-project
         String projectPath = System.getProperty("user.dir");
+        //com/magnus
+        //todo  只能是/，不能是\， 看下windows下怎么办
+        String basePackagePath = "com" + sp + "magnus";
+        String projectPackageName = "com.magnus";
+
+
+        String domainModelName = projectName + "-domain";
+        String infrastructureModelName = projectName + "-infrastructure";
 
         String tableName = scanner("表名");
-        String moduleName = "test";
-        String domainModelRootPath = projectPath + "/" + projectName + "-domain" + "/src/main/java/" + moduleName;
-        String infrastructureModelRootPath = projectPath + "/" + projectName + "-infrastructure" + "/src/main/java/" + moduleName;
-        //todo 判断操作系统是windows还是unix，windows上路径为\ unix上路径为\
-//        String templatesPath = projectPath + "/" + projectName + "-infrastructure" + "/src/main/java/" + "resources/templates";
-        String templatesPath = projectPath + "\\" + projectName + "-infrastructure" + "\\src\\main\\java\\" + "resources\\templates";
+        //表新生成的package名
+        //todo 改为交互式输入
+        String tableDirName = "test";
 
-        String parentPackageName = "com.magnus";
+        String srcMainJavaPath = "src" + sp + "main" + sp + "java";
+        //表在domain下的目录
+        String domainModelRootPath = projectPath + sp + domainModelName + sp + srcMainJavaPath + sp + basePackagePath + sp + tableDirName;
+        //表在infra下的目录
+        String tableInfraModelPath = projectPath + sp + infrastructureModelName + srcMainJavaPath + basePackagePath + sp + tableDirName;
 
         //自己指定模板
         AbstractTemplateEngine renderEngine = new FreemarkerTemplateEngine();
-        String basePath = parentPackageName.replaceAll("\\.", "/");
-        String modelPath = projectPath + "/" + projectName + "-infrastructure/src/main/java/" + basePath + "/infrastructure/" + "dao/" + moduleName + "/model/";
 
-        List<String> modelNames = Files.list(Paths.get(modelPath))
-                .map(path -> path.toFile().getName().substring(0, path.toFile().getName().indexOf("DO.java")))
-                .collect(Collectors.toList());
-        //ftl模板参数
-        Map<String, Object> params = Maps.newHashMap();
-        params.put("package", parentPackageName + ".domain." + moduleName + ".converter");
-        params.put("domainPackage", parentPackageName + ".domain." + moduleName + ".model");
-        params.put("modelPackage", parentPackageName + ".infrastructure." + "dao." + moduleName + ".model");
-        params.put("modelNames", modelNames);
-        params.put("moduleName", CaseUtils.toCamelCase(moduleName, true));
-        params.put("date", new Date().toString());
-        String cvPath = projectPath + "/" + projectName + "-domain/src/main/java/" + basePath + "/domain/" + moduleName + "/converter/";
-        String outputFile = cvPath + CaseUtils.toCamelCase(moduleName, true) + "Converter.java";
-
-        renderEngine.init(null).writer(params, "/templates/converter.java.ftl", outputFile);
-
-        String mapperPath = projectPath + "/" + projectName + "-infrastructure/src/main/java/" + basePath + "/infrastructure/" + "/dao/" + tableName
-                        + "/mapper/" + tableName + ".java";
+        String tableNameInBigCamelCase = CaseUtils.toCamelCase(tableName, true, '_');
+        //生成文件的路径，仅mapperXml文件的生成地址为默认地址
+        //todo 判断操作系统是windows还是unix，windows上路径为\ unix上路径为\
+        String doPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "DO") + ".java";
+        String mapperPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "Mapper") + ".java";
+        String domainEntityPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase) + ".java";
+        String repositoryPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "Repository") + ".java";
+        String repositoryImplPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "RepositoryImpl") + ".java";
 
         NewModelCodeGenerator.create("jdbc:mysql://localhost:3306/gstest", "root", "admin")
                 .globalConfig(builder -> {
                     builder.author("gs") // 设置作者
                             .fileOverride() // 覆盖已生成文件
-                            .outputDir(domainModelRootPath)
                             //默认生成完毕后会打开outputDir对应文件夹，关闭
                             .disableOpenDir()
                             //使用localdatatime 如果想用date可以指定为ONLY_DATE
                             .dateType(DateType.TIME_PACK); // 默认的指定输出目录 如果packageConfig中没有指定某个生成类的目录，则采用此默认目录
                 })
-                //包配置（主要是路径信息）
+                //包配置（主要是路径信息） 除了mapperXml外全部自定义
                 .packageConfig(builder -> {
-                    builder.parent(parentPackageName) // 设置父包名
+                    builder.parent(projectPackageName) // 设置父包名
                             .pathInfo(ImmutableMap.of(
-                                    OutputFile.mapperXml, infrastructureModelRootPath,
-                                    OutputFile.entity, infrastructureModelRootPath,
-                                    OutputFile.service, domainModelRootPath,
-                                    OutputFile.serviceImpl, domainModelRootPath,
-                                    OutputFile.mapper, infrastructureModelRootPath
+                                    OutputFile.mapperXml, tableInfraModelPath
                             ));
                 })
                 .strategyConfig(builder -> {
                     builder.addInclude(tableName)
                     ; // 设置需要生成的表名
                 })
-                .injectionConfig(builder -> builder
-                        //
-                        .beforeOutputFile((tableInfo, objectMap) -> {
-                            System.out.println("tableInfo: " + tableInfo.getEntityName() + " objectMap: " + objectMap.size());
-                        })
-                        //自定义模板参数
-                        .customMap(Collections.singletonMap("test", "baomidou"))
-                        //自定义模板
-//                        .customFile(Collections.singletonMap(mapperPath, "/templates" + "/mapper.java.ftl"))
-                        )
+                .injectionConfig(builder ->
+                        builder
+                                //
+                                .beforeOutputFile((tableInfo, objectMap) -> {
+                                    System.out.println("tableInfo: " + tableInfo.getEntityName() + " objectMap: " + objectMap.size());
+                                })
+                                //自定义模板参数
+                                .customMap(ImmutableMap.of(
+                                        //todo 通用化
+                                        "doPath", "com.magnus.domain",
+                                        "mapperPath", "com.magnus.domain",
+                                        "domainEntityPath", "com.magnus.domain",
+                                        "repositoryPath", "com.magnus.domain",
+                                        "repositoryImplPath", "com.magnus.domain"
+                                ))
+                                //自定义模板 key生成路径 value 模板名称
+                                .customFile(ImmutableMap.of(
+                                                doPath, "/templates" + "/do.java.ftl",
+                                                mapperPath, "/templates" + "/mapper.java.ftl",
+                                                domainEntityPath, "/templates" + "/domainEntity.java.ftl",
+                                                repositoryPath, "/templates" + "/repository.java.ftl",
+                                                repositoryImplPath, "/templates" + "/repositoryImpl.java.ftl"
+                                        )
+                                )
+                )
                 .templateConfig(builder -> {
                     builder
                             //此处配置无法改变生成类的类名，不建议使用，仅留一注释作为参考
-                            .mapper("/templates" + "/mapper.java")
+                            //.mapper("/templates" + "/mapper.java")
                             //禁掉默认会生成的controller
-                            .disable(TemplateType.CONTROLLER)
+                            .disable(TemplateType.CONTROLLER, TemplateType.CONTROLLER, TemplateType.ENTITY,
+                                    TemplateType.MAPPER, TemplateType.SERVICE, TemplateType.SERVICEIMPL)
                     ;
                 })
                 // 使用Freemarker引擎模板，默认的是Velocity引擎模板
-                .templateEngine(new FreemarkerTemplateEngine())
+                .templateEngine(new FreemarkerTemplateEngine() {
+                    //重写该方法，以自定义输出路径
+                    protected void outputCustomFile(Map<String, String> customFile, TableInfo tableInfo, Map<String, Object> objectMap) {
+                        String entityName = tableInfo.getEntityName();
+                        String otherPath = getPathInfo(OutputFile.other);
+                        customFile.forEach((key, value) -> {
+                            System.out.println("otherPath:" + otherPath);
+                            System.out.println("entityName:" + entityName);
+                            System.out.println("key:" + key);
+                            String fileName = key;
+                            outputFile(new File(fileName), objectMap, value);
+                        });
+                    }
+                })
                 .execute();
     }
 
