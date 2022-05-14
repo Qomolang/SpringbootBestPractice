@@ -1,6 +1,6 @@
-package ${package.Service};
+package ${repositoryPackagePath};
 
-import ${domainEntityPath}.${entity};
+import ${domainEntityPackagePath}.${entity};
 
 import java.util.Collection;
 import java.util.List;

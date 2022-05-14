@@ -1,37 +1,31 @@
-package ${package};
+package ${converterPackagePath};
 
-<#list modelNames as modelName>
-    import ${domainPackage}.${modelName};
-</#list>
-<#list modelNames as modelName>
-    import ${modelPackage}.${modelName}DO;
-</#list>
+import ${domainEntityPackagePath}.${entity};
+import ${doPackagePath}.${entity}DO;
 import org.mapstruct.Mapper;
 
 /**
-* ${moduleName} 转换器
+* ${entity} 转换器
 *
 * @author mybatis-plus-auto-generator
 * @description
 * @since ${date}
 */
 @Mapper(componentModel = "spring")
-public interface ${moduleName}Converter {
-<#list modelNames as modelName>
+public interface ${entity}Converter {
     /**
-    * ${modelName}: DO -> Domain
+    * ${entity}: DO -> Domain
     *
     * @param entityDO
     * @return
     */
-    ${modelName} to${modelName}(${modelName}DO entityDO);
+    ${entity} to${entity}(${entity}DO entityDO);
 
     /**
-    * ${modelName}: Domain -> DO
+    * ${entity}: Domain -> DO
     *
     * @param domain
     * @return
     */
-    ${modelName}DO to${modelName}DO(${modelName} domain);
-</#list>
+    ${entity}DO to${entity}DO(${entity} domain);
 }

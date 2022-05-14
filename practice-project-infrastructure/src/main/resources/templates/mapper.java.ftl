@@ -1,4 +1,4 @@
-package ${package.Mapper};
+package ${mapperPackagePath};
 
 import ${package.Entity}.${entity}DO;
 import ${superMapperClassPackage};

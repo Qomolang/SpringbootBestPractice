@@ -1,4 +1,4 @@
-package ${domainEntityPath};
+package ${domainEntityPackagePath};
 
 import java.time.LocalDateTime;
 <#if swagger>

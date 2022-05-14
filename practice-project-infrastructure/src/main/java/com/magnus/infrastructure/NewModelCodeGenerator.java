@@ -1,4 +1,4 @@
-package com.magnus;
+package com.magnus.infrastructure;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -231,9 +231,9 @@ public final class NewModelCodeGenerator {
 
         String srcMainJavaPath = "src" + sp + "main" + sp + "java";
         //表在domain下的目录
-        String domainModelRootPath = projectPath + sp + domainModelName + sp + srcMainJavaPath + sp + basePackagePath + sp + tableDirName;
+        String domainModelRootPath = projectPath + sp + domainModelName + sp + srcMainJavaPath + sp + basePackagePath + sp + "domain";
         //表在infra下的目录
-        String tableInfraModelPath = projectPath + sp + infrastructureModelName + srcMainJavaPath + basePackagePath + sp + tableDirName;
+        String InfraModelRootPath = projectPath + sp + infrastructureModelName + sp + srcMainJavaPath + sp + basePackagePath + sp + "infrastructure";
 
         //自己指定模板
         AbstractTemplateEngine renderEngine = new FreemarkerTemplateEngine();
@@ -241,11 +241,13 @@ public final class NewModelCodeGenerator {
         String tableNameInBigCamelCase = CaseUtils.toCamelCase(tableName, true, '_');
         //生成文件的路径，仅mapperXml文件的生成地址为默认地址
         //todo 判断操作系统是windows还是unix，windows上路径为\ unix上路径为\
-        String doPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "DO") + ".java";
-        String mapperPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "Mapper") + ".java";
-        String domainEntityPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase) + ".java";
-        String repositoryPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "Repository") + ".java";
-        String repositoryImplPath = projectPath + "\\" + projectName + "-infrastructure\\src\\main\\java\\" + basePackagePath + "\\infrastructure\\" + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "RepositoryImpl") + ".java";
+        String doPath = InfraModelRootPath + sp + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "DO") + ".java";
+        String mapperPath = InfraModelRootPath + sp + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "Mapper") + ".java";
+        String mapperXmlPath = InfraModelRootPath + sp + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "Mapper") + ".xml";
+        String domainEntityPath = InfraModelRootPath + sp + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase) + ".java";
+        String repositoryPath = InfraModelRootPath + sp + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "Repository") + ".java";
+        String repositoryImplPath = InfraModelRootPath + sp + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "RepositoryImpl") + ".java";
+        String converterImplPath = InfraModelRootPath + sp + "dao\\" + tableName + "\\mapper\\" + (tableNameInBigCamelCase + "Converter") + ".java";
 
         NewModelCodeGenerator.create("jdbc:mysql://localhost:3306/gstest", "root", "admin")
                 .globalConfig(builder -> {
@@ -256,16 +258,8 @@ public final class NewModelCodeGenerator {
                             //使用localdatatime 如果想用date可以指定为ONLY_DATE
                             .dateType(DateType.TIME_PACK); // 默认的指定输出目录 如果packageConfig中没有指定某个生成类的目录，则采用此默认目录
                 })
-                //包配置（主要是路径信息） 除了mapperXml外全部自定义
-                .packageConfig(builder -> {
-                    builder.parent(projectPackageName) // 设置父包名
-                            .pathInfo(ImmutableMap.of(
-                                    OutputFile.mapperXml, tableInfraModelPath
-                            ));
-                })
                 .strategyConfig(builder -> {
-                    builder.addInclude(tableName)
-                    ; // 设置需要生成的表名
+                    builder.addInclude(tableName); // 设置需要生成的表名
                 })
                 .injectionConfig(builder ->
                         builder
@@ -274,23 +268,26 @@ public final class NewModelCodeGenerator {
                                     System.out.println("tableInfo: " + tableInfo.getEntityName() + " objectMap: " + objectMap.size());
                                 })
                                 //自定义模板参数
-                                .customMap(ImmutableMap.of(
+                                .customMap(ImmutableMap.<String, Object>builder()
+                                        //key ftl模板中参数名 value ftl模板参数值
                                         //todo 通用化
-                                        "doPath", "com.magnus.domain",
-                                        "mapperPath", "com.magnus.domain",
-                                        "domainEntityPath", "com.magnus.domain",
-                                        "repositoryPath", "com.magnus.domain",
-                                        "repositoryImplPath", "com.magnus.domain"
-                                ))
+                                        .put("doPackagePath", "com.magnus.domain")
+                                        .put("mapperPackagePath", "com.magnus.domain")
+                                        .put("domainEntityPackagePath", "com.magnus.domain")
+                                        .put("repositoryPackagePath", "com.magnus.domain")
+                                        .put("repositoryImplPackagePath", "com.magnus.domain")
+                                        .put("converterPackagePath", "com.magnus.domain")
+                                        .build())
                                 //自定义模板 key生成路径 value 模板名称
-                                .customFile(ImmutableMap.of(
-                                                doPath, "/templates" + "/do.java.ftl",
-                                                mapperPath, "/templates" + "/mapper.java.ftl",
-                                                domainEntityPath, "/templates" + "/domainEntity.java.ftl",
-                                                repositoryPath, "/templates" + "/repository.java.ftl",
-                                                repositoryImplPath, "/templates" + "/repositoryImpl.java.ftl"
-                                        )
-                                )
+                                .customFile(ImmutableMap.<String, String>builder()
+                                        .put(doPath, "/templates" + "/do.java.ftl")
+                                        .put(mapperPath, "/templates" + "/mapper.java.ftl")
+                                        .put(mapperXmlPath, "/templates" + "/mapper.xml.ftl")
+                                        .put(domainEntityPath, "/templates" + "/domainEntity.java.ftl")
+                                        .put(repositoryPath, "/templates" + "/repository.java.ftl")
+                                        .put(repositoryImplPath, "/templates" + "/repositoryImpl.java.ftl")
+                                        .put(converterImplPath, "/templates" + "/converter.java.ftl")
+                                        .build())
                 )
                 .templateConfig(builder -> {
                     builder
@@ -337,5 +334,4 @@ public final class NewModelCodeGenerator {
         }
         throw new MybatisPlusException("请输入正确的" + tip + "！");
     }
-
 }

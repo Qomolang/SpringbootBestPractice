@@ -1,7 +1,7 @@
-package ${package.ServiceImpl};
+package ${repositoryImplPackagePath};
 
-import ${doPath}.${entity}DO;
-import ${domainEntityPath}.${entity};
+import ${doPackagePath}.${entity}DO;
+import ${domainEntityPackagePath}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${entity}Repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
