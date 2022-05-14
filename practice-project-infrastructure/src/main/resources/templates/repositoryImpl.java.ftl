@@ -2,8 +2,8 @@ package ${repositoryImplPackagePath};
 
 import ${doPackagePath}.${entity}DO;
 import ${domainEntityPackagePath}.${entity};
-import ${package.Mapper}.${table.mapperName};
-import ${package.Service}.${entity}Repository;
+import ${mapperPackagePath}.${table.mapperName};
+import ${repositoryPackagePath}.${entity}Repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import ${superServiceImplClassPackage};
 import org.apache.commons.collections4.CollectionUtils;

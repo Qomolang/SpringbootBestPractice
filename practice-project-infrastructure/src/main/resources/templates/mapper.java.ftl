@@ -1,6 +1,6 @@
 package ${mapperPackagePath};
 
-import ${package.Entity}.${entity}DO;
+import ${doPackagePath}.${entity}DO;
 import ${superMapperClassPackage};
 
 /**
