@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
+import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Property;
@@ -90,22 +92,6 @@ public final class NewModelCodeGenerator {
      * 读取控制台输入内容
      */
     private final Scanner scanner = new Scanner(System.in);
-
-    /**
-     * 控制台输入内容读取并打印提示信息
-     *
-     * @param message 提示信息
-     * @return
-     */
-    public String scannerNext(String message) {
-        System.out.println(message);
-        String nextLine = scanner.nextLine();
-        if (StringUtils.isBlank(nextLine)) {
-            // 如果输入空行继续等待
-            return scanner.next();
-        }
-        return nextLine;
-    }
 
     /**
      * 全局配置
@@ -276,10 +262,28 @@ public final class NewModelCodeGenerator {
                 .injectionConfig(builder -> builder
                         //预处理
                         .beforeOutputFile((tableInfo, objectMap) ->
-                                //字段名 is_deleted 替换为 deleteTag
-                                tableInfo.getFields().stream()
-                                        .filter(field -> StringUtils.equals(field.getColumnName(), "is_deleted"))
-                                        .peek(field -> field.setPropertyName("deleteTag", field.getColumnType()))
+                                        //字段名 is_deleted 替换为 deleteTag
+                                {
+                                    for (TableField field : tableInfo.getFields()) {
+                                        boolean booleanType = field.getColumnType() == DbColumnType.BOOLEAN || field.getColumnType() == DbColumnType.BASE_BOOLEAN;
+                                        boolean startWithIs = field.getColumnName().startsWith("is");
+                                        if (booleanType && startWithIs) {
+
+                                            //逻辑删除标记单独处理
+                                            if (StringUtils.equals(field.getPropertyName(), "isDeleted")) {
+                                                field.setPropertyName("deleteTag", field.getColumnType());
+                                            }
+
+                                            String propertyName = field.getPropertyName();
+
+                                            propertyName = StringUtils.truncate(propertyName, 2, propertyName.length());
+                                            propertyName = StringUtils.uncapitalize(propertyName);
+                                            propertyName = propertyName + "Tag";
+
+                                            field.setPropertyName(propertyName, field.getColumnType());
+                                        }
+                                    }
+                                }
                         )
                         //自定义模板参数
                         .customMap(ImmutableMap.<String, Object>builder()
