@@ -2,6 +2,7 @@ package ${repositoryImplPackagePath};
 
 import ${doPackagePath}.${entity}DO;
 import ${domainEntityPackagePath}.${entity};
+import ${converterPackagePath}.${entity}Converter;
 import ${mapperPackagePath}.${table.mapperName};
 import ${repositoryPackagePath}.${entity}Repository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -41,14 +42,6 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     }
 
     @Override
-    public Map<Long, ${entity}> listAll() {
-        return list()
-            .stream()
-            .map(cv::to${entity})
-            .collect(Collectors.toMap(${entity}::getId, Function.identity()));
-    }
-
-    @Override
     public Map<Long, ${entity}> listAllByIds(Collection<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyMap();
@@ -71,7 +64,7 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
 
     @Override
     public boolean deleteById(Long id) {
-        //todo 物理删
+        //todo 此处为物理删，如果为逻辑删需要手动更改
         return super.removeById(id);
     }
 

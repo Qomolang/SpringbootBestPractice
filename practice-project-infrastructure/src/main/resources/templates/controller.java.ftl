@@ -1,7 +1,11 @@
-package ${package.Controller};
+package ${starterPackagePath};
 
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ${servicePackagePath}.${entity}BizService;
+
+import javax.annotation.Resource;
 
 <#if restControllerStyle>
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +38,14 @@ public class ${table.controllerName} extends ${superControllerClass} {
 <#else>
 public class ${table.controllerName} {
 </#if>
+    @Resource
+    private ${entity}BizService bizService;
+
+    @GetMapping("/api/create")
+    public String index() {
+       // bizService.create${entity}();
+        return "guten tag";
+    }
 
 }
 </#if>

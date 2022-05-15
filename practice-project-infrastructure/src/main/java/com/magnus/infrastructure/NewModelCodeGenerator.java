@@ -9,18 +9,17 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
-import com.baomidou.mybatisplus.generator.fill.Column;
 import com.baomidou.mybatisplus.generator.fill.Property;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * mybatis plus FastAutoGenerator
@@ -37,6 +36,7 @@ public final class NewModelCodeGenerator {
 
     private static final String srcMainJavaPath = "src" + sp + "main" + sp + "java";
 
+    private static final Gson gson = new Gson();
 
     /**
      * 数据源配置 Builder
@@ -86,10 +86,6 @@ public final class NewModelCodeGenerator {
         return new NewModelCodeGenerator(new DataSourceConfig.Builder(url, username, password));
     }
 
-    public static NewModelCodeGenerator create(DataSourceConfig.Builder dataSourceConfigBuilder) {
-        return new NewModelCodeGenerator(dataSourceConfigBuilder);
-    }
-
     /**
      * 读取控制台输入内容
      */
@@ -122,11 +118,6 @@ public final class NewModelCodeGenerator {
         return this;
     }
 
-    public NewModelCodeGenerator globalConfig(BiConsumer<Function<String, String>, GlobalConfig.Builder> biConsumer) {
-        biConsumer.accept(message -> scannerNext(message), this.globalConfigBuilder);
-        return this;
-    }
-
     /**
      * 包配置
      *
@@ -135,11 +126,6 @@ public final class NewModelCodeGenerator {
      */
     public NewModelCodeGenerator packageConfig(Consumer<PackageConfig.Builder> consumer) {
         consumer.accept(this.packageConfigBuilder);
-        return this;
-    }
-
-    public NewModelCodeGenerator packageConfig(BiConsumer<Function<String, String>, PackageConfig.Builder> biConsumer) {
-        biConsumer.accept(message -> scannerNext(message), this.packageConfigBuilder);
         return this;
     }
 
@@ -154,11 +140,6 @@ public final class NewModelCodeGenerator {
         return this;
     }
 
-    public NewModelCodeGenerator strategyConfig(BiConsumer<Function<String, String>, StrategyConfig.Builder> biConsumer) {
-        biConsumer.accept(message -> scannerNext(message), this.strategyConfigBuilder);
-        return this;
-    }
-
     /**
      * 注入配置
      *
@@ -170,11 +151,6 @@ public final class NewModelCodeGenerator {
         return this;
     }
 
-    public NewModelCodeGenerator injectionConfig(BiConsumer<Function<String, String>, InjectionConfig.Builder> biConsumer) {
-        biConsumer.accept(message -> scannerNext(message), this.injectionConfigBuilder);
-        return this;
-    }
-
     /**
      * 模板配置
      *
@@ -183,11 +159,6 @@ public final class NewModelCodeGenerator {
      */
     public NewModelCodeGenerator templateConfig(Consumer<TemplateConfig.Builder> consumer) {
         consumer.accept(this.templateConfigBuilder);
-        return this;
-    }
-
-    public NewModelCodeGenerator templateConfig(BiConsumer<Function<String, String>, TemplateConfig.Builder> biConsumer) {
-        biConsumer.accept(message -> scannerNext(message), this.templateConfigBuilder);
         return this;
     }
 
@@ -231,30 +202,45 @@ public final class NewModelCodeGenerator {
         String projectPath = System.getProperty("user.dir");
 
         String projectName = "practice-project";
-        String domainModelName = projectName + "-domain";
+
         String infrastructureModelName = projectName + "-infrastructure";
+        String domainModelName = projectName + "-domain";
+        String serviceModelName = projectName + "-service";
+        String starterModelName = projectName + "-starter";
 
         //com/magnus
         String basePackagePath = "com" + sp + "magnus";
 
-        String domainModelRootPath = projectPath + sp + domainModelName;
         String infraModelRootPath = projectPath + sp + infrastructureModelName;
+        String domainModelRootPath = projectPath + sp + domainModelName;
+        String serviceModelRootPath = projectPath + sp + serviceModelName;
+        String starterModelRootPath = projectPath + sp + starterModelName;
 
-        // src/main/java/com/projectName/domain
-        String domainModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "domain";
-        // src/main/java/com/projectName/domain
+        // src/main/java/com/projectName/infrastructure
         String infraModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "infrastructure";
+        String domainModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "domain";
+        String serviceModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "service";
+        String starterModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "controller";
 
         String tableNameInBigCamelCase = CaseUtils.toCamelCase(tableName, true, '_');
 
         //生成文件的路径
-        String doModelRelativePath = infraModelRelativePath + sp + "dao" + sp + dirName + sp + "model";
-        String mapperModelRelativePath = infraModelRelativePath + sp + "dao" + sp + dirName + sp + "mapper";
-        String mapperXmlModelRelativePath = srcMainJavaPath + sp + "resources" + sp + "mapper" + sp + dirName;
-        String domainEntityModelRelativePath = domainModelRelativePath + sp + dirName + sp + "model";
-        String repositoryModelRelativePath = domainModelRelativePath + sp + dirName + sp + "repository";
-        String repositoryImplModelRelativePath = domainModelRelativePath + sp + dirName;
-        String converterImplModelRelativePath = domainModelRelativePath + sp + dirName + sp + "converter";
+        String doDirRelativeModelPath = infraModelRelativePath + sp + "dao" + sp + dirName + sp + "model";
+        String mapperDirRelativeModelPath = infraModelRelativePath + sp + "dao" + sp + dirName + sp + "mapper";
+        String mapperXmlDirRelativeModelPath = "src" + sp + "main" + sp + "resources" + sp + "mapper" + sp + dirName;
+        String domainEntityDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "model";
+        String repositoryDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "repository";
+        String repositoryImplDirRelativeModelPath = domainModelRelativePath + sp + dirName;
+        String converterImplDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "converter";
+        String serviceDirRelativeModelPath = serviceModelRelativePath + sp + dirName;
+        String starterDirRelativeModelPath = starterModelRelativePath + sp + "api";
+
+        //决定是否生成service层及controller层
+        Map<String, String> customFileMap = buildCustomFile(serviceModelRootPath,
+                serviceDirRelativeModelPath,
+                starterModelRootPath,
+                starterDirRelativeModelPath,
+                tableNameInBigCamelCase);
 
         NewModelCodeGenerator.create(dBUrl, dBUserName, dBPassWord)
                 .globalConfig(builder -> builder
@@ -269,41 +255,55 @@ public final class NewModelCodeGenerator {
                 .strategyConfig(builder -> builder
                         //设置需要生成的表名
                         .addInclude(tableName)
-                        //打开模板中的entityLombokModel标签
+                        //打开模板中的 entityLombokModel 标签
                         .entityBuilder()
-                        //打开模板中的entityLombokModel
+                        //打开 entityLombokModel 标签
                         .enableLombok()
-                        //打开模板中的entityColumnConstant标签
+                        //打开 entityColumnConstant 标签
                         .enableColumnConstant()
+                        //打开 convert 标签
                         .enableTableFieldAnnotation()
-                        .addTableFills(new Column("create_time", FieldFill.INSERT))
+                        //Boolean 类型字段移除 is 前缀
+                        .enableRemoveIsPrefix()
+                        //给表字段添加填充
+                        .addTableFills(new Property("createTime", FieldFill.INSERT))
                         .addTableFills(new Property("updateTime", FieldFill.INSERT_UPDATE))
                         .idType(IdType.AUTO)
+                        .controllerBuilder()
+                        //打开 restControllerStyle 标签
+                        .enableRestStyle()
                 )
                 .injectionConfig(builder -> builder
-                        //
-                        .beforeOutputFile((tableInfo, objectMap) -> {
-                            System.out.println("tableInfo: " + tableInfo.getEntityName() + " objectMap: " + objectMap.size());
-                        })
+                        //预处理
+                        .beforeOutputFile((tableInfo, objectMap) ->
+                                //字段名 is_deleted 替换为 deleteTag
+                                tableInfo.getFields().stream()
+                                        .filter(field -> StringUtils.equals(field.getColumnName(), "is_deleted"))
+                                        .peek(field -> field.setPropertyName("deleteTag", field.getColumnType()))
+                        )
                         //自定义模板参数
                         .customMap(ImmutableMap.<String, Object>builder()
                                 //key ftl模板中参数名 value ftl模板参数值
-                                .put("doPackagePath", getPackageName(doModelRelativePath))
-                                .put("mapperPackagePath", getPackageName(mapperModelRelativePath))
-                                .put("domainEntityPackagePath", getPackageName(domainEntityModelRelativePath))
-                                .put("repositoryPackagePath", getPackageName(repositoryModelRelativePath))
-                                .put("repositoryImplPackagePath", getPackageName(repositoryImplModelRelativePath))
-                                .put("converterPackagePath", getPackageName(converterImplModelRelativePath))
+                                .put("doPackagePath", getPackageName(doDirRelativeModelPath))
+                                .put("mapperPackagePath", getPackageName(mapperDirRelativeModelPath))
+                                .put("domainEntityPackagePath", getPackageName(domainEntityDirRelativeModelPath))
+                                .put("repositoryPackagePath", getPackageName(repositoryDirRelativeModelPath))
+                                .put("repositoryImplPackagePath", getPackageName(repositoryImplDirRelativeModelPath))
+                                .put("converterPackagePath", getPackageName(converterImplDirRelativeModelPath))
+                                .put("servicePackagePath", getPackageName(serviceDirRelativeModelPath))
+                                .put("starterPackagePath", getPackageName(starterDirRelativeModelPath))
                                 .build())
-                        //自定义模板 key生成文件绝对路径 value 模板名称
+                        //自定义模板 key:生成文件绝对路径 value:模板名称
                         .customFile(ImmutableMap.<String, String>builder()
-                                .put(infraModelRootPath + sp + doModelRelativePath + sp + tableNameInBigCamelCase + "DO.java", "/templates" + "/do.java.ftl")
-                                .put(infraModelRootPath + sp + mapperModelRelativePath + sp + tableNameInBigCamelCase + "Mapper.java", "/templates" + "/mapper.java.ftl")
-                                .put(infraModelRootPath + sp + mapperXmlModelRelativePath + sp + tableNameInBigCamelCase + "Mapper.xml", "/templates" + "/mapper.xml.ftl")
-                                .put(domainModelRootPath + sp + domainEntityModelRelativePath + sp + tableNameInBigCamelCase + ".java", "/templates" + "/domainEntity.java.ftl")
-                                .put(domainModelRootPath + sp + repositoryModelRelativePath + sp + tableNameInBigCamelCase + "Repository.java", "/templates" + "/repository.java.ftl")
-                                .put(domainModelRootPath + sp + repositoryImplModelRelativePath + sp + tableNameInBigCamelCase + "RepositoryImpl.java", "/templates" + "/repositoryImpl.java.ftl")
-                                .put(domainModelRootPath + sp + converterImplModelRelativePath + sp + tableNameInBigCamelCase + "Converter.java", "/templates" + "/converter.java.ftl")
+                                .put(infraModelRootPath + sp + doDirRelativeModelPath + sp + tableNameInBigCamelCase + "DO.java", "/templates" + "/do.java.ftl")
+                                .put(infraModelRootPath + sp + mapperDirRelativeModelPath + sp + tableNameInBigCamelCase + "Mapper.java", "/templates" + "/mapper.java.ftl")
+                                .put(infraModelRootPath + sp + mapperXmlDirRelativeModelPath + sp + tableNameInBigCamelCase + "Mapper.xml", "/templates" + "/mapper.xml.ftl")
+                                .put(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + tableNameInBigCamelCase + ".java", "/templates" + "/domainEntity.java.ftl")
+                                .put(domainModelRootPath + sp + repositoryDirRelativeModelPath + sp + tableNameInBigCamelCase + "Repository.java", "/templates" + "/repository.java.ftl")
+                                .put(domainModelRootPath + sp + repositoryImplDirRelativeModelPath + sp + tableNameInBigCamelCase + "RepositoryImpl.java", "/templates" + "/repositoryImpl.java.ftl")
+                                .put(domainModelRootPath + sp + converterImplDirRelativeModelPath + sp + tableNameInBigCamelCase + "Converter.java", "/templates" + "/converter.java.ftl")
+                                //可生成optional的的文件
+                                .putAll(customFileMap)
                                 .build())
                 )
                 .templateConfig(builder -> builder
@@ -315,11 +315,7 @@ public final class NewModelCodeGenerator {
                 .templateEngine(new FreemarkerTemplateEngine() {
                     //重写该方法，以自定义输出路径
                     protected void outputCustomFile(Map<String, String> customFile, TableInfo tableInfo, Map<String, Object> objectMap) {
-                        String entityName = tableInfo.getEntityName();
-                        String otherPath = getPathInfo(OutputFile.other);
-                        customFile.forEach((key, value) -> {
-                            outputFile(new File(key), objectMap, value);
-                        });
+                        customFile.forEach((key, value) -> outputFile(new File(key), objectMap, value));
                     }
                 })
                 .execute();
@@ -333,7 +329,7 @@ public final class NewModelCodeGenerator {
     private static String scanner(String tip) {
         Scanner scanner = new Scanner(System.in);
         StringBuilder help = new StringBuilder();
-        help.append("请输入" + tip + "：");
+        help.append("请输入 " + tip + ":");
         System.out.println(help.toString());
         if (scanner.hasNext()) {
             String ipt = scanner.next();
@@ -342,24 +338,6 @@ public final class NewModelCodeGenerator {
             }
         }
         throw new MybatisPlusException("请输入正确的" + tip + "！");
-    }
-
-
-    /**
-     * src.main.java -> /src/main/java
-     *
-     * @param packagePath
-     * @return
-     */
-    private static String packagePath2FilePath(String packagePath) {
-        //linux mac
-        String filePath;
-        if (StringUtils.equals(sp, "/")) {
-            filePath = packagePath.replaceAll("\\.", "/");
-        }
-        //windows
-        filePath = packagePath.replaceAll("\\.", "\\\\");
-        return filePath;
     }
 
     /**
@@ -381,5 +359,27 @@ public final class NewModelCodeGenerator {
         return filePath;
     }
 
+    /**
+     * 选择是否生成的自定义文件
+     */
+    private static Map<String, String> buildCustomFile(String serviceModelRootPath,
+                                                       String serviceDirRelativeModelPath,
+                                                       String starterModelRootPath,
+                                                       String starterDirRelativeModelPath,
+                                                       String tableNameInBigCamelCase
+    ) {
+        Map<String, String> output = new HashMap<>();
+
+        String judge = "y";
+        if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
+            return output;
+        }
+        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + tableNameInBigCamelCase + "BizService.java", "/templates" + "/service.java.ftl");
+        if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
+            return output;
+        }
+        output.put(starterModelRootPath + sp + starterDirRelativeModelPath + sp + tableNameInBigCamelCase + "Controller.java", "/templates" + "/controller.java.ftl");
+        return output;
+    }
 
 }

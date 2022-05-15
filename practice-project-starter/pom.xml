@@ -51,15 +51,21 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>net.bytebuddy</groupId>-->
-<!--            <artifactId>byte-buddy</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>net.bytebuddy</groupId>-->
-<!--            <artifactId>byte-buddy-agent</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.magnus</groupId>
+            <artifactId>practice-project-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>net.bytebuddy</groupId>-->
+        <!--            <artifactId>byte-buddy</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>net.bytebuddy</groupId>-->
+        <!--            <artifactId>byte-buddy-agent</artifactId>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
 
     </dependencies>
 

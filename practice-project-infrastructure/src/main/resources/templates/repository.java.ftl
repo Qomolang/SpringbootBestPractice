@@ -26,13 +26,6 @@ public interface ${entity}Repository {
     ${entity} findOneById(Long id);
 
     /**
-     * 获取所有 ${table.comment!}
-     *
-     * @return
-     */
-    Map<Long, ${entity}> listAll();
-
-    /**
      * 根据 ID 列表查找 ${table.comment!} 列表
      * @param ids
      * @return

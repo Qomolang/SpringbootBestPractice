@@ -7,6 +7,9 @@ import io.swagger.annotations.ApiModelProperty;
 </#if>
 <#if entityLombokModel>
 import lombok.Data;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
     <#if chainModel>
 import lombok.experimental.Accessors;
@@ -25,6 +28,9 @@ import lombok.experimental.Accessors;
 @ApiModel(value="${entity}DO对象", description="${table.comment!}")
 </#if>
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ${entity}  {
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
