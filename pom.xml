@@ -7,6 +7,7 @@
         <module>practice-project-starter</module>
         <module>practice-project-domain</module>
         <module>practice-project-infrastructure</module>
+        <module>practice-project-service</module>
     </modules>
 
     <parent>
