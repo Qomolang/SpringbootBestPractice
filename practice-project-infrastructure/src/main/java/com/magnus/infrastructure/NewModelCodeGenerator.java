@@ -243,14 +243,13 @@ public final class NewModelCodeGenerator {
                         .addInclude(tableName)
                         //打开模板中的 entityLombokModel 标签
                         .entityBuilder()
+                        //！！！不要开启enableRemoveIsPrefix 与目前预处理部分冲突
                         //打开 entityLombokModel 标签
                         .enableLombok()
                         //打开 entityColumnConstant 标签
                         .enableColumnConstant()
                         //打开 convert 标签
                         .enableTableFieldAnnotation()
-                        //Boolean 类型字段移除 is 前缀
-                        .enableRemoveIsPrefix()
                         //给表字段添加填充
                         .addTableFills(new Property("createTime", FieldFill.INSERT))
                         .addTableFills(new Property("updateTime", FieldFill.INSERT_UPDATE))
@@ -268,14 +267,13 @@ public final class NewModelCodeGenerator {
                                         boolean booleanType = field.getColumnType() == DbColumnType.BOOLEAN || field.getColumnType() == DbColumnType.BASE_BOOLEAN;
                                         boolean startWithIs = field.getColumnName().startsWith("is");
                                         if (booleanType && startWithIs) {
-
                                             //逻辑删除标记单独处理
                                             if (StringUtils.equals(field.getPropertyName(), "isDeleted")) {
                                                 field.setPropertyName("deleteTag", field.getColumnType());
+                                                continue;
                                             }
 
                                             String propertyName = field.getPropertyName();
-
                                             propertyName = StringUtils.truncate(propertyName, 2, propertyName.length());
                                             propertyName = StringUtils.uncapitalize(propertyName);
                                             propertyName = propertyName + "Tag";

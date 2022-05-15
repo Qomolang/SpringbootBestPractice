@@ -19,6 +19,7 @@ public interface ${entity}Converter {
     * @param entityDO
     * @return
     */
+    //todo 检查数据库中是否有is开头的布尔字段 如果有可以考虑entity中设置为布尔 并在这里int转boolean
     ${entity} to${entity}(${entity}DO entityDO);
 
     /**
@@ -27,5 +28,6 @@ public interface ${entity}Converter {
     * @param domain
     * @return
     */
+    //todo 检查数据库中是否有is开头的布尔字段 如果有可以考虑entity中设置为布尔 并在这里boolean转int
     ${entity}DO to${entity}DO(${entity} domain);
 }
