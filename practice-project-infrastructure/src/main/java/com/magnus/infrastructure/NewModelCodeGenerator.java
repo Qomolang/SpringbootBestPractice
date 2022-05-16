@@ -176,6 +176,12 @@ public final class NewModelCodeGenerator {
     }
 
     public static void main(String[] args) throws Exception {
+        String projectName = "practice-project";
+        String basePackagePath = "com" + sp + "magnus";
+
+        String doCreateTime = "createTime";
+        String doUpdateTime = "updateTime";
+
         String dBUrl = "jdbc:mysql://localhost:3306/gstest";
         String dBUserName = "root";
         String dBPassWord = "admin";
@@ -187,15 +193,11 @@ public final class NewModelCodeGenerator {
         //unix下如:/home/gs/github/mybatis-practice-project
         String projectPath = System.getProperty("user.dir");
 
-        String projectName = "practice-project";
 
         String infrastructureModelName = projectName + "-infrastructure";
         String domainModelName = projectName + "-domain";
         String serviceModelName = projectName + "-service";
         String starterModelName = projectName + "-starter";
-
-        //com/magnus
-        String basePackagePath = "com" + sp + "magnus";
 
         String infraModelRootPath = projectPath + sp + infrastructureModelName;
         String domainModelRootPath = projectPath + sp + domainModelName;
@@ -251,8 +253,8 @@ public final class NewModelCodeGenerator {
                         //打开 convert 标签
                         .enableTableFieldAnnotation()
                         //给表字段添加填充
-                        .addTableFills(new Property("createTime", FieldFill.INSERT))
-                        .addTableFills(new Property("updateTime", FieldFill.INSERT_UPDATE))
+                        .addTableFills(new Property(doCreateTime, FieldFill.INSERT))
+                        .addTableFills(new Property(doUpdateTime, FieldFill.INSERT_UPDATE))
                         .idType(IdType.AUTO)
                         .controllerBuilder()
                         //打开 restControllerStyle 标签
@@ -355,6 +357,7 @@ public final class NewModelCodeGenerator {
         String filePath;
         if (StringUtils.equals(sp, "/")) {
             filePath = packagePath.replaceAll("\\/", ".");
+            return filePath;
         }
         //windows
         filePath = packagePath.replaceAll("\\\\", ".");
