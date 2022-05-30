@@ -1,7 +1,11 @@
-package com.magnus.infrastructure.enums;
+package com.magnus.api.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public enum SexEnum {
     /**
      * 男
@@ -9,12 +13,9 @@ public enum SexEnum {
     MAN(0, "男"),
     WOMAN(1, "女"),
     ;
-
     @EnumValue
     private int value;
 
     private String desc;
 
-    SexEnum(int value, String sex) {
-    }
 }

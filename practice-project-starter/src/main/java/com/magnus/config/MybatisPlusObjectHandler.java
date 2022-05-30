@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Component
-public class MybatisObjectHandler implements MetaObjectHandler {
+public class MybatisPlusObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());

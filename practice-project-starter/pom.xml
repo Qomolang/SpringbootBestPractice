@@ -18,6 +18,20 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.magnus</groupId>
+            <artifactId>practice-project-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.magnus</groupId>
+            <artifactId>practice-project-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -51,12 +65,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.magnus</groupId>
-            <artifactId>practice-project-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
+        <!--      validator      -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.hibernate.validator</groupId>-->
+        <!--            <artifactId>hibernate-validator</artifactId>-->
+        <!--        </dependency>-->
+
         <!--        <dependency>-->
         <!--            <groupId>net.bytebuddy</groupId>-->
         <!--            <artifactId>byte-buddy</artifactId>-->

@@ -6,6 +6,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.HandlerMethod;
 
 /**
+ * controller层方法的统一异常处理
+ *
  * @author 84028
  */
 @RestControllerAdvice
