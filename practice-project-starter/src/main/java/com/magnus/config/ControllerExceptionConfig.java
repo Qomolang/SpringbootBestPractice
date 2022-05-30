@@ -1,24 +1,53 @@
 package com.magnus.config;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.HandlerMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 /**
  * controller层方法的统一异常处理
  *
  * @author 84028
  */
+@Slf4j
 @RestControllerAdvice
 public class ControllerExceptionConfig {
 
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    @ResponseBody
+    public String exceptionHandler(MethodArgumentNotValidException e) {
+        //todo 参数值到哪里找？
+        String clazzName = e.getParameter().getMember().getDeclaringClass().getSimpleName();
+        String methodName = e.getParameter().getMethod().getName();
+
+        //        e.getParameter().getDeclaringClass()
+//        log.error();
+        String errorMsg = e.getBindingResult().getAllErrors().stream()
+                .map(foo -> foo.getDefaultMessage())
+                .collect(Collectors.joining(";"));
+        return errorMsg;
+    }
+
     /**
      * controller层异常兜底
+     *
      * @return
      */
-    @ExceptionHandler(value = {Exception.class})
-    public String handleExceptions(RuntimeException e, WebRequest webRequest, HandlerMethod handlerMethod){
+    @ExceptionHandler(value = Exception.class)
+    public String commonExceptionHandler(RuntimeException e, HttpServletRequest request, HandlerMethod handlerMethod) {
+        log.info("[ControllerExceptionConfig handleExceptions]");
+        String Url = request.getRequestURL().toString();
+        String clazzName = handlerMethod.getMethod().getDeclaringClass().getSimpleName();
+        String methodName = handlerMethod.getMethod().getName();
+        LocalDateTime time = LocalDateTime.now();
+
 
         //(0) 可做选择性处理 分考虑到的异常（本应用应用异常及转化为本应用异常的CE RE）和未考虑到的异常
         //if(e instanceof ){}

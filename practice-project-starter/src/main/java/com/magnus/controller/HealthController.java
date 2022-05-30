@@ -22,7 +22,9 @@ public class HealthController {
 
     @PostMapping("/test")
     public String test(@RequestBody @Valid CommonRequest request) {
-
+        if (true) {
+            throw new RuntimeException("这甚至不是错误");
+        }
         return "success";
     }
 
