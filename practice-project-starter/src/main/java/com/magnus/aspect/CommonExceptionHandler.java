@@ -15,11 +15,12 @@ import javax.validation.ConstraintViolationException;
 @Component
 public class CommonExceptionHandler {
 
+    //todo 换一种以类为粒度的 更不容易出错的切面指定
     @Pointcut("execution(* com.magnus.service.*.*(..))")
-    public void pointcut() {
+    public void pointCut() {
     }
 
-    @Around("pointcut()")
+    @Around("pointCut()")
     public Object invoke(ProceedingJoinPoint invocation) throws Throwable {
         Object result = null;
         try {
