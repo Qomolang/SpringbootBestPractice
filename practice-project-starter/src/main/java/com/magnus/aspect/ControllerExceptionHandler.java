@@ -1,4 +1,4 @@
-package com.magnus.config;
+package com.magnus.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestControllerAdvice
-public class ControllerExceptionConfig {
+public class ControllerExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseBody
