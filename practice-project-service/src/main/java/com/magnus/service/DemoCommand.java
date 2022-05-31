@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -11,7 +12,11 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class DemoCommand {
 
-    @NotNull(message = "姓名不为空")
+    @NotBlank(message = "姓名不为空")
     String name;
+
+
+    @NotNull(message = "年龄不为空")
+    Integer age;
 
 }

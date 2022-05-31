@@ -1,6 +1,7 @@
 package com.magnus.controller;
 
 import com.magnus.api.model.request.CommonRequest;
+import com.magnus.service.DemoCommand;
 import com.magnus.service.DemoService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class DemoController {
 
     @PostMapping("/test2")
     public String test2(@RequestBody @Valid CommonRequest request) {
-        demoService.test(null);
+        demoService.test(DemoCommand.builder().build());
         return "success";
     }
 
