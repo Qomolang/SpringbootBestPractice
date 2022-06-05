@@ -4,6 +4,8 @@ import ${domainEntityPackagePath}.${entity};
 import ${doPackagePath}.${entity}DO;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 /**
 * ${entity} 转换器
 *
@@ -19,8 +21,15 @@ public interface ${entity}Converter {
     * @param entityDO
     * @return
     */
-    //todo 检查数据库中是否有is开头的布尔字段 如果有可以考虑entity中设置为布尔 并在这里int转boolean
     ${entity} to${entity}(${entity}DO entityDO);
+
+    /**
+    * ${entity}: DO list-> Domain list
+    *
+    * @param entityDO
+    * @return
+    */
+    List<${entity}> to${entity}(List<${entity}DO> entityDO);
 
     /**
     * ${entity}: Domain -> DO
@@ -28,6 +37,14 @@ public interface ${entity}Converter {
     * @param domain
     * @return
     */
-    //todo 检查数据库中是否有is开头的布尔字段 如果有可以考虑entity中设置为布尔 并在这里boolean转int
     ${entity}DO to${entity}DO(${entity} domain);
+
+    /**
+    * ${entity}: Domain list -> DO list
+    *
+    * @param domain
+    * @return
+    */
+    List<${entity}DO> to${entity}DO(List<${entity}> domain);
+
 }

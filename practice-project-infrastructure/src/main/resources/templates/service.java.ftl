@@ -5,9 +5,6 @@ import ${repositoryPackagePath}.${entity}Repository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>

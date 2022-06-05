@@ -30,7 +30,7 @@ public interface ${entity}Repository {
      * @param ids
      * @return
      */
-    Map<Long, ${entity}> listAllByIds(Collection<Long> ids);
+    List<${entity}> listAllByIds(Collection<Long> ids);
 
     /**
      * 保存 ${table.comment!}
@@ -39,6 +39,14 @@ public interface ${entity}Repository {
      * @return
     */
     ${entity} create(${entity} domain);
+
+    /**
+     * 单个修改
+     *
+     * @param domain
+     * @return
+    */
+    ${entity} update(${entity} domain);
 
     /**
      * 根据 ID 删除某个 ${table.comment!}

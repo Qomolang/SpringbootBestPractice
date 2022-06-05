@@ -42,23 +42,35 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     }
 
     @Override
-    public Map<Long, ${entity}> listAllByIds(Collection<Long> ids) {
+    public List<${entity}> listAllByIds(Collection<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
-            return Collections.emptyMap();
+            return Collections.emptyList();
         }
 
-        return list(new QueryWrapper<${entity}DO>()
-            .in(${entity}DO.ID, ids))
-            .stream()
-            .map(cv::to${entity})
-            .collect(Collectors.toMap(${entity}::getId, Function.identity()));
+        List<${entity}DO> output = list(new QueryWrapper<${entity}DO>()
+                                             .in(${entity}DO.ID, ids));
+
+        return cv.to${entity}(output);
     }
 
     @Override
     public ${entity} create(${entity} domain) {
         ${entity}DO entityDO = cv.to${entity}DO(domain);
         save(entityDO);
-        //todo 有逻辑删标记字段需要在这里赋值
+        //todo 有逻辑删标记字段，需要在这里赋值，或者在数据设置默认值
+        return cv.to${entity}(entityDO);
+    }
+
+    @Override
+    public ${entity} update(${entity} domain) {
+        ${entity}DO entityDO = cv.to${entity}DO(domain);
+
+        update(entityDO, new QueryWrapper<${entity}DO>()
+                .eq(${entity}DO.ID, domain.getId())
+                //有逻辑删字段要解除下面的注释
+                //eq(${entity}DO.IS_DELETED, 0)
+                );
+
         return cv.to${entity}(entityDO);
     }
 
