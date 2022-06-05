@@ -193,22 +193,24 @@ public final class NewModelCodeGenerator {
         //unix下如:/home/gs/github/mybatis-practice-project
         String projectPath = System.getProperty("user.dir");
 
-
         String infrastructureModelName = projectName + "-infrastructure";
         String domainModelName = projectName + "-domain";
         String serviceModelName = projectName + "-service";
         String starterModelName = projectName + "-starter";
+        String apiModelName = projectName + "-api";
 
         String infraModelRootPath = projectPath + sp + infrastructureModelName;
         String domainModelRootPath = projectPath + sp + domainModelName;
         String serviceModelRootPath = projectPath + sp + serviceModelName;
         String starterModelRootPath = projectPath + sp + starterModelName;
+        String apiModelRootPath = projectPath + sp + apiModelName;
 
         // src/main/java/com/projectName/infrastructure
         String infraModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "infrastructure";
         String domainModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "domain";
         String serviceModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "service";
         String starterModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "controller";
+        String apiModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "api";
 
         String tableNameInBigCamelCase = CaseUtils.toCamelCase(tableName, true, '_');
 
@@ -219,15 +221,20 @@ public final class NewModelCodeGenerator {
         String domainEntityDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "model";
         String repositoryDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "repository";
         String repositoryImplDirRelativeModelPath = domainModelRelativePath + sp + dirName;
-        String converterImplDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "converter";
+        String converterDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "converter";
         String serviceDirRelativeModelPath = serviceModelRelativePath + sp + dirName;
+        String serviceConverterDirRelativeModelPath = serviceModelRelativePath + sp + dirName + sp + "converter";
         String starterDirRelativeModelPath = starterModelRelativePath + sp + "api";
+        String requestDirRelativeModelPath = apiModelRelativePath + sp + "model" + sp + "request" + sp + dirName;
 
         //决定是否生成service层及controller层
         Map<String, String> customFileMap = buildCustomFile(serviceModelRootPath,
                 serviceDirRelativeModelPath,
+                serviceConverterDirRelativeModelPath,
                 starterModelRootPath,
                 starterDirRelativeModelPath,
+                apiModelRootPath,
+                requestDirRelativeModelPath,
                 tableNameInBigCamelCase);
 
         NewModelCodeGenerator.create(dBUrl, dBUserName, dBPassWord)
@@ -293,9 +300,11 @@ public final class NewModelCodeGenerator {
                                 .put("domainEntityPackagePath", getPackageName(domainEntityDirRelativeModelPath))
                                 .put("repositoryPackagePath", getPackageName(repositoryDirRelativeModelPath))
                                 .put("repositoryImplPackagePath", getPackageName(repositoryImplDirRelativeModelPath))
-                                .put("converterPackagePath", getPackageName(converterImplDirRelativeModelPath))
+                                .put("converterPackagePath", getPackageName(converterDirRelativeModelPath))
                                 .put("servicePackagePath", getPackageName(serviceDirRelativeModelPath))
+                                .put("serviceConverterPackagePath", getPackageName(serviceConverterDirRelativeModelPath))
                                 .put("starterPackagePath", getPackageName(starterDirRelativeModelPath))
+                                .put("requestPackagePath", getPackageName(requestDirRelativeModelPath))
                                 .build())
                         //自定义模板 key:生成文件绝对路径 value:模板名称
                         .customFile(ImmutableMap.<String, String>builder()
@@ -305,7 +314,7 @@ public final class NewModelCodeGenerator {
                                 .put(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + tableNameInBigCamelCase + ".java", "/templates" + "/domainEntity.java.ftl")
                                 .put(domainModelRootPath + sp + repositoryDirRelativeModelPath + sp + tableNameInBigCamelCase + "Repository.java", "/templates" + "/repository.java.ftl")
                                 .put(domainModelRootPath + sp + repositoryImplDirRelativeModelPath + sp + tableNameInBigCamelCase + "RepositoryImpl.java", "/templates" + "/repositoryImpl.java.ftl")
-                                .put(domainModelRootPath + sp + converterImplDirRelativeModelPath + sp + tableNameInBigCamelCase + "Converter.java", "/templates" + "/converter.java.ftl")
+                                .put(domainModelRootPath + sp + converterDirRelativeModelPath + sp + tableNameInBigCamelCase + "Converter.java", "/templates" + "/converter.java.ftl")
                                 //可生成optional的的文件
                                 .putAll(customFileMap)
                                 .build())
@@ -369,8 +378,11 @@ public final class NewModelCodeGenerator {
      */
     private static Map<String, String> buildCustomFile(String serviceModelRootPath,
                                                        String serviceDirRelativeModelPath,
+                                                       String serviceConverterDirRelativeModelPath,
                                                        String starterModelRootPath,
                                                        String starterDirRelativeModelPath,
+                                                       String apiModelRootPath,
+                                                       String apiDirRelativeModelPath,
                                                        String tableNameInBigCamelCase
     ) {
         Map<String, String> output = new HashMap<>();
@@ -384,6 +396,9 @@ public final class NewModelCodeGenerator {
             return output;
         }
         output.put(starterModelRootPath + sp + starterDirRelativeModelPath + sp + tableNameInBigCamelCase + "Controller.java", "/templates" + "/controller.java.ftl");
+        output.put(apiModelRootPath + sp + apiDirRelativeModelPath + sp + tableNameInBigCamelCase + "ExampleRequest.java", "/templates" + "/request.java.ftl");
+        output.put(serviceModelRootPath + sp + serviceConverterDirRelativeModelPath + sp + tableNameInBigCamelCase + "ServiceConverter.java", "/templates" + "/serviceConverter.java.ftl");
+
         return output;
     }
 
