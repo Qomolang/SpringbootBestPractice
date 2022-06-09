@@ -266,6 +266,11 @@ public final class NewModelCodeGenerator {
                         .controllerBuilder()
                         //打开 restControllerStyle 标签
                         .enableRestStyle()
+                        .mapperBuilder()
+                        //开启该标签后，在xml文件中生成字段映射
+                        .enableBaseResultMap()
+                        //开启该标签后，在xml文件中生成通用查询结果列
+                        .enableBaseColumnList()
                 )
                 .injectionConfig(builder -> builder
                         //预处理
