@@ -30,6 +30,7 @@
         <org.projectlombok.version>1.18.20</org.projectlombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <mybatisplus.version>3.5.1</mybatisplus.version>
+        <retrofit.version>2.9.0</retrofit.version>
     </properties>
 
     <!--  仅有开启dependencyManagement此标签后，该模块的子模块才能省略	-->
@@ -196,6 +197,18 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>1.2.80</version>
+            </dependency>
+
+            <!--      http库      -->
+            <dependency>
+                <groupId>com.squareup.retrofit2</groupId>
+                <artifactId>retrofit</artifactId>
+                <version>${retrofit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.retrofit2</groupId>
+                <artifactId>converter-gson</artifactId>
+                <version>${retrofit.version}</version>
             </dependency>
 
         </dependencies>
