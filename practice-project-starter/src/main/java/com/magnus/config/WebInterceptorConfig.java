@@ -3,16 +3,14 @@ package com.magnus.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-
-import javax.annotation.Resource;
 
 /**
  * 拦截器注册中心
+ *
  * @author 84028
  */
 @Configuration
-public class InterceptorsRegistry implements WebMvcConfigurer {
+public class WebInterceptorConfig implements WebMvcConfigurer {
 //    @Resource
 //    LocaleChangeInterceptor i18nInterceptor;
 
