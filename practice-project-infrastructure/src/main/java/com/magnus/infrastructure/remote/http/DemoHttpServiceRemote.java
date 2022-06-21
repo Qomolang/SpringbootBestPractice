@@ -26,7 +26,7 @@ public class DemoHttpServiceRemote {
 
         //todo 该对象也抽成bean，每个网址抽一个
         Retrofit DemoRemoteRetrofit = new Retrofit.Builder()
-                .baseUrl("http://localhost:7001/http/test")
+                .baseUrl("http://localhost:7001/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
