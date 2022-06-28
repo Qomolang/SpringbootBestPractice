@@ -188,6 +188,7 @@ public final class NewModelCodeGenerator {
 
         //表新生成的package名
         String tableName = scanner("表名");
+        String tablePrefix = scanner("去除表前缀（如忽略请直接回车）");
         String dirName = scanner("目录名");
 
         //unix下如:/home/gs/github/mybatis-practice-project
@@ -212,7 +213,8 @@ public final class NewModelCodeGenerator {
         String starterModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "controller";
         String apiModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "api";
 
-        String tableNameInBigCamelCase = CaseUtils.toCamelCase(tableName, true, '_');
+        String tableTempName = tableName.replace(tablePrefix, "");
+        String fileBaseName = CaseUtils.toCamelCase(tableTempName, true, '_');
 
         //生成文件的路径
         String doDirRelativeModelPath = infraModelRelativePath + sp + "dao" + sp + dirName + sp + "model";
@@ -235,7 +237,7 @@ public final class NewModelCodeGenerator {
                 starterDirRelativeModelPath,
                 apiModelRootPath,
                 requestDirRelativeModelPath,
-                tableNameInBigCamelCase);
+                fileBaseName);
 
         NewModelCodeGenerator.create(dBUrl, dBUserName, dBPassWord)
                 .globalConfig(builder -> builder
@@ -250,6 +252,7 @@ public final class NewModelCodeGenerator {
                 .strategyConfig(builder -> builder
                         //设置需要生成的表名
                         .addInclude(tableName)
+                        .addTablePrefix(tablePrefix)
                         //打开模板中的 entityLombokModel 标签
                         .entityBuilder()
                         //！！！不要开启enableRemoveIsPrefix 与目前预处理部分冲突
@@ -313,13 +316,13 @@ public final class NewModelCodeGenerator {
                                 .build())
                         //自定义模板 key:生成文件绝对路径 value:模板名称
                         .customFile(ImmutableMap.<String, String>builder()
-                                .put(infraModelRootPath + sp + doDirRelativeModelPath + sp + tableNameInBigCamelCase + "DO.java", "/templates" + "/do.java.ftl")
-                                .put(infraModelRootPath + sp + mapperDirRelativeModelPath + sp + tableNameInBigCamelCase + "Mapper.java", "/templates" + "/mapper.java.ftl")
-                                .put(infraModelRootPath + sp + mapperXmlDirRelativeModelPath + sp + tableNameInBigCamelCase + "Mapper.xml", "/templates" + "/mapper.xml.ftl")
-                                .put(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + tableNameInBigCamelCase + ".java", "/templates" + "/domainEntity.java.ftl")
-                                .put(domainModelRootPath + sp + repositoryDirRelativeModelPath + sp + tableNameInBigCamelCase + "Repository.java", "/templates" + "/repository.java.ftl")
-                                .put(domainModelRootPath + sp + repositoryImplDirRelativeModelPath + sp + tableNameInBigCamelCase + "RepositoryImpl.java", "/templates" + "/repositoryImpl.java.ftl")
-                                .put(domainModelRootPath + sp + converterDirRelativeModelPath + sp + tableNameInBigCamelCase + "Converter.java", "/templates" + "/converter.java.ftl")
+                                .put(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java", "/templates" + "/do.java.ftl")
+                                .put(infraModelRootPath + sp + mapperDirRelativeModelPath + sp + fileBaseName + "Mapper.java", "/templates" + "/mapper.java.ftl")
+                                .put(infraModelRootPath + sp + mapperXmlDirRelativeModelPath + sp + fileBaseName + "Mapper.xml", "/templates" + "/mapper.xml.ftl")
+                                .put(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + fileBaseName + ".java", "/templates" + "/domainEntity.java.ftl")
+                                .put(domainModelRootPath + sp + repositoryDirRelativeModelPath + sp + fileBaseName + "Repository.java", "/templates" + "/repository.java.ftl")
+                                .put(domainModelRootPath + sp + repositoryImplDirRelativeModelPath + sp + fileBaseName + "RepositoryImpl.java", "/templates" + "/repositoryImpl.java.ftl")
+                                .put(domainModelRootPath + sp + converterDirRelativeModelPath + sp + fileBaseName + "Converter.java", "/templates" + "/converter.java.ftl")
                                 //可生成optional的的文件
                                 .putAll(customFileMap)
                                 .build())
@@ -388,7 +391,7 @@ public final class NewModelCodeGenerator {
                                                        String starterDirRelativeModelPath,
                                                        String apiModelRootPath,
                                                        String apiDirRelativeModelPath,
-                                                       String tableNameInBigCamelCase
+                                                       String fileBaseName
     ) {
         Map<String, String> output = new HashMap<>();
 
@@ -396,13 +399,13 @@ public final class NewModelCodeGenerator {
         if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
             return output;
         }
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + tableNameInBigCamelCase + "BizService.java", "/templates" + "/service.java.ftl");
+        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "BizService.java", "/templates" + "/service.java.ftl");
         if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
             return output;
         }
-        output.put(starterModelRootPath + sp + starterDirRelativeModelPath + sp + tableNameInBigCamelCase + "Controller.java", "/templates" + "/controller.java.ftl");
-        output.put(apiModelRootPath + sp + apiDirRelativeModelPath + sp + tableNameInBigCamelCase + "ExampleRequest.java", "/templates" + "/request.java.ftl");
-        output.put(serviceModelRootPath + sp + serviceConverterDirRelativeModelPath + sp + tableNameInBigCamelCase + "ServiceConverter.java", "/templates" + "/serviceConverter.java.ftl");
+        output.put(starterModelRootPath + sp + starterDirRelativeModelPath + sp + fileBaseName + "Controller.java", "/templates" + "/controller.java.ftl");
+        output.put(apiModelRootPath + sp + apiDirRelativeModelPath + sp + fileBaseName + "ExampleRequest.java", "/templates" + "/request.java.ftl");
+        output.put(serviceModelRootPath + sp + serviceConverterDirRelativeModelPath + sp + fileBaseName + "ServiceConverter.java", "/templates" + "/serviceConverter.java.ftl");
 
         return output;
     }
