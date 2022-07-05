@@ -2,8 +2,8 @@ package com.magnus.controller;
 
 import com.magnus.api.model.request.CommonRequest;
 import com.magnus.infrastructure.remote.http.DemoHttpServiceRemote;
-import com.magnus.service.DemoCommand;
-import com.magnus.service.DemoService;
+import com.magnus.service.demo.DemoService;
+import com.magnus.service.demo.command.DemoCommand;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,4 +1,4 @@
-package com.magnus.service;
+package com.magnus.service.demo.command;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

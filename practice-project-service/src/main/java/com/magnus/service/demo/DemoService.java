@@ -1,5 +1,6 @@
-package com.magnus.service;
+package com.magnus.service.demo;
 
+import com.magnus.service.demo.command.DemoCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
