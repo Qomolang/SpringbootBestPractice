@@ -1,6 +1,7 @@
 package com.magnus.controller;
 
 import com.magnus.api.model.request.CommonRequest;
+import com.magnus.infrastructure.exception.catchlog.CatchAndLog;
 import com.magnus.infrastructure.remote.http.DemoHttpServiceRemote;
 import com.magnus.service.demo.DemoService;
 import com.magnus.service.demo.command.DemoCommand;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+@CatchAndLog
 @RestController
 public class DemoController {
 
@@ -20,6 +22,14 @@ public class DemoController {
 
     @GetMapping("/test")
     public String test() {
+        return "success";
+    }
+
+    @GetMapping("/testerror")
+    public String testError() {
+        if (true) {
+            throw new RuntimeException("这甚至不是错误");
+        }
         return "success";
     }
 
