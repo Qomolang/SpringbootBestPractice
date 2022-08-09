@@ -5,10 +5,11 @@ import ${domainEntityPackagePath}.${entity};
 import ${converterPackagePath}.${entity}Converter;
 import ${mapperPackagePath}.${table.mapperName};
 import ${repositoryPackagePath}.${entity}Repository;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import ${superServiceImplClassPackage};
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -34,7 +35,7 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     private ${entity}Converter cv;
 
     @Override
-    public ${entity} findOneById(Long id) {
+    public ${entity} getOneById(Long id) {
         return cv.to${entity}(getById(id));
     }
 
@@ -44,8 +45,8 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
             return Collections.emptyList();
         }
 
-        List<${entity}DO> output = list(new QueryWrapper<${entity}DO>()
-                                             .in(${entity}DO.ID, ids));
+        List<${entity}DO> output = list(new LambdaQueryWrapper<${entity}DO>()
+                .in(${entity}DO::getId, ids));
 
         return cv.to${entity}(output);
     }
@@ -62,20 +63,29 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     public ${entity} update(${entity} domain) {
         ${entity}DO entityDO = cv.to${entity}DO(domain);
 
-        update(entityDO, new QueryWrapper<${entity}DO>()
-                .eq(${entity}DO.ID, domain.getId())
-                //有逻辑删字段要解除下面的注释
-                //eq(${entity}DO.IS_DELETED, 0)
-                );
+        update(entityDO, new LambdaUpdateWrapper<${entity}DO>()
+                .eq(${entity}DO::getId, domain.getId())
+                .eq(${entity}DO::getDeleteTag, 0));
 
         return cv.to${entity}(entityDO);
     }
 
     @Override
     public boolean deleteById(Long id) {
-        //todo 此处为物理删，如果为逻辑删需要手动更改
         return super.removeById(id);
     }
+
+    @Override
+    public boolean deleteLogicallyById(Long id) {
+
+        update(new LambdaUpdateWrapper<${entity}DO>()
+                .eq(${entity}DO::getId, id)
+                //todo 根据情况调整
+                .set(${entity}DO::getDeleteTag, Boolean.TRUE));
+
+        return true;
+    }
+
 
 }
 </#if>

@@ -259,7 +259,7 @@ public final class NewModelCodeGenerator {
                         //打开 entityLombokModel 标签
                         .enableLombok()
                         //打开 entityColumnConstant 标签
-                        .enableColumnConstant()
+                        //.enableColumnConstant()
                         //打开 convert 标签
                         .enableTableFieldAnnotation()
                         //给表字段添加填充

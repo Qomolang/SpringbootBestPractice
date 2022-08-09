@@ -28,9 +28,9 @@ public class ${entity}BizService {
      * @param id
      * @return
      */
-    public ${entity} findOne${entity}ById(Long id){
+    public ${entity} getOne${entity}ById(Long id){
         //todo 补充校验
-        return repository.findOneById(id);
+        return repository.getOneById(id);
     };
 
     /**

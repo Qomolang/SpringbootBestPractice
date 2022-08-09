@@ -23,7 +23,7 @@ public interface ${entity}Repository {
      * @param id
      * @return
      */
-    ${entity} findOneById(Long id);
+    ${entity} getOneById(Long id);
 
     /**
      * 根据 ID 列表查找 ${table.comment!} 列表
@@ -55,5 +55,10 @@ public interface ${entity}Repository {
      * @return 删除是否成功
      */
     boolean deleteById(Long id);
+
+    /**b
+     * 逻辑删
+     */
+    boolean deleteLogicallyById(Long id);
 }
 </#if>
