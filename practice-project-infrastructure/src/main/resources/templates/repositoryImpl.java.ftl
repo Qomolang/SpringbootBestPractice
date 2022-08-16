@@ -8,8 +8,7 @@ import ${repositoryPackagePath}.${entity}Repository;
 import ${superServiceImplClassPackage};
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -36,7 +35,12 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
 
     @Override
     public ${entity} getOneById(Long id) {
-        return cv.to${entity}(getById(id));
+        UserDO output = this.baseMapper.selectOne(Wrappers.<${entity}DO>lambdaQuery()
+                .eq(${entity}DO::getId, id)
+                .eq(${entity}DO::getDeleteTag, Boolean.FALSE)
+        );
+
+        return cv.toUser(output);
     }
 
     @Override
@@ -45,8 +49,10 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
             return Collections.emptyList();
         }
 
-        List<${entity}DO> output = list(new LambdaQueryWrapper<${entity}DO>()
-                .in(${entity}DO::getId, ids));
+        List<${entity}DO> output = list(Wrappers.<${entity}DO>lambdaQuery()
+                .in(UserDO::getId, ids)
+                .eq(UserDO::getDeleteTag, Boolean.FALSE)
+        );
 
         return cv.to${entity}(output);
     }
@@ -60,12 +66,21 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     }
 
     @Override
+    public List<${entity}> createBatch(List<${entity}> domains) {
+        List<${entity}DO> entityDOs = cv.to${entity}DO(domains);
+        saveBatch(entityDOs);
+        //todo 有逻辑删标记字段，需要在这里赋值，或者在数据设置默认值
+        return cv.to${entity}(entityDOs);
+    }
+
+    @Override
     public ${entity} update(${entity} domain) {
         ${entity}DO entityDO = cv.to${entity}DO(domain);
 
-        update(entityDO, new LambdaUpdateWrapper<${entity}DO>()
+        update(entityDO, Wrappers.<${entity}DO>lambdaQuery()
                 .eq(${entity}DO::getId, domain.getId())
-                .eq(${entity}DO::getDeleteTag, 0));
+                .eq(${entity}DO::getDeleteTag, 0)
+        );
 
         return cv.to${entity}(entityDO);
     }
@@ -78,10 +93,21 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     @Override
     public boolean deleteLogicallyById(Long id) {
 
-        update(new LambdaUpdateWrapper<${entity}DO>()
+        update(Wrappers.<${entity}DO>lambdaUpdate()
                 .eq(${entity}DO::getId, id)
-                //todo 根据情况调整
-                .set(${entity}DO::getDeleteTag, Boolean.TRUE));
+                .set(${entity}DO::getDeleteTag, Boolean.TRUE)
+        );
+
+        return true;
+    }
+
+    @Override
+    public boolean deleteLogicallyByIds(Collection<Long> ids) {
+
+        update(Wrappers.<${entity}DO>lambdaUpdate()
+                .in(${entity}DO::getId, ids)
+                .set(${entity}DO::getDeleteTag, Boolean.TRUE)
+        );
 
         return true;
     }

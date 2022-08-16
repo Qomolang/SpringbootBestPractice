@@ -33,12 +33,20 @@ public interface ${entity}Repository {
     List<${entity}> listAllByIds(Collection<Long> ids);
 
     /**
-     * 保存 ${table.comment!}
+     * 单条插入 ${table.comment!}
      *
      * @param domain
      * @return
     */
     ${entity} create(${entity} domain);
+
+    /**
+     * 批量插入 ${table.comment!}
+     *
+     * @param domain
+     * @return
+    */
+    List<${entity}> createBatch(List<${entity}> domains);
 
     /**
      * 单个修改
@@ -56,9 +64,15 @@ public interface ${entity}Repository {
      */
     boolean deleteById(Long id);
 
-    /**b
+    /**
      * 逻辑删
      */
     boolean deleteLogicallyById(Long id);
+
+    /**
+     * 批量逻辑删
+     */
+    boolean deleteLogicallyByIds(Collection<Long> ids);
+
 }
 </#if>
