@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * 拦截器注册中心
  *
- * @author 84028
+ * @author gaosong
  */
 @Configuration
 public class WebInterceptorConfig implements WebMvcConfigurer {

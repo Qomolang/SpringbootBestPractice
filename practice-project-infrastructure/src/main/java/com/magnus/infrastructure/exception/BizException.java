@@ -12,13 +12,23 @@ public class BizException extends RuntimeException {
 
     private String errorCode;
 
+    private String errorMsg;
+
     private static final long serialVersionUID = 1L;
 
     private static final String DEFAULT_ERR_CODE = "BIZ_ERROR";
 
     public BizException(String errCode, String errMessage) {
         super(errMessage);
-        errorCode = errCode;
+        this.errorCode = errCode;
+        this.errorMsg = errMessage;
+    }
+
+    public BizException(ErrorCodeEnum errCode) {
+        super(errCode.getErrorMsg());
+        this.errorCode = errCode.getErrorCode();
+        this.errorMsg = errCode.getErrorMsg();
+
     }
 
 }

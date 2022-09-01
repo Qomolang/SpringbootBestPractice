@@ -68,6 +68,13 @@
                 <version>${spring-boot.version}</version>
             </dependency>
 
+            <!--     COLA       -->
+            <dependency>
+                <groupId>com.alibaba.cola</groupId>
+                <artifactId>cola-component-dto</artifactId>
+                <version>4.3.1</version>
+            </dependency>
+
             <!--	数据库 基本配置   -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>

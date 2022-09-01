@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 /**
- * @author 84028
+ * @author gaosong
  */
 @Data
 public class CommonRequest {

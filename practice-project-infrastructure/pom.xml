@@ -55,6 +55,11 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.cola</groupId>
+            <artifactId>cola-component-dto</artifactId>
+        </dependency>
+
         <!--     生成器       -->
         <dependency>
             <groupId>com.baomidou</groupId>

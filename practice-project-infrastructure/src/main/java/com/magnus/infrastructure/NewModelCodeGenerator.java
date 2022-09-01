@@ -281,15 +281,17 @@ public final class NewModelCodeGenerator {
                                         //字段名 is_deleted 替换为 deleteTag
                                 {
                                     for (TableField field : tableInfo.getFields()) {
-                                        boolean booleanType = field.getColumnType() == DbColumnType.BOOLEAN || field.getColumnType() == DbColumnType.BASE_BOOLEAN;
-                                        boolean startWithIs = field.getColumnName().startsWith("is");
-                                        if (booleanType && startWithIs) {
-                                            //逻辑删除标记单独处理
-                                            if (StringUtils.equals(field.getPropertyName(), "isDeleted")) {
-                                                field.setPropertyName("deleteTag", field.getColumnType());
-                                                continue;
-                                            }
 
+                                        //逻辑删除标记单独处理
+                                        if (StringUtils.equals(field.getPropertyName(), "isDeleted")) {
+                                            field.setPropertyName("deleteTag", field.getColumnType());
+                                            continue;
+                                        }
+
+                                        boolean booleanType = field.getColumnType() == DbColumnType.BOOLEAN || field.getColumnType() == DbColumnType.BASE_BOOLEAN;
+                                        boolean startWithIs = field.getPropertyName().startsWith("is");
+
+                                        if (booleanType && startWithIs) {
                                             String propertyName = field.getPropertyName();
                                             propertyName = StringUtils.truncate(propertyName, 2, propertyName.length());
                                             propertyName = StringUtils.uncapitalize(propertyName);

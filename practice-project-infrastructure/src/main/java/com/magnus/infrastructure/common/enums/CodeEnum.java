@@ -9,7 +9,7 @@ import java.util.Arrays;
 /**
  * 适用场景：外部系统用字符串常量当入/出参
  *
- * @author 84028
+ * @author gaosong
  */
 @Getter
 @AllArgsConstructor

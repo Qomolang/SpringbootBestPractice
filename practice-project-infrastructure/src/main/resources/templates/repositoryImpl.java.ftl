@@ -35,12 +35,12 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
 
     @Override
     public ${entity} getOneById(Long id) {
-        UserDO output = this.baseMapper.selectOne(Wrappers.<${entity}DO>lambdaQuery()
+        ${entity}DO output = this.baseMapper.selectOne(Wrappers.<${entity}DO>lambdaQuery()
                 .eq(${entity}DO::getId, id)
                 .eq(${entity}DO::getDeleteTag, Boolean.FALSE)
         );
 
-        return cv.toUser(output);
+        return cv.to${entity}(output);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
         }
 
         List<${entity}DO> output = list(Wrappers.<${entity}DO>lambdaQuery()
-                .in(UserDO::getId, ids)
-                .eq(UserDO::getDeleteTag, Boolean.FALSE)
+                .in(${entity}DO::getId, ids)
+                .eq(${entity}DO::getDeleteTag, Boolean.FALSE)
         );
 
         return cv.to${entity}(output);
