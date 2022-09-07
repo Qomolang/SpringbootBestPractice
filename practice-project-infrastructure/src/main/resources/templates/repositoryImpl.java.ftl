@@ -18,6 +18,8 @@ import java.util.List;
 /**
  * <p>
  * ${table.comment!} repository实现类
+ * get开头的方法为单个查询
+ * list开头的方法为批量查询
  * </p>
  *
  * @author ${author}
@@ -34,7 +36,7 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     private ${entity}Converter cv;
 
     @Override
-    public ${entity} getOneById(Long id) {
+    public ${entity} getById(Long id) {
         ${entity}DO output = this.baseMapper.selectOne(Wrappers.<${entity}DO>lambdaQuery()
                 .eq(${entity}DO::getId, id)
                 .eq(${entity}DO::getDeleteTag, Boolean.FALSE)
@@ -44,7 +46,7 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     }
 
     @Override
-    public List<${entity}> listAllByIds(Collection<Long> ids) {
+    public List<${entity}> listEntityByIds(Collection<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();
         }
@@ -74,15 +76,20 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     }
 
     @Override
-    public ${entity} update(${entity} domain) {
+    public boolean updateById(${entity} domain) {
         ${entity}DO entityDO = cv.to${entity}DO(domain);
 
-        update(entityDO, Wrappers.<${entity}DO>lambdaQuery()
+        return update(entityDO, Wrappers.<${entity}DO>lambdaQuery()
                 .eq(${entity}DO::getId, domain.getId())
                 .eq(${entity}DO::getDeleteTag, 0)
         );
+    }
 
-        return cv.to${entity}(entityDO);
+    @Override
+    public boolean updateBatchByIds(List<${entity}> domains) {
+        //注意 批量更新不会考虑逻辑删字段
+        List<${entity}DO> entityDOs = cv.to${entity}DO(domains);
+        return updateBatchById(entityDOs);
     }
 
     @Override

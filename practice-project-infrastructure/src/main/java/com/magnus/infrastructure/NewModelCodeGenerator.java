@@ -179,8 +179,8 @@ public final class NewModelCodeGenerator {
         String projectName = "practice-project";
         String basePackagePath = "com" + sp + "magnus";
 
-        String doCreateTime = "createTime";
-        String doUpdateTime = "updateTime";
+        String doCreateTime = "gmtCreate";
+        String doUpdateTime = "gmtModified";
 
         String dBUrl = "jdbc:mysql://localhost:3306/gstest";
         String dBUserName = "root";
@@ -401,7 +401,10 @@ public final class NewModelCodeGenerator {
         if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
             return output;
         }
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "BizService.java", "/templates" + "/service.java.ftl");
+        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "ReadService.java", "/templates" + "/readService.java.ftl");
+        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "WriteService.java", "/templates" + "/writeService.java.ftl");
+        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "BizService.java", "/templates" + "/bizService.java.ftl");
+
         if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
             return output;
         }

@@ -1,4 +1,4 @@
-package com.magnus.infrastructure.dao;
+package com.magnus.infrastructure.dao.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class DemoExtDO {
+public class UserExtDO {
 
     String description;
 

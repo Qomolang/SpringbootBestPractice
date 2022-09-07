@@ -380,7 +380,7 @@ public final class UpdateEntityModelCodeGenerator {
         if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
             return output;
         }
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + tableNameInBigCamelCase + "BizService.java", "/templates" + "/service.java.ftl");
+        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + tableNameInBigCamelCase + "BizService.java", "/templates" + "/readService.java.ftl");
         if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
             return output;
         }

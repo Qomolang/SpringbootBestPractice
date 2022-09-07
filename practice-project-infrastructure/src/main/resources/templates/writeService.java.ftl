@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 
 /**
  * <p>
- * ${table.comment!} bizService类
+ * ${table.comment!} WriteService类
  * </p>
  *
  * @author ${author}
@@ -18,20 +18,10 @@ import javax.annotation.Resource;
 class ${entity}BizService
 <#else>
 @Service
-public class ${entity}BizService {
+public class ${entity}WriteService {
 
     @Resource
     private ${entity}Repository repository;
-
-    /**
-     * 根据 ID 查找 ${table.comment!}
-     * @param id
-     * @return
-     */
-    public ${entity} getOne${entity}ById(Long id){
-        //todo 补充校验
-        return repository.getOneById(id);
-    };
 
     /**
      * 保存 ${table.comment!}
