@@ -10,11 +10,15 @@
         <result column="nick_name" property="nickName" />
         <result column="emp_code" property="empCode" />
         <result column="is_deleted" property="deleteTag" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+        <result column="create_by" property="createBy" />
+        <result column="modified_by" property="modifiedBy" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, tenant_id, nick_name, emp_code, is_deleted
+        id, user_id, tenant_id, nick_name, emp_code, is_deleted, gmt_create, gmt_modified, create_by, modified_by
     </sql>
 
 </mapper>

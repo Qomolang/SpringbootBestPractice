@@ -5,6 +5,7 @@ import com.magnus.infrastructure.exception.catchlog.CatchAndLog;
 import com.magnus.infrastructure.remote.http.DemoHttpServiceRemote;
 import com.magnus.service.demo.DemoService;
 import com.magnus.service.demo.command.DemoCommand;
+import com.magnus.transaction.TransactionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,8 @@ import javax.validation.Valid;
 @RestController
 public class DemoController {
 
+    @Resource
+    private TransactionService transactionService;
     @Resource
     private DemoService demoService;
 
@@ -53,6 +56,12 @@ public class DemoController {
     @GetMapping("/retrofit/test")
     public String retrofitTest() {
         demoHttpServiceRemote.httpTest();
+        return "success";
+    }
+
+    @GetMapping("/transaction/test")
+    public String transaction() {
+        transactionService.stepIn();
         return "success";
     }
 

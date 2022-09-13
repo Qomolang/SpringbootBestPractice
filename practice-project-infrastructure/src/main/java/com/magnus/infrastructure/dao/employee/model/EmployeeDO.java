@@ -1,10 +1,12 @@
 package com.magnus.infrastructure.dao.employee.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +16,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author gs
- * @since 2022-09-08
+ * @since 2022-09-10
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -40,6 +42,18 @@ public class EmployeeDO implements Serializable {
 
     @TableField("is_deleted")
     private Long deleteTag;
+
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
+    private LocalDateTime gmtCreate;
+
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime gmtModified;
+
+    @TableField("create_by")
+    private Long createBy;
+
+    @TableField("modified_by")
+    private Long modifiedBy;
 
 
 }

@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author gs
- * @since 2022-09-08
+ * @since 2022-09-10
  */
 @Data
 @Builder
@@ -32,6 +32,14 @@ public class Employee  {
     private String empCode;
 
     private Long deleteTag;
+
+    private LocalDateTime gmtCreate;
+
+    private LocalDateTime gmtModified;
+
+    private Long createBy;
+
+    private Long modifiedBy;
 
 
 }
