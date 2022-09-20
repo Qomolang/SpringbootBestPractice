@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Property;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import com.magnus.infrastructure.common.enums.DBTimeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 
@@ -179,8 +180,8 @@ public final class NewModelCodeGenerator {
         String projectName = "practice-project";
         String basePackagePath = "com" + sp + "magnus";
 
-        String doCreateTime = "gmtCreate";
-        String doUpdateTime = "gmtModified";
+        String doCreateTime = DBTimeEnum.CreateTime.getCode();
+        String doUpdateTime = DBTimeEnum.UpdateTIme.getCode();
 
         String dBUrl = "jdbc:mysql://localhost:3306/gstest";
         String dBUserName = "root";

@@ -1,6 +1,7 @@
-package com.magnus.config;
+package com.magnus.config.mybatisplus;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.magnus.infrastructure.common.enums.DBTimeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.mybatis.spring.annotation.MapperScan;
@@ -17,12 +18,12 @@ import java.time.LocalDateTime;
 public class MybatisPlusConfig implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "gmtCreate", LocalDateTime.class, LocalDateTime.now());
-        this.strictUpdateFill(metaObject, "gmtModified", LocalDateTime.class, LocalDateTime.now());
+        this.strictInsertFill(metaObject, DBTimeEnum.CreateTime.getCode(), LocalDateTime.class, LocalDateTime.now());
+        this.strictUpdateFill(metaObject, DBTimeEnum.UpdateTIme.getCode(), LocalDateTime.class, LocalDateTime.now());
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictUpdateFill(metaObject, DBTimeEnum.UpdateTIme.getCode(), LocalDateTime.class, LocalDateTime.now());
     }
 }

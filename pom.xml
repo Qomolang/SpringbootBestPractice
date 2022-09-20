@@ -69,6 +69,13 @@
                 <version>${spring-boot.version}</version>
             </dependency>
 
+            <!--     redis       -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+
             <!--     COLA       -->
             <dependency>
                 <groupId>com.alibaba.cola</groupId>
