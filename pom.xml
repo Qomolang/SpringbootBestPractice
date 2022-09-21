@@ -10,6 +10,7 @@
         <module>practice-project-service</module>
         <module>practice-project-api</module>
         <module>practice-project-advanced-demo</module>
+        <module>practice-project-excel-import-export</module>
     </modules>
 
     <parent>
