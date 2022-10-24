@@ -1,4 +1,4 @@
-package com.magnus.excel.emp.model;
+package com.magnus.excel.model.emp;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * gaosong
  */
 @Data
-public class EmpExcelVO {
+public class EmpExcelEntity {
 
     /**
      * 组织名称
