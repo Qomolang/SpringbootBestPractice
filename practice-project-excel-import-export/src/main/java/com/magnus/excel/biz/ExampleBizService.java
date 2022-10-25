@@ -3,7 +3,7 @@ package com.magnus.excel.biz;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserExcelBizService {
+public class ExampleBizService {
 
     /**
      * 同步导出（模板）
