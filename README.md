@@ -15,3 +15,53 @@
 1. 类上加@Validated，spring仅校验有该注解标识的类下面的方法
 2. 方法参数上加@Valid，让hibernate-validator校验
 3. 如果参数要保证不为null，方法参数上要加@NotNull
+
+### 建表语句
+
+-- gstest.employee definition
+
+CREATE TABLE `employee` (
+`id` bigint NOT NULL AUTO_INCREMENT,
+`user_id` bigint NOT NULL,
+`tenant_id` bigint NOT NULL,
+`nick_name` varchar(100) NOT NULL,
+`emp_code` varchar(512) NOT NULL,
+`is_deleted` bigint NOT NULL DEFAULT '0',
+`gmt_create` timestamp NOT NULL,
+`gmt_modified` timestamp NOT NULL,
+`create_by` bigint NOT NULL,
+`modified_by` bigint NOT NULL,
+PRIMARY KEY (`id`),
+UNIQUE KEY `employee_un` (`emp_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- gstest.org definition
+
+CREATE TABLE `org` (
+`id` bigint NOT NULL AUTO_INCREMENT,
+`name` varchar(512) NOT NULL,
+`full_name` varchar(100) DEFAULT NULL,
+`corp_id` varchar(100) NOT NULL,
+`super_admin_uid` bigint NOT NULL,
+`ext` json DEFAULT NULL,
+`gmt_create` timestamp NOT NULL,
+`gmt_modified` timestamp NOT NULL,
+`create_by` bigint NOT NULL,
+`modified_by` bigint NOT NULL,
+`is_deleted` bigint NOT NULL DEFAULT '0',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- gstest.`user` definition
+
+CREATE TABLE `user` (
+`id` bigint NOT NULL AUTO_INCREMENT,
+`gmt_create` timestamp NOT NULL,
+`gmt_modified` timestamp NOT NULL,
+`create_by` bigint NOT NULL,
+`modified_by` bigint NOT NULL,
+`name` varchar(64) NOT NULL,
+`tag` json DEFAULT NULL,
+`is_deleted` bigint DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
