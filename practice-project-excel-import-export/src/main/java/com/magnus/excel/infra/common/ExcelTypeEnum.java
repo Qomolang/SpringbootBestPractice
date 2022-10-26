@@ -1,4 +1,4 @@
-package com.magnus.excel.model;
+package com.magnus.excel.infra.common;
 
 /**
  * gaosong

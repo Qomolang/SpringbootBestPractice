@@ -1,4 +1,4 @@
-package com.magnus.excel.common;
+package com.magnus.excel.infra.common;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
