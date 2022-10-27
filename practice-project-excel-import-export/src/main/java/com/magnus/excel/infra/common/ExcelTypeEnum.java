@@ -1,11 +1,11 @@
 package com.magnus.excel.infra.common;
 
 /**
- * gaosong
+ * @author gaosong
  */
 public enum ExcelTypeEnum {
     /**
-     * 员工
+     * 员工导入
      */
     EMP,
 

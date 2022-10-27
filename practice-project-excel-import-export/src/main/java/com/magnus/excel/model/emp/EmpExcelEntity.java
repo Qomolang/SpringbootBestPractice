@@ -1,21 +1,31 @@
 package com.magnus.excel.model.emp;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.magnus.excel.model.BaseExcelEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * gaosong
+ * @author gaosong
  */
 @Data
-public class EmpExcelEntity {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class EmpExcelEntity extends BaseExcelEntity {
 
     /**
      * 组织名称
      */
-    private String tenantName;
+    @ExcelProperty(EmpHeaderConstants.MOBILE)
+    private String mobile;
 
     /**
      * 用户名称
      */
+    @ExcelProperty(EmpHeaderConstants.USER_NAME)
     private String userName;
 
 }

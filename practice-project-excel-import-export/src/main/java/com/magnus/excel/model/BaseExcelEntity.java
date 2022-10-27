@@ -1,7 +1,7 @@
 package com.magnus.excel.model;
 
 /**
- * gaosong
+ * @author gaosong
  */
 public class BaseExcelEntity {
     /**
