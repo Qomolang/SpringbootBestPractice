@@ -19,13 +19,13 @@ public class EmpExcelEntity extends BaseExcelEntity {
     /**
      * 组织名称
      */
-    @ExcelProperty(EmpHeaderConstants.MOBILE)
+    @ExcelProperty({EmpHeaderConstants.HINT_LINE, EmpHeaderConstants.MOBILE})
     private String mobile;
 
     /**
      * 用户名称
      */
-    @ExcelProperty(EmpHeaderConstants.USER_NAME)
+    @ExcelProperty({EmpHeaderConstants.HINT_LINE, EmpHeaderConstants.USER_NAME})
     private String userName;
 
 }
