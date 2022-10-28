@@ -1,4 +1,4 @@
-package com.magnus.excel.biz.filterchain;
+package com.magnus.excel.filternode;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
