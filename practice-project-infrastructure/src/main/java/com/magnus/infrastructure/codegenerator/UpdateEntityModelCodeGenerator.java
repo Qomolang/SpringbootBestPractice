@@ -1,4 +1,4 @@
-package com.magnus.infrastructure;
+package com.magnus.infrastructure.codegenerator;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Property;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import com.magnus.infrastructure.common.enums.DBTimeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 
@@ -23,6 +24,9 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import static com.magnus.infrastructure.codegenerator.CommonOps.*;
+import static com.magnus.infrastructure.codegenerator.CommonOps.sp;
+
 /**
  * mybatis plus FastAutoGenerator
  *
@@ -30,15 +34,6 @@ import java.util.function.Consumer;
  * @since 2021-07-22
  */
 public final class UpdateEntityModelCodeGenerator {
-
-    /**
-     * 斜杠
-     */
-    private static final String sp = File.separator;
-
-    private static final String srcMainJavaPath = "src" + sp + "main" + sp + "java";
-
-    private static final Gson gson = new Gson();
 
     /**
      * 数据源配置 Builder
@@ -87,11 +82,6 @@ public final class UpdateEntityModelCodeGenerator {
     public static UpdateEntityModelCodeGenerator create(String url, String username, String password) {
         return new UpdateEntityModelCodeGenerator(new DataSourceConfig.Builder(url, username, password));
     }
-
-    /**
-     * 读取控制台输入内容
-     */
-    private final Scanner scanner = new Scanner(System.in);
 
     /**
      * 全局配置
@@ -175,18 +165,12 @@ public final class UpdateEntityModelCodeGenerator {
                 .execute(this.templateEngine);
     }
 
-    /**
-     * 该生成器方法仅生成DO与Entity文件
-     *
-     * @param args
-     * @throws Exception
-     */
     public static void main(String[] args) throws Exception {
         String projectName = "practice-project";
         String basePackagePath = "com" + sp + "magnus";
 
-        String doCreateTime = "createTime";
-        String doUpdateTime = "updateTime";
+        String doCreateTime = DBTimeEnum.CreateTime.getCode();
+        String doUpdateTime = DBTimeEnum.UpdateTIme.getCode();
 
         String dBUrl = "jdbc:mysql://localhost:3306/gstest";
         String dBUserName = "root";
@@ -194,29 +178,33 @@ public final class UpdateEntityModelCodeGenerator {
 
         //表新生成的package名
         String tableName = scanner("表名");
+        String tablePrefix = scanner("去除表前缀（如忽略请直接回车）");
         String dirName = scanner("目录名");
 
         //unix下如:/home/gs/github/mybatis-practice-project
         String projectPath = System.getProperty("user.dir");
 
-
         String infrastructureModelName = projectName + "-infrastructure";
         String domainModelName = projectName + "-domain";
         String serviceModelName = projectName + "-service";
         String starterModelName = projectName + "-starter";
+        String apiModelName = projectName + "-api";
 
         String infraModelRootPath = projectPath + sp + infrastructureModelName;
         String domainModelRootPath = projectPath + sp + domainModelName;
         String serviceModelRootPath = projectPath + sp + serviceModelName;
         String starterModelRootPath = projectPath + sp + starterModelName;
+        String apiModelRootPath = projectPath + sp + apiModelName;
 
         // src/main/java/com/projectName/infrastructure
         String infraModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "infrastructure";
         String domainModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "domain";
         String serviceModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "service";
         String starterModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "controller";
+        String apiModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "api";
 
-        String tableNameInBigCamelCase = CaseUtils.toCamelCase(tableName, true, '_');
+        String tableTempName = tableName.replace(tablePrefix, "");
+        String fileBaseName = CaseUtils.toCamelCase(tableTempName, true, '_');
 
         //生成文件的路径
         String doDirRelativeModelPath = infraModelRelativePath + sp + "dao" + sp + dirName + sp + "model";
@@ -225,16 +213,11 @@ public final class UpdateEntityModelCodeGenerator {
         String domainEntityDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "model";
         String repositoryDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "repository";
         String repositoryImplDirRelativeModelPath = domainModelRelativePath + sp + dirName;
-        String converterImplDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "converter";
+        String converterDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "converter";
         String serviceDirRelativeModelPath = serviceModelRelativePath + sp + dirName;
+        String serviceConverterDirRelativeModelPath = serviceModelRelativePath + sp + dirName + sp + "converter";
         String starterDirRelativeModelPath = starterModelRelativePath + sp + "api";
-
-        //决定是否生成service层及controller层
-        Map<String, String> customFileMap = buildCustomFile(serviceModelRootPath,
-                serviceDirRelativeModelPath,
-                starterModelRootPath,
-                starterDirRelativeModelPath,
-                tableNameInBigCamelCase);
+        String requestDirRelativeModelPath = apiModelRelativePath + sp + "model" + sp + "request" + sp + dirName;
 
         UpdateEntityModelCodeGenerator.create(dBUrl, dBUserName, dBPassWord)
                 .globalConfig(builder -> builder
@@ -249,13 +232,14 @@ public final class UpdateEntityModelCodeGenerator {
                 .strategyConfig(builder -> builder
                         //设置需要生成的表名
                         .addInclude(tableName)
+                        .addTablePrefix(tablePrefix)
                         //打开模板中的 entityLombokModel 标签
                         .entityBuilder()
                         //！！！不要开启enableRemoveIsPrefix 与目前预处理部分冲突
                         //打开 entityLombokModel 标签
                         .enableLombok()
                         //打开 entityColumnConstant 标签
-                        .enableColumnConstant()
+                        //.enableColumnConstant()
                         //打开 convert 标签
                         .enableTableFieldAnnotation()
                         //给表字段添加填充
@@ -265,6 +249,11 @@ public final class UpdateEntityModelCodeGenerator {
                         .controllerBuilder()
                         //打开 restControllerStyle 标签
                         .enableRestStyle()
+                        .mapperBuilder()
+                        //开启该标签后，在xml文件中生成字段映射
+                        .enableBaseResultMap()
+                        //开启该标签后，在xml文件中生成通用查询结果列
+                        .enableBaseColumnList()
                 )
                 .injectionConfig(builder -> builder
                         //预处理
@@ -272,15 +261,17 @@ public final class UpdateEntityModelCodeGenerator {
                                         //字段名 is_deleted 替换为 deleteTag
                                 {
                                     for (TableField field : tableInfo.getFields()) {
-                                        boolean booleanType = field.getColumnType() == DbColumnType.BOOLEAN || field.getColumnType() == DbColumnType.BASE_BOOLEAN;
-                                        boolean startWithIs = field.getColumnName().startsWith("is");
-                                        if (booleanType && startWithIs) {
-                                            //逻辑删除标记单独处理
-                                            if (StringUtils.equals(field.getPropertyName(), "isDeleted")) {
-                                                field.setPropertyName("deleteTag", field.getColumnType());
-                                                continue;
-                                            }
 
+                                        //逻辑删除标记单独处理
+                                        if (StringUtils.equals(field.getPropertyName(), "isDeleted")) {
+                                            field.setPropertyName("deleteTag", field.getColumnType());
+                                            continue;
+                                        }
+
+                                        boolean booleanType = field.getColumnType() == DbColumnType.BOOLEAN || field.getColumnType() == DbColumnType.BASE_BOOLEAN;
+                                        boolean startWithIs = field.getPropertyName().startsWith("is");
+
+                                        if (booleanType && startWithIs) {
                                             String propertyName = field.getPropertyName();
                                             propertyName = StringUtils.truncate(propertyName, 2, propertyName.length());
                                             propertyName = StringUtils.uncapitalize(propertyName);
@@ -299,16 +290,17 @@ public final class UpdateEntityModelCodeGenerator {
                                 .put("domainEntityPackagePath", getPackageName(domainEntityDirRelativeModelPath))
                                 .put("repositoryPackagePath", getPackageName(repositoryDirRelativeModelPath))
                                 .put("repositoryImplPackagePath", getPackageName(repositoryImplDirRelativeModelPath))
-                                .put("converterPackagePath", getPackageName(converterImplDirRelativeModelPath))
+                                .put("converterPackagePath", getPackageName(converterDirRelativeModelPath))
                                 .put("servicePackagePath", getPackageName(serviceDirRelativeModelPath))
+                                .put("serviceConverterPackagePath", getPackageName(serviceConverterDirRelativeModelPath))
                                 .put("starterPackagePath", getPackageName(starterDirRelativeModelPath))
+                                .put("requestPackagePath", getPackageName(requestDirRelativeModelPath))
                                 .build())
                         //自定义模板 key:生成文件绝对路径 value:模板名称
                         .customFile(ImmutableMap.<String, String>builder()
-                                .put(infraModelRootPath + sp + doDirRelativeModelPath + sp + tableNameInBigCamelCase + "DO.java", "/templates" + "/do.java.ftl")
-                                .put(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + tableNameInBigCamelCase + ".java", "/templates" + "/domainEntity.java.ftl")
+                                .put(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java", "/templates" + "/do.java.ftl")
+                                .put(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + fileBaseName + ".java", "/templates" + "/domainEntity.java.ftl")
                                 //可生成optional的的文件
-                                .putAll(customFileMap)
                                 .build())
                 )
                 .templateConfig(builder -> builder
@@ -325,67 +317,4 @@ public final class UpdateEntityModelCodeGenerator {
                 })
                 .execute();
     }
-
-    /**
-     * <p>
-     * 读取控制台内容
-     * </p>
-     */
-    private static String scanner(String tip) {
-        Scanner scanner = new Scanner(System.in);
-        StringBuilder help = new StringBuilder();
-        help.append("请输入 " + tip + ":");
-        System.out.println(help.toString());
-        if (scanner.hasNext()) {
-            String ipt = scanner.next();
-            if (StringUtils.isNotBlank(ipt)) {
-                return ipt;
-            }
-        }
-        throw new MybatisPlusException("请输入正确的" + tip + "！");
-    }
-
-    /**
-     * /src/main/java/com/magnus -> com.magnus
-     *
-     * @param packagePath
-     * @return
-     */
-    private static String getPackageName(String packagePath) {
-        //去除前缀 src/main/java/
-        packagePath = StringUtils.replace(packagePath, srcMainJavaPath + sp, "");
-        //linux mac
-        String filePath;
-        if (StringUtils.equals(sp, "/")) {
-            filePath = packagePath.replaceAll("\\/", ".");
-            return filePath;
-        }
-        //windows
-        filePath = packagePath.replaceAll("\\\\", ".");
-        return filePath;
-    }
-
-    /**
-     * 选择是否生成的自定义文件
-     */
-    private static Map<String, String> buildCustomFile(String serviceModelRootPath,
-                                                       String serviceDirRelativeModelPath,
-                                                       String starterModelRootPath,
-                                                       String starterDirRelativeModelPath,
-                                                       String tableNameInBigCamelCase
-    ) {
-        Map<String, String> output = new HashMap<>();
-
-        String judge = "y";
-        if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
-            return output;
-        }
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + tableNameInBigCamelCase + "BizService.java", "/templates" + "/readService.java.ftl");
-        if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
-            return output;
-        }
-        output.put(starterModelRootPath + sp + starterDirRelativeModelPath + sp + tableNameInBigCamelCase + "Controller.java", "/templates" + "/controller.java.ftl");
-        return output;
-    }
-
 }

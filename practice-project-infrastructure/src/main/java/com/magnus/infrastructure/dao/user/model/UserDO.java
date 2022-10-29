@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author gs
- * @since 2022-09-08
+ * @since 2022-10-29
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -42,6 +42,9 @@ public class UserDO implements Serializable {
 
     @TableField("name")
     private String name;
+
+    @TableField("mobile")
+    private String mobile;
 
     @TableField("tag")
     private String tag;

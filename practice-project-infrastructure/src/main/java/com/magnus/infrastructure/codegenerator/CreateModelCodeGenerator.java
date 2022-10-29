@@ -1,4 +1,4 @@
-package com.magnus.infrastructure;
+package com.magnus.infrastructure.codegenerator;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -24,22 +24,15 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import static com.magnus.infrastructure.codegenerator.CommonOps.*;
+
 /**
  * mybatis plus FastAutoGenerator
  *
  * @author L.cm, lanjerry
  * @since 2021-07-22
  */
-public final class NewModelCodeGenerator {
-
-    /**
-     * 斜杠
-     */
-    private static final String sp = File.separator;
-
-    private static final String srcMainJavaPath = "src" + sp + "main" + sp + "java";
-
-    private static final Gson gson = new Gson();
+public final class CreateModelCodeGenerator {
 
     /**
      * 数据源配置 Builder
@@ -76,7 +69,7 @@ public final class NewModelCodeGenerator {
      */
     private AbstractTemplateEngine templateEngine;
 
-    private NewModelCodeGenerator(DataSourceConfig.Builder dataSourceConfigBuilder) {
+    private CreateModelCodeGenerator(DataSourceConfig.Builder dataSourceConfigBuilder) {
         this.dataSourceConfigBuilder = dataSourceConfigBuilder;
         this.globalConfigBuilder = new GlobalConfig.Builder();
         this.packageConfigBuilder = new PackageConfig.Builder();
@@ -85,14 +78,9 @@ public final class NewModelCodeGenerator {
         this.templateConfigBuilder = new TemplateConfig.Builder();
     }
 
-    public static NewModelCodeGenerator create(String url, String username, String password) {
-        return new NewModelCodeGenerator(new DataSourceConfig.Builder(url, username, password));
+    public static CreateModelCodeGenerator create(String url, String username, String password) {
+        return new CreateModelCodeGenerator(new DataSourceConfig.Builder(url, username, password));
     }
-
-    /**
-     * 读取控制台输入内容
-     */
-    private final Scanner scanner = new Scanner(System.in);
 
     /**
      * 全局配置
@@ -100,7 +88,7 @@ public final class NewModelCodeGenerator {
      * @param consumer 自定义全局配置
      * @return
      */
-    public NewModelCodeGenerator globalConfig(Consumer<GlobalConfig.Builder> consumer) {
+    public CreateModelCodeGenerator globalConfig(Consumer<GlobalConfig.Builder> consumer) {
         consumer.accept(this.globalConfigBuilder);
         return this;
     }
@@ -111,7 +99,7 @@ public final class NewModelCodeGenerator {
      * @param consumer 自定义包配置
      * @return
      */
-    public NewModelCodeGenerator packageConfig(Consumer<PackageConfig.Builder> consumer) {
+    public CreateModelCodeGenerator packageConfig(Consumer<PackageConfig.Builder> consumer) {
         consumer.accept(this.packageConfigBuilder);
         return this;
     }
@@ -122,7 +110,7 @@ public final class NewModelCodeGenerator {
      * @param consumer 自定义策略配置
      * @return
      */
-    public NewModelCodeGenerator strategyConfig(Consumer<StrategyConfig.Builder> consumer) {
+    public CreateModelCodeGenerator strategyConfig(Consumer<StrategyConfig.Builder> consumer) {
         consumer.accept(this.strategyConfigBuilder);
         return this;
     }
@@ -133,7 +121,7 @@ public final class NewModelCodeGenerator {
      * @param consumer 自定义注入配置
      * @return
      */
-    public NewModelCodeGenerator injectionConfig(Consumer<InjectionConfig.Builder> consumer) {
+    public CreateModelCodeGenerator injectionConfig(Consumer<InjectionConfig.Builder> consumer) {
         consumer.accept(this.injectionConfigBuilder);
         return this;
     }
@@ -144,7 +132,7 @@ public final class NewModelCodeGenerator {
      * @param consumer 自定义模板配置
      * @return
      */
-    public NewModelCodeGenerator templateConfig(Consumer<TemplateConfig.Builder> consumer) {
+    public CreateModelCodeGenerator templateConfig(Consumer<TemplateConfig.Builder> consumer) {
         consumer.accept(this.templateConfigBuilder);
         return this;
     }
@@ -155,7 +143,7 @@ public final class NewModelCodeGenerator {
      * @param templateEngine 模板引擎
      * @return
      */
-    public NewModelCodeGenerator templateEngine(AbstractTemplateEngine templateEngine) {
+    public CreateModelCodeGenerator templateEngine(AbstractTemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
         return this;
     }
@@ -231,7 +219,7 @@ public final class NewModelCodeGenerator {
         String requestDirRelativeModelPath = apiModelRelativePath + sp + "model" + sp + "request" + sp + dirName;
 
         //决定是否生成service层及controller层
-        Map<String, String> customFileMap = buildCustomFile(serviceModelRootPath,
+        Map<String, String> customFileMap = CommonOps.buildCustomHierarchy(serviceModelRootPath,
                 serviceDirRelativeModelPath,
                 serviceConverterDirRelativeModelPath,
                 starterModelRootPath,
@@ -240,7 +228,7 @@ public final class NewModelCodeGenerator {
                 requestDirRelativeModelPath,
                 fileBaseName);
 
-        NewModelCodeGenerator.create(dBUrl, dBUserName, dBPassWord)
+        CreateModelCodeGenerator.create(dBUrl, dBUserName, dBPassWord)
                 .globalConfig(builder -> builder
                         .author("gs")
                         // 覆盖已生成文件
@@ -344,76 +332,4 @@ public final class NewModelCodeGenerator {
                 })
                 .execute();
     }
-
-    /**
-     * <p>
-     * 读取控制台内容
-     * </p>
-     */
-    private static String scanner(String tip) {
-        Scanner scanner = new Scanner(System.in);
-        StringBuilder help = new StringBuilder();
-        help.append("请输入 " + tip + ":");
-        System.out.println(help.toString());
-        if (scanner.hasNext()) {
-            String ipt = scanner.next();
-            if (StringUtils.isNotBlank(ipt)) {
-                return ipt;
-            }
-        }
-        throw new MybatisPlusException("请输入正确的" + tip + "！");
-    }
-
-    /**
-     * /src/main/java/com/magnus -> com.magnus
-     *
-     * @param packagePath
-     * @return
-     */
-    private static String getPackageName(String packagePath) {
-        //去除前缀 src/main/java/
-        packagePath = StringUtils.replace(packagePath, srcMainJavaPath + sp, "");
-        //linux mac
-        String filePath;
-        if (StringUtils.equals(sp, "/")) {
-            filePath = packagePath.replaceAll("\\/", ".");
-            return filePath;
-        }
-        //windows
-        filePath = packagePath.replaceAll("\\\\", ".");
-        return filePath;
-    }
-
-    /**
-     * 选择是否生成的自定义文件
-     */
-    private static Map<String, String> buildCustomFile(String serviceModelRootPath,
-                                                       String serviceDirRelativeModelPath,
-                                                       String serviceConverterDirRelativeModelPath,
-                                                       String starterModelRootPath,
-                                                       String starterDirRelativeModelPath,
-                                                       String apiModelRootPath,
-                                                       String apiDirRelativeModelPath,
-                                                       String fileBaseName
-    ) {
-        Map<String, String> output = new HashMap<>();
-
-        String judge = "y";
-        if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
-            return output;
-        }
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "ReadService.java", "/templates" + "/readService.java.ftl");
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "WriteService.java", "/templates" + "/writeService.java.ftl");
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "BizService.java", "/templates" + "/bizService.java.ftl");
-
-        if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
-            return output;
-        }
-        output.put(starterModelRootPath + sp + starterDirRelativeModelPath + sp + fileBaseName + "Controller.java", "/templates" + "/controller.java.ftl");
-        output.put(apiModelRootPath + sp + apiDirRelativeModelPath + sp + fileBaseName + "ExampleRequest.java", "/templates" + "/request.java.ftl");
-        output.put(serviceModelRootPath + sp + serviceConverterDirRelativeModelPath + sp + fileBaseName + "ServiceConverter.java", "/templates" + "/serviceConverter.java.ftl");
-
-        return output;
-    }
-
 }

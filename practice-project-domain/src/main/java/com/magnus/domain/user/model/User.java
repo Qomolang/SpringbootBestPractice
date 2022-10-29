@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author gs
- * @since 2022-09-08
+ * @since 2022-10-29
  */
 @Data
 @Builder
@@ -32,6 +32,8 @@ public class User  {
     private Long modifiedBy;
 
     private String name;
+
+    private String mobile;
 
     private String tag;
 
