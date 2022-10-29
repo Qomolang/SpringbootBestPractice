@@ -39,7 +39,7 @@ public interface ${entity}Repository {
      *
      * @param domain
      * @return
-    */
+     */
     ${entity} create(${entity} domain);
 
     /**
@@ -47,7 +47,7 @@ public interface ${entity}Repository {
      *
      * @param domains
      * @return
-    */
+     */
     List<${entity}> createBatch(List<${entity}> domains);
 
     /**
@@ -55,7 +55,7 @@ public interface ${entity}Repository {
      *
      * @param domain
      * @return
-    */
+     */
     boolean updateById(${entity} domain);
 
     /**
@@ -63,7 +63,7 @@ public interface ${entity}Repository {
      *
      * @param domains
      * @return
-    */
+     */
     boolean updateBatchByIds(List<${entity}> domains);
 
     /**

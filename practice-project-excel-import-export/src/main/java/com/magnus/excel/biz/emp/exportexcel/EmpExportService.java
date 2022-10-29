@@ -29,7 +29,6 @@ public class EmpExportService {
      * 获取数据库中的数据
      */
     public List<Employee> getDbRecords(Long tenantId){
-
         List<Employee> employees = empTunnel.listAllByTenantId(tenantId);
         return employees;
     }

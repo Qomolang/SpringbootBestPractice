@@ -28,7 +28,7 @@ public class ${entity}WriteService {
      *
      * @param domain
      * @return
-    */
+     */
     public ${entity} create${entity}(${entity} domain){
         //todo 补充校验
          return repository.create(domain);

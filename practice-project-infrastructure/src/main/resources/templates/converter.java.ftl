@@ -16,35 +16,35 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ${entity}Converter {
     /**
-    * ${entity}: DO -> Domain
-    *
-    * @param entityDO
-    * @return
-    */
+     * ${entity}: DO -> Domain
+     *
+     * @param entityDO
+     * @return
+     */
     ${entity} to${entity}(${entity}DO entityDO);
 
     /**
-    * ${entity}: DO list-> Domain list
-    *
-    * @param entityDO
-    * @return
-    */
+     * ${entity}: DO list-> Domain list
+     *
+     * @param entityDO
+     * @return
+     */
     List<${entity}> to${entity}(List<${entity}DO> entityDO);
 
     /**
-    * ${entity}: Domain -> DO
-    *
-    * @param domain
-    * @return
-    */
+     * ${entity}: Domain -> DO
+     *
+     * @param domain
+     * @return
+     */
     ${entity}DO to${entity}DO(${entity} domain);
 
     /**
-    * ${entity}: Domain list -> DO list
-    *
-    * @param domain
-    * @return
-    */
+     * ${entity}: Domain list -> DO list
+     *
+     * @param domain
+     * @return
+     */
     List<${entity}DO> to${entity}DO(List<${entity}> domain);
 
 }
