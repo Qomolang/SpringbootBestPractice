@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public interface EmployeeRepository {
     /**
-     * 根据 ID 查找 
+     * 根据 ID 查找
      * @param id
      * @return
      */
@@ -31,8 +31,10 @@ public interface EmployeeRepository {
      */
     List<Employee> listEntityByIds(Collection<Long> ids);
 
+    List<Employee> listAllByTenantId(Long tenantId);
+
     /**
-     * 单条插入 
+     * 单条插入
      *
      * @param domain
      * @return
@@ -40,7 +42,7 @@ public interface EmployeeRepository {
     Employee create(Employee domain);
 
     /**
-     * 批量插入 
+     * 批量插入
      *
      * @param domains
      * @return
@@ -64,7 +66,7 @@ public interface EmployeeRepository {
     boolean updateBatchByIds(List<Employee> domains);
 
     /**
-     * 根据 ID 删除某个 
+     * 根据 ID 删除某个
      *
      * @param id
      * @return 删除是否成功

@@ -5,6 +5,7 @@ import com.magnus.domain.employee.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -22,11 +23,18 @@ public class EmployeeReadService {
 
     /**
      * 根据 ID 查找 
-     * @param id
-     * @return
      */
     public Employee getEmployeeById(Long id){
         //todo 补充校验
         return repository.getById(id);
     };
+
+    /**
+     *
+     */
+    public List<Employee> listAllByTenantId(Long tenantId){
+        //todo 补充校验
+        return repository.listAllByTenantId(tenantId);
+    };
+
 }

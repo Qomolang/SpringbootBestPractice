@@ -21,7 +21,7 @@ public class EmpTunnel {
     private EmployeeWriteService employeeWriteService;
 
     public List<Employee> listAllByTenantId(Long tenantId){
-        return new ArrayList<>();
+        return employeeReadService.listAllByTenantId(tenantId);
     }
 
 }

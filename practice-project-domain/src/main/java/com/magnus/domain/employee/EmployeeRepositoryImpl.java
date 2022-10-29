@@ -1,5 +1,6 @@
 package com.magnus.domain.employee;
 
+import com.google.common.base.Preconditions;
 import com.magnus.infrastructure.dao.employee.model.EmployeeDO;
 import com.magnus.domain.employee.model.Employee;
 import com.magnus.domain.employee.converter.EmployeeConverter;
@@ -17,7 +18,7 @@ import java.util.List;
 
 /**
  * <p>
- *  repository实现类
+ * repository实现类
  * get开头的方法为单个查询
  * list开头的方法为批量查询
  * </p>
@@ -49,6 +50,17 @@ public class EmployeeRepositoryImpl extends ServiceImpl<EmployeeMapper, Employee
         List<EmployeeDO> output = list(Wrappers.<EmployeeDO>lambdaQuery()
                 .in(EmployeeDO::getId, ids)
                 .eq(EmployeeDO::getDeleteTag, Boolean.FALSE)
+        );
+
+        return cv.toEmployee(output);
+    }
+
+    @Override
+    public List<Employee> listAllByTenantId(Long tenantId) {
+        Preconditions.checkNotNull(tenantId);
+
+        List<EmployeeDO> output = list(Wrappers.<EmployeeDO>lambdaQuery()
+                .eq(EmployeeDO::getTenantId, tenantId)
         );
 
         return cv.toEmployee(output);

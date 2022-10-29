@@ -56,6 +56,17 @@ public class ExampleBizService {
      * 异步导入
      */
     public void importAsync(Long tenantId, Long userId){
+        //1, 校验权限
+
+        //2. 校验是否已经正在导入，任务类型+唯一键确认
+
+        //3. 获取File Stream
+
+        //4. File Stream -> ExcelEntity
+
+        //5. ExcelEntity -> 数据库records
+
+        //6. File Stream -> URL
 
     }
 
