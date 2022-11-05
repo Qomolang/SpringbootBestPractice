@@ -1,5 +1,6 @@
 package com.magnus.domain.org;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.magnus.infrastructure.dao.org.model.OrgDO;
 import com.magnus.domain.org.model.Org;
 import com.magnus.domain.org.converter.OrgConverter;
@@ -17,7 +18,7 @@ import java.util.List;
 
 /**
  * <p>
- *  repository实现类
+ * repository实现类
  * get开头的方法为单个查询
  * list开头的方法为批量查询
  * </p>
@@ -52,6 +53,24 @@ public class OrgRepositoryImpl extends ServiceImpl<OrgMapper, OrgDO> implements 
         );
 
         return cv.toOrg(output);
+    }
+
+    @Override
+    public Page<Org> listAllInPage(Long pageNumber, Long pageSize) {
+
+        Page<OrgDO> page = new Page<>(pageNumber, pageSize);
+
+        Page<OrgDO> pageResult = this.page(page, Wrappers.<OrgDO>lambdaQuery()
+                .eq(OrgDO::getDeleteTag, Boolean.FALSE));
+
+        if (pageResult == null) {
+            return new Page();
+        }
+
+        Page<Org> output = Page.of(pageResult.getCurrent(), pageResult.getSize(), pageResult.getTotal());
+        output.setRecords(cv.toOrg(pageResult.getRecords()));
+
+        return output;
     }
 
     @Override

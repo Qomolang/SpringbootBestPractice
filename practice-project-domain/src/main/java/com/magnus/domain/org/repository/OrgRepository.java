@@ -1,5 +1,6 @@
 package com.magnus.domain.org.repository;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.magnus.domain.org.model.Org;
 
 import java.util.Collection;
@@ -30,6 +31,8 @@ public interface OrgRepository {
      * @return
      */
     List<Org> listEntityByIds(Collection<Long> ids);
+
+    Page<Org> listAllInPage(Long pageNumber, Long pageSize);
 
     /**
      * 单条插入 
