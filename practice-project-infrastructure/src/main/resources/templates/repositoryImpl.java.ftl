@@ -9,6 +9,7 @@ import ${superServiceImplClassPackage};
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -57,6 +58,24 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
         );
 
         return cv.to${entity}(output);
+    }
+    
+    @Override
+    public Page<${entity}> listAllInPage(Long pageNumber, Long pageSize) {
+
+        Page<${entity}DO> page = new Page<>(pageNumber, pageSize);
+
+        Page<${entity}DO> pageResult = this.page(page, Wrappers.<${entity}DO>lambdaQuery()
+                .eq(${entity}DO::getDeleteTag, Boolean.FALSE));
+
+        if (pageResult == null) {
+            return new Page();
+        }
+
+        Page<${entity}> output = Page.of(pageResult.getCurrent(), pageResult.getSize(), pageResult.getTotal());
+        output.setRecords(cv.to${entity}(pageResult.getRecords()));
+
+        return output;
     }
 
     @Override

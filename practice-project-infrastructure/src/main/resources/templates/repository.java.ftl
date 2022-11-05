@@ -35,6 +35,13 @@ public interface ${entity}Repository {
     List<${entity}> listEntityByIds(Collection<Long> ids);
 
     /**
+     * 分页查找 ${table.comment!} 列表
+     * @param ids
+     * @return
+     */
+    Page<${entity}> listAllInPage(Long pageNumber, Long pageSize);
+
+    /**
      * 单条插入 ${table.comment!}
      *
      * @param domain
