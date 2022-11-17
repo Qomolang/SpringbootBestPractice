@@ -65,9 +65,13 @@ public class EmpExportService {
         return byteArrayOutputStream;
     }
 
-    public void stream2File(ByteArrayOutputStream byteArrayOutputStream) {
+    /**
+     * 由文件流获得文件因子
+     */
+    public String fileStream2FilePath(ByteArrayOutputStream byteArrayOutputStream) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 
+        //todo 可上传到云端，此处为方便导出本地
         File targetFile = new File("temp.xlsx");
 
         try {
@@ -75,6 +79,8 @@ public class EmpExportService {
         } catch (IOException e) {
             throw new RuntimeException("IO异常",e);
         }
+
+        return targetFile.getAbsolutePath();
     }
 
 }
