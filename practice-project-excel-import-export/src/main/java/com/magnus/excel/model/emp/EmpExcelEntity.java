@@ -1,6 +1,7 @@
 package com.magnus.excel.model.emp;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.magnus.excel.infra.common.constants.EmpHeaderConstants;
 import com.magnus.excel.model.BaseExcelEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

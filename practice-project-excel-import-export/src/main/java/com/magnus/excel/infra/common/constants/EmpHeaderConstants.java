@@ -1,4 +1,4 @@
-package com.magnus.excel.model.emp;
+package com.magnus.excel.infra.common.constants;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
