@@ -6,6 +6,7 @@ import com.magnus.domain.employee.model.Employee;
 import com.magnus.excel.infra.common.CellStyleFactory;
 import com.magnus.excel.infra.tunnel.EmpTunnel;
 import com.magnus.excel.model.emp.EmpExcelEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * @author gaosong
  */
+@Slf4j
 @Service
 public class EmpExportService {
 

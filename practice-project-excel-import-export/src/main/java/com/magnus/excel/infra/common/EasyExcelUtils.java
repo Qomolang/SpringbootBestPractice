@@ -4,8 +4,9 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.magnus.excel.infra.HeadListener;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,29 @@ import java.util.Map;
  */
 @Slf4j
 public class EasyExcelUtils {
+
+    /**
+     * 将输入流变为可重复读流
+     *
+     * 使用过输入流之后，reset即可
+     * repeatableInputSteam.reset();
+     *
+     */
+    public static ByteArrayInputStream repeatableStream(InputStream inputStream) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        try {
+            IOUtils.copy(inputStream, byteArrayOutputStream);
+        } catch (IOException e) {
+            log.error("[EasyExcelUtils repeatableStream] io异常", e);
+            throw new RuntimeException("",e);
+        }
+
+        ByteArrayInputStream repeatableInputSteam = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+
+        return repeatableInputSteam;
+    }
 
     /**
      * 仅读表头行

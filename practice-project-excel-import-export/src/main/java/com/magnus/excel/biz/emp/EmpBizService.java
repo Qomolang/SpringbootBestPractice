@@ -11,6 +11,7 @@ import com.magnus.excel.model.emp.EmpExcelEntity;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
@@ -80,34 +81,6 @@ public class EmpBizService {
     }
 
     /**
-     * 同步导入
-     * 推荐场景：1.数据量有限且链路简单
-     */
-    public void importSync(Long tenantId, Long userId, String fileUrl) {
-        //1, 校验权限
-
-        //2. 校验是否已经正在导入，任务类型+唯一键确认
-        String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, String.valueOf(tenantId), String.valueOf(userId));
-        //todo 从redis中找到
-        boolean exportFlag = true;
-        if (exportFlag) {
-            throw new RuntimeException("正在导出中，请稍等");
-        }
-
-        //todo 打上导入标
-
-        //3. 获取File Stream
-        empImportService.getFileStream(tenantId, fileUrl);
-
-        //4. File Stream -> ExcelEntity
-        List<EmpExcelEntity> empExcelEntityList = empImportService.stream2ExcelEntity();
-
-        //5. ExcelEntity -> 数据库records
-        List<Employee> employeeList = empImportService.excelEntity2Records(empExcelEntityList);
-
-    }
-
-    /**
      * 异步导出
      * 模板异步导出没有意义，因此异步导出仅指导出数据，不用再在名称上体现
      */
@@ -154,15 +127,24 @@ public class EmpBizService {
      * 异步导入
      */
     public void importAsync(Long tenantId, Long userId, String fileUrl) {
+
         //1, 校验权限
 
         //2. 校验是否已经正在导入，任务类型+唯一键确认
+        String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, String.valueOf(tenantId), String.valueOf(userId));
+        //todo 从redis中找到
+        boolean exportFlag = true;
+        if (exportFlag) {
+            throw new RuntimeException("正在导出中，请稍等");
+        }
+
+        //todo 打上导入标
 
         //3. 获取File Stream
-        empImportService.getFileStream(tenantId, fileUrl);
+        ByteArrayInputStream inputStream = empImportService.getFileStream(tenantId, fileUrl);
 
         //4. File Stream -> ExcelEntity
-        List<EmpExcelEntity> empExcelEntityList = empImportService.stream2ExcelEntity();
+        List<EmpExcelEntity> empExcelEntityList = empImportService.stream2ExcelEntity(inputStream);
 
         //5. ExcelEntity -> 数据库records
         List<Employee> employeeList = empImportService.excelEntity2Records(empExcelEntityList);
