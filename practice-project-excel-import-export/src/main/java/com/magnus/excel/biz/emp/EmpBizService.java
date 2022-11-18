@@ -131,11 +131,11 @@ public class EmpBizService {
         //1, 校验权限
 
         //2. 校验是否已经正在导入，任务类型+唯一键确认
-        String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, String.valueOf(tenantId), String.valueOf(userId));
+        String importRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, String.valueOf(tenantId), String.valueOf(userId));
         //todo 从redis中找到
-        boolean exportFlag = true;
-        if (exportFlag) {
-            throw new RuntimeException("正在导出中，请稍等");
+        boolean importFlag = true;
+        if (importFlag) {
+            throw new RuntimeException("正在导入中，请稍等");
         }
 
         //todo 打上导入标
