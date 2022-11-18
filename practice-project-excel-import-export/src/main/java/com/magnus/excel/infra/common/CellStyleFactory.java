@@ -1,4 +1,4 @@
-package com.magnus.excel.infra.common.excelstyle;
+package com.magnus.excel.infra.common;
 
 import com.alibaba.excel.write.handler.WriteHandler;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;

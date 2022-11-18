@@ -1,17 +1,12 @@
 package com.magnus.excel.biz.emp;
 
 import com.magnus.ServiceApplication;
-import com.magnus.excel.biz.emp.exportexcel.EmpExportService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-
-import static org.junit.Assert.*;
 
 /**
  * @author gaosong
@@ -32,6 +27,6 @@ public class EmpBizServiceTest {
 
     @Test
     public void exportSync() {
-        exportSync.exportSync(1L,1L);
+        exportSync.exportTemplateSync(1L,1L);
     }
 }

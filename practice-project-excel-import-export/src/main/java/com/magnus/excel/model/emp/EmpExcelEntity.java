@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class EmpExcelEntity extends BaseExcelEntity {
 
     /**
-     * 组织名称
+     * 手机号
      */
     @ExcelProperty({EmpHeaderConstants.HINT_LINE, EmpHeaderConstants.MOBILE})
     private String mobile;

@@ -3,9 +3,9 @@ package com.magnus.excel.infra.common.enums;
 /**
  * @author gaosong
  */
-public enum ExcelTypeEnum {
+public enum ExcelSceneEnum {
     /**
-     * 员工导入
+     * 员工
      */
     EMP,
 

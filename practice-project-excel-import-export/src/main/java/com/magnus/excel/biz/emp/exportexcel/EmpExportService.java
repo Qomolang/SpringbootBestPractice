@@ -3,7 +3,7 @@ package com.magnus.excel.biz.emp.exportexcel;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.magnus.domain.employee.model.Employee;
-import com.magnus.excel.infra.common.excelstyle.CellStyleFactory;
+import com.magnus.excel.infra.common.CellStyleFactory;
 import com.magnus.excel.infra.tunnel.EmpTunnel;
 import com.magnus.excel.model.emp.EmpExcelEntity;
 import org.apache.commons.io.FileUtils;
@@ -44,7 +44,7 @@ public class EmpExportService {
     /**
      * ExcelEntity -> File Stream
      */
-    public ByteArrayOutputStream excelEntity2Stream(List<EmpExcelEntity> excelEntities){
+    public ByteArrayOutputStream excelEntity2FileStream(List<EmpExcelEntity> excelEntities){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         ExcelWriterBuilder excelWriterBuilder = EasyExcel.write(byteArrayOutputStream, EmpExcelEntity.class);
@@ -66,7 +66,7 @@ public class EmpExportService {
     }
 
     /**
-     * 由文件流获得文件因子
+     * 由文件流获得文件路径
      */
     public String fileStream2FilePath(ByteArrayOutputStream byteArrayOutputStream) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
