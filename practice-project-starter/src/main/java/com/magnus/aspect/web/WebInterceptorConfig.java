@@ -1,6 +1,6 @@
-package com.magnus.config;
+package com.magnus.aspect.web;
 
-import com.magnus.aspect.RefererInterceptor;
+import com.magnus.aspect.web.interceptor.RefererInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

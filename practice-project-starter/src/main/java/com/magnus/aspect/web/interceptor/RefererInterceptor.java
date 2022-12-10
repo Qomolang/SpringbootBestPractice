@@ -1,4 +1,4 @@
-package com.magnus.aspect;
+package com.magnus.aspect.web.interceptor;
 
 import com.google.common.net.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,8 @@ public class RefererInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        log.info("RefererInterceptor step in flag");
+
         String referer = request.getHeader(HttpHeaders.REFERER);
         log.info("RefererInterceptor referer:{}", referer);
         if (StringUtils.isNoneBlank(referer)) {
