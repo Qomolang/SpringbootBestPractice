@@ -1,5 +1,8 @@
 package com.magnus.aspect.web.filter;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
@@ -17,7 +20,9 @@ public class BaseFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
-
+        ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(filterConfig.getServletContext());
+        //通过反射找到bean
+        //ctx.getBean();
     }
 
 
