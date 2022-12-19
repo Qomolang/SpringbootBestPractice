@@ -20,8 +20,10 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
+    /**
+     * 参数校验异常兜底
+     */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    @ResponseBody
     public String exceptionHandler(MethodArgumentNotValidException e) {
         //todo 参数值到哪里找？
         String clazzName = e.getParameter().getMember().getDeclaringClass().getSimpleName();
@@ -37,8 +39,6 @@ public class ControllerExceptionHandler {
 
     /**
      * controller层异常兜底
-     *
-     * @return
      */
     @ExceptionHandler(value = Exception.class)
     public String commonExceptionHandler(RuntimeException e, HttpServletRequest request, HandlerMethod handlerMethod) {
