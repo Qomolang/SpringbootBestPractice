@@ -5,6 +5,8 @@ import com.magnus.infrastructure.exception.catchlog.CatchAndLog;
 import com.magnus.infrastructure.remote.http.DemoHttpServiceRemote;
 import com.magnus.service.demo.DemoService;
 import com.magnus.service.demo.command.DemoCommand;
+import com.magnus.service.sms.SmsService;
+import com.magnus.service.sms.enums.SmsTemplateEnum;
 import com.magnus.transaction.TransactionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,5 +66,24 @@ public class DemoController {
         transactionService.stepIn();
         return "success";
     }
+
+    @Resource
+    private SmsService smsService;
+
+    @GetMapping("/smsCode/send/test")
+    public String smsCodeSend() {
+        smsService.sendSms(SmsTemplateEnum.DATA_KNOWLEDGE_PLATFORM, "13662212175");
+        return "success";
+    }
+
+    @GetMapping("/smsCode/validate/test")
+    public String smsCodeValidate(String smsCode) {
+        smsService.validateSmsCodeAndExpire(smsCode, SmsTemplateEnum.DATA_KNOWLEDGE_PLATFORM, "13662212175", () -> {
+            System.out.println("修改成功");
+            return null;
+        });
+        return "success";
+    }
+
 
 }
