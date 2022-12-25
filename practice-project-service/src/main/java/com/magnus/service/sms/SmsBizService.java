@@ -1,7 +1,7 @@
 package com.magnus.service.sms;
 
 import com.magnus.service.sms.enums.SmsTemplateEnum;
-import com.magnus.service.sms.model.ExampleBizContext;
+import com.magnus.service.sms.model.CommonBizContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 public class SmsBizService {
 
     @Resource
-    private ExampleBizFilterChain exampleBizFilterChain;
+    private CommonBizFilterChain commonBizFilterChain;
     @Resource
     private SmsDomainService smsDomainService;
 
@@ -21,7 +21,7 @@ public class SmsBizService {
 
         SmsTemplateEnum smsTemplateEnum = SmsTemplateEnum.EXAM_PLATFORM;
 
-        exampleBizFilterChain.doCheck(ExampleBizContext.builder()
+        commonBizFilterChain.doCheck(CommonBizContext.builder()
                 .smsTemplate(smsTemplateEnum)
                 .mobile(mobile)
                 .build());

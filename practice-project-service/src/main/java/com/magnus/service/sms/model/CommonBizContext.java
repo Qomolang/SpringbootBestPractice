@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExampleBizContext {
+public class CommonBizContext {
 
     private String mobile;
 
