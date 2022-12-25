@@ -5,7 +5,8 @@ import com.magnus.infrastructure.exception.catchlog.CatchAndLog;
 import com.magnus.infrastructure.remote.http.DemoHttpServiceRemote;
 import com.magnus.service.demo.DemoService;
 import com.magnus.service.demo.command.DemoCommand;
-import com.magnus.service.sms.SmsService;
+import com.magnus.service.sms.SmsBizService;
+import com.magnus.service.sms.SmsDomainService;
 import com.magnus.service.sms.enums.SmsTemplateEnum;
 import com.magnus.transaction.TransactionService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,7 +69,14 @@ public class DemoController {
     }
 
     @Resource
-    private SmsService smsService;
+    private SmsDomainService smsService;
+    private SmsBizService smsBizService;
+
+    @GetMapping("/smsCode/send/test/withCheck")
+    public String smsCodeSendWithCheck() {
+        smsBizService.sendExamPlatformLoginSms("13662212175");
+        return "success";
+    }
 
     @GetMapping("/smsCode/send/test")
     public String smsCodeSend() {

@@ -1,6 +1,5 @@
 package com.magnus.service.sms;
 
-import com.alibaba.cola.dto.SingleResponse;
 import com.magnus.infrastructure.utils.RandomUtils;
 import com.magnus.service.sms.enums.SmsTemplateEnum;
 import com.magnus.service.sms.model.SmsDTO;
@@ -14,7 +13,6 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -22,7 +20,7 @@ import java.util.function.Supplier;
  */
 @Service
 @Slf4j
-public class SmsService {
+public class SmsDomainService {
 
     @Resource
     private RedisTemplate<String, Serializable> redisTemplate;

@@ -26,7 +26,7 @@ public class SendIntervalFilterNode {
     /**
      * 校验主体应只有两种 userId 和 mobile。当且仅当userId达到百亿级别，才会和mobile冲突，因此此处不考虑再做区分
      */
-    public Boolean checkSendInterval(String subject, SmsTemplateEnum smsTemplate) {
+    public boolean checkSendInterval(String subject, SmsTemplateEnum smsTemplate) {
         log.info("[SendIntervalFilterNode checkSendInterval] step in");
 
         String sendSmsRedisKey = SmsRedisKeyFactory.buildSendSmsLimitKey(smsTemplate, subject);
