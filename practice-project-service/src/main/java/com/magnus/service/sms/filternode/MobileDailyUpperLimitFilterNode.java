@@ -42,6 +42,7 @@ public class MobileDailyUpperLimitFilterNode {
 
     public Boolean isFatigue(int upperTimes, String key) {
         Integer currentVersion = (Integer) redisTemplate.opsForValue().get(key);
+        log.info("[MobileDailyUpperLimitFilterNode checkMobileDailyUpperLimit] upperTimes:{}，currentVersion:{}", upperTimes, currentVersion);
 
         //疲劳情况判断
         if (currentVersion != null && currentVersion >= upperTimes) {
