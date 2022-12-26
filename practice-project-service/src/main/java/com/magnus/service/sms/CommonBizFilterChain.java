@@ -34,6 +34,7 @@ public class CommonBizFilterChain {
             throw new RuntimeException("发送过快，请在上次发送后等待一分钟");
         }
 
+        //疲劳校验应该放在最后一步
         boolean mobileDailyUpperLimitFlag = mobileDailyUpperLimitFilterNode.checkMobileDailyUpperLimit(mobile, smsTemplate);
         if (!mobileDailyUpperLimitFlag) {
             throw new RuntimeException("该手机号今日发送次数达到上限，请明天再进行发送");

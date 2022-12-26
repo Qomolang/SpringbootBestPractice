@@ -26,10 +26,16 @@ public class FatigueRedis {
         long timeout = 30;
         TimeUnit timeUnit = TimeUnit.SECONDS;
 
-        return isFatigue(limitTimes, timeout, timeUnit, key);
+        Boolean isFatigue = isFatigue(limitTimes, key);
+        incrementFatigueTimes(timeout, timeUnit, key);
+
+        return isFatigue;
     }
 
-    public Boolean isFatigue(int limitTimes, long timeout, TimeUnit timeUnit, String key) {
+    /**
+     * 校验是否疲劳
+     */
+    public Boolean isFatigue(int limitTimes, String key) {
         Integer currentVersion = (Integer) redisTemplate.opsForValue().get(key);
 
         //疲劳情况判断
@@ -38,14 +44,18 @@ public class FatigueRedis {
             return true;
         }
 
+        return false;
+    }
+
+    /**
+     * 增加疲劳次数
+     */
+    public void incrementFatigueTimes(long timeout, TimeUnit timeUnit, String key) {
         Long newVersion = redisTemplate.opsForValue().increment(key);
         //increment方法不会添加过期时间，需要额外调用expire方法添加过期时间
         if (newVersion == 1) {
             redisTemplate.expire(key, timeout, timeUnit);
         }
-
-        return false;
     }
-
 
 }
