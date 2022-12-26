@@ -31,7 +31,12 @@ public class CommonBizFilterChain {
 
         boolean sendIntervalFlag = sendIntervalFilterNode.checkSendInterval(mobile, smsTemplate);
         if (!sendIntervalFlag) {
-            return false;
+            throw new RuntimeException("发送过快，请在上次发送后等待一分钟");
+        }
+
+        boolean mobileDailyUpperLimitFlag = mobileDailyUpperLimitFilterNode.checkMobileDailyUpperLimit(mobile, smsTemplate);
+        if (!mobileDailyUpperLimitFlag) {
+            throw new RuntimeException("该手机号今日发送次数达到上限，请明天再进行发送");
         }
 
         return true;

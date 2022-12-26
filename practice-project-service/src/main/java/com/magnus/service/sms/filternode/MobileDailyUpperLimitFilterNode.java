@@ -3,7 +3,6 @@ package com.magnus.service.sms.filternode;
 import com.magnus.service.sms.SmsRedisKeyFactory;
 import com.magnus.service.sms.enums.SmsTemplateEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -36,17 +35,17 @@ public class MobileDailyUpperLimitFilterNode {
 
         int upperTimes = smsTemplate.getMobileLimitTimes();
 
-        return this.isFatigue(upperTimes, redisKey);
+        return this.fatigueCheck(upperTimes, redisKey);
 
     }
 
-    public Boolean isFatigue(int upperTimes, String key) {
+    public Boolean fatigueCheck(int upperTimes, String key) {
         Integer currentVersion = (Integer) redisTemplate.opsForValue().get(key);
         log.info("[MobileDailyUpperLimitFilterNode checkMobileDailyUpperLimit] upperTimes:{}，currentVersion:{}", upperTimes, currentVersion);
 
         //疲劳情况判断
         if (currentVersion != null && currentVersion >= upperTimes) {
-            throw new RuntimeException("该手机号今日发送次数达到上限，请明天再进行发送");
+            return false;
         }
 
         Long newVersion = redisTemplate.opsForValue().increment(key);
@@ -56,7 +55,7 @@ public class MobileDailyUpperLimitFilterNode {
             redisTemplate.expire(key, timeInterval, TimeUnit.MILLISECONDS);
         }
 
-        return false;
+        return true;
     }
 
     private Long getNextDayIntervalInMilliseconds() {

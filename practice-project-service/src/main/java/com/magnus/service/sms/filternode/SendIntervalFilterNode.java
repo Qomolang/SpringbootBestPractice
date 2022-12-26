@@ -42,7 +42,7 @@ public class SendIntervalFilterNode {
 
         Date now = new Date();
         if (now.before(nextSendLimitTime)) {
-            throw new RuntimeException("发送过快，请在上次发送后等待一分钟");
+            return false;
         }
 
         return true;
