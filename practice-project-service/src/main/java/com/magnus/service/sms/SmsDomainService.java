@@ -37,7 +37,7 @@ public class SmsDomainService {
 
         //缓存中保留一份
         String sendSmsRedisKey = SmsRedisKeyFactory.buildSendSmsLimitKey(smsTemplate, subject);
-        redisTemplate.opsForValue().set(sendSmsRedisKey, smsInfo);
+        redisTemplate.opsForValue().set(sendSmsRedisKey, smsInfo, smsTemplate.getValidDurationMinutes(), TimeUnit.MINUTES);
 
         //发送给用户一份
         log.info("验证码发送成功，验证码为:{}", smsCode);

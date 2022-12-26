@@ -34,6 +34,10 @@ public class SendIntervalFilterNode {
         log.info("[SendIntervalFilterNode checkSendInterval] sendSmsRedisKey:{}", sendSmsRedisKey);
 
         SmsDTO smsDTO = (SmsDTO) redisTemplate.opsForValue().get(sendSmsRedisKey);
+        if(smsDTO == null){
+            return true;
+        }
+
         Date nextSendLimitTime = smsDTO.getNextSendLimitTime();
 
         Date now = new Date();

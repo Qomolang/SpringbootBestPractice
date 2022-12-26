@@ -13,12 +13,12 @@ public enum SmsTemplateEnum {
     /**
      * 考试平台
      */
-    EXAM_PLATFORM(SmsBizEnum.EXAM_PLATFORM, SmsSceneEnum.LOG_IN, 60 ,20),
+    EXAM_PLATFORM(SmsBizEnum.EXAM_PLATFORM, SmsSceneEnum.LOG_IN, 60 ,20,5),
 
     /**
      * 数字知识平台
      */
-    DATA_KNOWLEDGE_PLATFORM(SmsBizEnum.DATA_KNOWLEDGE_PLATFORM, SmsSceneEnum.LOG_IN, 60 ,20),
+    DATA_KNOWLEDGE_PLATFORM(SmsBizEnum.DATA_KNOWLEDGE_PLATFORM, SmsSceneEnum.LOG_IN, 60 ,20,5),
 
     ;
 
@@ -40,6 +40,9 @@ public enum SmsTemplateEnum {
      */
     private final int mobileLimitTimes;
 
-
+    /**
+     * 有效时间（分钟）
+     */
+    private final int validDurationMinutes;
 
 }

@@ -70,6 +70,7 @@ public class DemoController {
 
     @Resource
     private SmsDomainService smsService;
+    @Resource
     private SmsBizService smsBizService;
 
     @GetMapping("/smsCode/send/test/withCheck")
