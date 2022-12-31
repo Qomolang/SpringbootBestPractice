@@ -1,5 +1,6 @@
-package com.magnus.service.sms.filternode;
+package com.magnus.service.sms.filterchain.filternode;
 
+import com.magnus.infrastructure.utils.FatigueUtils;
 import com.magnus.service.sms.SmsRedisKeyFactory;
 import com.magnus.service.sms.enums.SmsTemplateEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,9 @@ import java.util.concurrent.TimeUnit;
 public class MobileDailyUpperLimitFilterNode {
 
     @Resource
+    private FatigueUtils fatigueUtils;
+
+    @Resource
     private RedisTemplate<String, Serializable> redisTemplate;
 
     public Boolean checkMobileDailyUpperLimit(String mobile, SmsTemplateEnum smsTemplate) {
@@ -40,32 +44,7 @@ public class MobileDailyUpperLimitFilterNode {
     }
 
     public Boolean fatigueCheck(int upperTimes, String key) {
-        Integer currentVersion = (Integer) redisTemplate.opsForValue().get(key);
-        log.info("[MobileDailyUpperLimitFilterNode checkMobileDailyUpperLimit] upperTimes:{}，currentVersion:{}", upperTimes, currentVersion);
-
-        //疲劳情况判断
-        if (currentVersion != null && currentVersion >= upperTimes) {
-            return false;
-        }
-
-        Long newVersion = redisTemplate.opsForValue().increment(key);
-        //increment方法不会添加过期时间，需要额外调用expire方法添加过期时间
-        if (newVersion == 1) {
-            Long timeInterval = this.getNextDayIntervalInMilliseconds();
-            redisTemplate.expire(key, timeInterval, TimeUnit.MILLISECONDS);
-        }
-
-        return true;
-    }
-
-    private Long getNextDayIntervalInMilliseconds() {
-        Date now = new Date();
-
-        //算到下一天 2022/02/02 22:22 -> 2022/02/03 00:00
-        Date nextDayMidnight = DateUtils.ceiling(now, Calendar.DATE);
-
-        Long interval = nextDayMidnight.getTime() - now.getTime();
-        return interval;
+        return fatigueUtils.fatigueCheck(upperTimes, key);
     }
 
 

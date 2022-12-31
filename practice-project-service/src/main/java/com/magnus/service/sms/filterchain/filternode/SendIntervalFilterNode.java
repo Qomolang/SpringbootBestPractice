@@ -1,4 +1,4 @@
-package com.magnus.service.sms.filternode;
+package com.magnus.service.sms.filterchain.filternode;
 
 import com.magnus.service.sms.SmsRedisKeyFactory;
 import com.magnus.service.sms.enums.SmsTemplateEnum;
