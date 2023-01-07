@@ -4,16 +4,21 @@ import com.google.common.collect.Lists;
 import com.magnus.domain.employee.model.Employee;
 import com.magnus.excel.biz.emp.exportexcel.EmpExportService;
 import com.magnus.excel.biz.emp.importexcel.EmpImportService;
+import com.magnus.excel.infra.ExcelThreadService;
+import com.magnus.excel.infra.common.constants.RedisFlagConstants;
 import com.magnus.excel.infra.common.enums.ExcelFlagEnum;
 import com.magnus.excel.infra.utils.RedisKeyFactory;
 import com.magnus.excel.infra.common.enums.ExcelActionEnum;
 import com.magnus.excel.infra.common.enums.ExcelSceneEnum;
 import com.magnus.excel.model.emp.EmpExcelEntity;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -28,7 +33,10 @@ public class EmpBizService {
     private EmpExportService empExportService;
     @Resource
     private EmpImportService empImportService;
-
+    @Resource
+    private ExcelThreadService excelThreadService;
+    @Resource
+    private RedisTemplate<String, Serializable> redisTemplate;
 
     /**
      * 同步导出模板
@@ -60,9 +68,8 @@ public class EmpBizService {
 
         //2. 校验是否已经正在导出，任务类型+唯一键确认
         String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.EXPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
-        //todo 从redis中找到
-        boolean exportFlag = true;
-        if (exportFlag) {
+        String exportingStatusFlag = (String) redisTemplate.opsForValue().get(exportRedisKey);
+        if (StringUtils.isNoneBlank(exportingStatusFlag)) {
             throw new RuntimeException("正在导出中，请稍等");
         }
 
@@ -90,15 +97,12 @@ public class EmpBizService {
 
         //2. 校验是否已经正在导出，任务类型+唯一键确认
         String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.EXPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
-        //todo 从redis中找到
-        boolean exportFlag = true;
-        if (exportFlag) {
+        String exportingStatusFlag = (String) redisTemplate.opsForValue().get(exportRedisKey);
+        if (StringUtils.isNoneBlank(exportingStatusFlag)) {
             throw new RuntimeException("正在导出中，请稍等");
         }
 
         //todo 以下步骤异步进行
-
-        //缓存中加 正在导出的flag
 
         //3. 获取数据库中的records
         List<Employee> employeeList = empExportService.getDbRecords(tenantId);
@@ -120,7 +124,7 @@ public class EmpBizService {
     /**
      * 轮询检查异步导出结果
      */
-    public void pollExportAsyncResult(Long tenantId, Long userId){
+    public void pollExportAsyncResult(Long tenantId, Long userId) {
 
     }
 
@@ -133,13 +137,19 @@ public class EmpBizService {
 
         //2. 校验是否已经正在导入，任务类型+唯一键确认
         String importRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
-        //todo 从redis中找到
-        boolean importFlag = true;
-        if (importFlag) {
-            throw new RuntimeException("正在导入中，请稍等");
+        String importingStatusFlag = (String) redisTemplate.opsForValue().get(importRedisKey);
+
+        //2.1 未通过 直接抛出异常
+        if (StringUtils.isNoneBlank(importingStatusFlag)) {
+            throw new RuntimeException("正在导出中，请稍等");
         }
 
-        //todo 打上导入标
+        //2.2 通过 打上导入标（如果发现用户已经在导入，不允许用户再次进行导入）
+        redisTemplate.opsForValue().set(importRedisKey, RedisFlagConstants.IMPORTING_STATUS_FLAG_VALUE);
+
+        //删除用户上次导入结果
+        String resultKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.RESULT, String.valueOf(tenantId), String.valueOf(userId));
+        redisTemplate.delete(resultKey);
 
         //3. 获取File Stream
         ByteArrayInputStream inputStream = empImportService.getFileStream(tenantId, fileUrl);
