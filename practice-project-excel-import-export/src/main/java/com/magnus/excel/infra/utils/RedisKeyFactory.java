@@ -1,4 +1,4 @@
-package com.magnus.excel.infra.common;
+package com.magnus.excel.infra.utils;
 
 import com.google.common.base.Preconditions;
 import com.magnus.excel.infra.common.enums.ExcelActionEnum;

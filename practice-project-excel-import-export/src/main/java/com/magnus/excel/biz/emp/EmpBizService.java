@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.magnus.domain.employee.model.Employee;
 import com.magnus.excel.biz.emp.exportexcel.EmpExportService;
 import com.magnus.excel.biz.emp.importexcel.EmpImportService;
-import com.magnus.excel.infra.common.RedisKeyFactory;
+import com.magnus.excel.infra.utils.RedisKeyFactory;
 import com.magnus.excel.infra.common.enums.ExcelActionEnum;
 import com.magnus.excel.infra.common.enums.ExcelSceneEnum;
 import com.magnus.excel.model.emp.EmpExcelEntity;

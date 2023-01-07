@@ -37,6 +37,7 @@ public class FatigueUtils {
         //增加疲劳次数
         this.incrementFatigueTimes(timeout, timeUnit, key);
 
+        return true;
     }
 
 

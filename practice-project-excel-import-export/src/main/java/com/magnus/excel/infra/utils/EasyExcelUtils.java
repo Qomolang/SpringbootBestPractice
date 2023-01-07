@@ -1,4 +1,4 @@
-package com.magnus.excel.infra.common;
+package com.magnus.excel.infra.utils;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.enums.CellExtraTypeEnum;

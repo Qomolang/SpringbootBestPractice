@@ -1,8 +1,7 @@
 package com.magnus.excel.biz.emp.importexcel;
 
-import com.alibaba.excel.EasyExcel;
 import com.magnus.domain.employee.model.Employee;
-import com.magnus.excel.infra.common.EasyExcelUtils;
+import com.magnus.excel.infra.utils.EasyExcelUtils;
 import com.magnus.excel.model.emp.EmpExcelEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

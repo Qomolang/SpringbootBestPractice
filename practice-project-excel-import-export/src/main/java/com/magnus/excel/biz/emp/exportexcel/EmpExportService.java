@@ -3,7 +3,7 @@ package com.magnus.excel.biz.emp.exportexcel;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.magnus.domain.employee.model.Employee;
-import com.magnus.excel.infra.common.CellStyleFactory;
+import com.magnus.excel.infra.utils.CellStyleFactory;
 import com.magnus.excel.infra.tunnel.EmpTunnel;
 import com.magnus.excel.model.emp.EmpExcelEntity;
 import lombok.extern.slf4j.Slf4j;
