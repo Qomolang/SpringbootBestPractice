@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.magnus.domain.employee.model.Employee;
 import com.magnus.excel.biz.emp.exportexcel.EmpExportService;
 import com.magnus.excel.biz.emp.importexcel.EmpImportService;
+import com.magnus.excel.infra.common.enums.ExcelFlagEnum;
 import com.magnus.excel.infra.utils.RedisKeyFactory;
 import com.magnus.excel.infra.common.enums.ExcelActionEnum;
 import com.magnus.excel.infra.common.enums.ExcelSceneEnum;
@@ -58,7 +59,7 @@ public class EmpBizService {
         //1, 校验权限
 
         //2. 校验是否已经正在导出，任务类型+唯一键确认
-        String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.EXPORTING, String.valueOf(tenantId), String.valueOf(userId));
+        String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.EXPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
         //todo 从redis中找到
         boolean exportFlag = true;
         if (exportFlag) {
@@ -88,7 +89,7 @@ public class EmpBizService {
         //1, 校验权限
 
         //2. 校验是否已经正在导出，任务类型+唯一键确认
-        String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.EXPORTING, String.valueOf(tenantId), String.valueOf(userId));
+        String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.EXPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
         //todo 从redis中找到
         boolean exportFlag = true;
         if (exportFlag) {
@@ -131,7 +132,7 @@ public class EmpBizService {
         //1, 校验权限
 
         //2. 校验是否已经正在导入，任务类型+唯一键确认
-        String importRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, String.valueOf(tenantId), String.valueOf(userId));
+        String importRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
         //todo 从redis中找到
         boolean importFlag = true;
         if (importFlag) {
