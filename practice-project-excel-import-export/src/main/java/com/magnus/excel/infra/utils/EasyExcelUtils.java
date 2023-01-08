@@ -1,7 +1,9 @@
 package com.magnus.excel.infra.utils;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.magnus.excel.infra.HeadListener;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -18,10 +20,9 @@ public class EasyExcelUtils {
 
     /**
      * 将输入流变为可重复读流
-     *
+     * <p>
      * 使用过输入流之后，reset即可
      * repeatableInputSteam.reset();
-     *
      */
     public static ByteArrayInputStream repeatableStream(InputStream inputStream) {
 
@@ -31,7 +32,7 @@ public class EasyExcelUtils {
             IOUtils.copy(inputStream, byteArrayOutputStream);
         } catch (IOException e) {
             log.error("[EasyExcelUtils repeatableStream] io异常", e);
-            throw new RuntimeException("",e);
+            throw new RuntimeException("", e);
         }
 
         ByteArrayInputStream repeatableInputSteam = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
@@ -63,6 +64,28 @@ public class EasyExcelUtils {
         }
 
         return headListener.getHeadList();
+    }
+
+    /**
+     * 导出
+     * 将所有数据以无格式、无表头的形式导出，且所有内容均处于第一格
+     */
+    public static ByteArrayOutputStream writeStream(List<List<Object>> dataList) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        ExcelWriter excelWriter = EasyExcel.write(outputStream)
+                //cell内容策略 居左
+                .registerWriteHandler(CellStyleFactory.buildCellStyle())
+                //行高 自动
+                .registerWriteHandler(CellStyleFactory.buildAutoHeightStyleStrategy())
+                //行宽 固定
+                .registerWriteHandler(CellStyleFactory.buildFixedWidthStyleStrategy())
+                .build();
+
+        excelWriter.write(dataList, new WriteSheet())
+                .finish();
+
+        return outputStream;
     }
 
 }

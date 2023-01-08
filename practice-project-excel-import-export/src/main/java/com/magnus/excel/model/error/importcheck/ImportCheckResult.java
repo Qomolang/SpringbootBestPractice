@@ -1,4 +1,4 @@
-package com.magnus.excel.model;
+package com.magnus.excel.model.error.importcheck;
 
 import lombok.Data;
 
@@ -12,11 +12,11 @@ public class ImportCheckResult<T> {
 
     private boolean success;
 
-    private ExcelErrorMsg errorMsg;
+    private ImportErrorMsg errorMsg;
 
     private T result;
 
-    private static <T> ImportCheckResult<T> buildSuccessResult(T t) {
+    public static <T> ImportCheckResult<T> buildSuccessResult(T t) {
 
         ImportCheckResult<T> result = new ImportCheckResult<>();
         result.setSuccess(true);
@@ -25,7 +25,7 @@ public class ImportCheckResult<T> {
         return result;
     }
 
-    private static <T> ImportCheckResult<T> buildFailureResult(ExcelErrorMsg errorMsg) {
+    public static <T> ImportCheckResult<T> buildFailureResult(ImportErrorMsg errorMsg) {
 
         ImportCheckResult<T> result = new ImportCheckResult<>();
         result.setSuccess(false);

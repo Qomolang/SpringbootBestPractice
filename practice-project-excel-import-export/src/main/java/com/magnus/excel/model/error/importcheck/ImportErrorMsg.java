@@ -1,4 +1,4 @@
-package com.magnus.excel.model;
+package com.magnus.excel.model.error.importcheck;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,23 +14,22 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExcelErrorMsg {
+public class ImportErrorMsg {
 
     /**
      * 1.表头错误等一句话错误
      * 2.异步异常
      */
-    private    String plainErrorMsg;
+    private String plainErrorMsg;
 
     private List<DataFormatErrorMsg> dataFormatErrorMsgList;
 
     @Data
     @Builder
-    public static class DataFormatErrorMsg{
+    public static class DataFormatErrorMsg {
         private Integer row;
         private Integer line;
         private String msg;
-
     }
 
 }

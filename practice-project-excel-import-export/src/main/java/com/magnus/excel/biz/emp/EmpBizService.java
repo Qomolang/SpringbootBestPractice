@@ -69,7 +69,7 @@ public class EmpBizService {
         //2. 校验是否已经正在导出，任务类型+唯一键确认
         String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.EXPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
         String exportingStatusFlag = (String) redisTemplate.opsForValue().get(exportRedisKey);
-        if (StringUtils.isNoneBlank(exportingStatusFlag)) {
+        if (StringUtils.isNotBlank(exportingStatusFlag)) {
             throw new RuntimeException("正在导出中，请稍等");
         }
 
@@ -98,7 +98,7 @@ public class EmpBizService {
         //2. 校验是否已经正在导出，任务类型+唯一键确认
         String exportRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.EXPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
         String exportingStatusFlag = (String) redisTemplate.opsForValue().get(exportRedisKey);
-        if (StringUtils.isNoneBlank(exportingStatusFlag)) {
+        if (StringUtils.isNotBlank(exportingStatusFlag)) {
             throw new RuntimeException("正在导出中，请稍等");
         }
 
@@ -140,7 +140,7 @@ public class EmpBizService {
         String importingStatusFlag = (String) redisTemplate.opsForValue().get(importRedisKey);
 
         //2.1 未通过 直接抛出异常
-        if (StringUtils.isNoneBlank(importingStatusFlag)) {
+        if (StringUtils.isNotBlank(importingStatusFlag)) {
             throw new RuntimeException("正在导出中，请稍等");
         }
 
@@ -151,14 +151,6 @@ public class EmpBizService {
         String resultKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.RESULT, String.valueOf(tenantId), String.valueOf(userId));
         redisTemplate.delete(resultKey);
 
-        //3. 获取File Stream
-        ByteArrayInputStream inputStream = empImportService.getFileStream(tenantId, fileUrl);
-
-        //4. File Stream -> ExcelEntity
-        List<EmpExcelEntity> empExcelEntityList = empImportService.stream2ExcelEntity(inputStream);
-
-        //5. ExcelEntity -> 数据库records
-        List<Employee> employeeList = empImportService.excelEntity2Records(empExcelEntityList);
 
         //6. 执行插入
 

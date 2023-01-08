@@ -1,11 +1,20 @@
 package com.magnus.excel.biz.emp.importexcel;
 
 import com.magnus.domain.employee.model.Employee;
+import com.magnus.excel.biz.ImportErrorHandlerService;
+import com.magnus.excel.biz.filterchain.EmpContext;
+import com.magnus.excel.biz.filterchain.EmpFilterChain;
+import com.magnus.excel.infra.common.enums.ErrorHandleModeEnum;
+import com.magnus.excel.infra.tunnel.EmpTunnel;
 import com.magnus.excel.infra.utils.EasyExcelUtils;
+import com.magnus.excel.model.error.ImportResult;
+import com.magnus.excel.model.error.importcheck.ImportErrorMsg;
+import com.magnus.excel.model.error.importcheck.ImportCheckResult;
 import com.magnus.excel.model.emp.EmpExcelEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.util.List;
 
@@ -15,6 +24,37 @@ import java.util.List;
 @Slf4j
 @Service
 public class EmpImportService {
+
+    @Resource
+    private EmpFilterChain empFilterChain;
+    @Resource
+    private EmpTunnel empTunnel;
+    @Resource
+    private ImportErrorHandlerService importErrorHandlerService;
+
+    public void doImportAsync(Long tenantId, String fileUrl) {
+
+        //1. 获取File Stream
+        ByteArrayInputStream inputStream = this.getFileStream(tenantId, fileUrl);
+
+        //2. File Stream -> ExcelEntity
+        ImportCheckResult<List<EmpExcelEntity>> importCheckResult = this.stream2ExcelEntity(inputStream);
+
+        if (importCheckResult.isSuccess()) {
+            //3.1 转换失败 进入错误处理流程
+            ImportErrorMsg importErrorMsg = importCheckResult.getErrorMsg();
+            log.info("emp import fail excelErrorMsg:{}", importErrorMsg);
+
+            ImportResult importResult = importErrorHandlerService.handleImportErrorMsg(importErrorMsg, ErrorHandleModeEnum.FRONTEND_SHOWING);
+        } else {
+            //3.2 转换成功 准备导入
+            //ExcelEntity -> 数据库records
+            List<Employee> employeeList = this.excelEntity2Records(importCheckResult.getResult());
+            //todo 执行导入
+
+        }
+
+    }
 
     /**
      * 获取文件流
@@ -40,12 +80,15 @@ public class EmpImportService {
     /**
      * 文件流 -> ExcelEntity
      */
-    public List<EmpExcelEntity> stream2ExcelEntity(ByteArrayInputStream fileStream) {
-        //1. 责任链校验
+    public ImportCheckResult<List<EmpExcelEntity>> stream2ExcelEntity(ByteArrayInputStream fileStream) {
 
-        //校验不通过，
+        //责任链校验
+        ImportCheckResult<List<EmpExcelEntity>> importCheckResult = empFilterChain.doCheck(EmpContext.builder()
+                .fileStream(fileStream)
+                .build());
 
-        return null;
+
+        return importCheckResult;
     }
 
     /**
