@@ -5,7 +5,7 @@ package com.magnus.excel.biz.emp;
  * @author gaosong
  */
 
-public class EmpExcelBizConstants {
+public class EmpExcelBizConfig {
 
     /**
      * excel表格最大条数

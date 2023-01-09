@@ -1,6 +1,6 @@
-package com.magnus.excel.model.error;
+package com.magnus.excel.infra.errorhandler.error;
 
-import com.magnus.excel.model.error.importcheck.ImportErrorMsg;
+import com.magnus.excel.infra.errorhandler.error.importcheck.ImportErrorMsg;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

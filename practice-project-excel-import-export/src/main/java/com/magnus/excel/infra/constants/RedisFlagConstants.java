@@ -1,4 +1,4 @@
-package com.magnus.excel.infra.common.constants;
+package com.magnus.excel.infra.constants;
 
 /**
  * @author gaosong

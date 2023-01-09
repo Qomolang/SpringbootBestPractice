@@ -1,4 +1,4 @@
-package com.magnus.excel.model.error.importcheck;
+package com.magnus.excel.infra.errorhandler.error.importcheck;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
