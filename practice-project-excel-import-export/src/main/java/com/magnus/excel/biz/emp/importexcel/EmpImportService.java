@@ -2,6 +2,7 @@ package com.magnus.excel.biz.emp.importexcel;
 
 import com.magnus.domain.employee.model.Employee;
 import com.magnus.excel.biz.ImportErrorHandlerService;
+import com.magnus.excel.biz.emp.converter.EmpExcelConverter;
 import com.magnus.excel.biz.filterchain.EmpContext;
 import com.magnus.excel.biz.filterchain.EmpFilterChain;
 import com.magnus.excel.infra.common.enums.ErrorHandleModeEnum;
@@ -26,6 +27,8 @@ import java.util.List;
 public class EmpImportService {
 
     @Resource
+    private EmpExcelConverter cv;
+    @Resource
     private EmpFilterChain empFilterChain;
     @Resource
     private EmpTunnel empTunnel;
@@ -40,16 +43,21 @@ public class EmpImportService {
         //2. File Stream -> ExcelEntity
         ImportCheckResult<List<EmpExcelEntity>> importCheckResult = this.stream2ExcelEntity(inputStream);
 
-        if (importCheckResult.isSuccess()) {
+        if (!importCheckResult.isSuccess()) {
             //3.1 转换失败 进入错误处理流程
             ImportErrorMsg importErrorMsg = importCheckResult.getErrorMsg();
             log.info("emp import fail excelErrorMsg:{}", importErrorMsg);
 
             ImportResult importResult = importErrorHandlerService.handleImportErrorMsg(importErrorMsg, ErrorHandleModeEnum.FRONTEND_SHOWING);
+            log.info("emp import fail importResult:{}", importResult);
+
         } else {
             //3.2 转换成功 准备导入
             //ExcelEntity -> 数据库records
             List<Employee> employeeList = this.excelEntity2Records(importCheckResult.getResult());
+            log.info("emp import success employeeList:{}", employeeList);
+
+
             //todo 执行导入
 
         }
@@ -95,7 +103,7 @@ public class EmpImportService {
      * ExcelEntity -> 数据库records
      */
     public List<Employee> excelEntity2Records(List<EmpExcelEntity> excelEntities) {
-        return null;
+        return cv.excelEntity2Records(excelEntities);
     }
 
 }

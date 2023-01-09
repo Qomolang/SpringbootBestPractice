@@ -71,11 +71,16 @@ public class ImportErrorHandlerService {
 
         List<List<Object>> output = new ArrayList<>();
 
+        //todo 有空看下类型系统
         if (CollectionUtils.isNotEmpty(dataFormatErrorMsgList)) {
-            output = dataFormatErrorMsgList.stream()
-                    .map(foo -> "第" + foo.getRow() + "行" + "第" + foo.getLine() + "列" + "单元格:" + foo.getMsg())
-                    .map(foo -> (List) Lists.newArrayList(foo))
-                    .collect(Collectors.toList());
+            for (ImportErrorMsg.DataFormatErrorMsg foo : dataFormatErrorMsgList) {
+                String errMsgStr = "第" + foo.getRow() + "行" + "第" + foo.getLine() + "列" + "单元格:" + foo.getMsg();
+                output.add(Lists.newArrayList(errMsgStr));
+            }
+//            output = dataFormatErrorMsgList.stream()
+//                    .map(foo -> "第" + foo.getRow() + "行" + "第" + foo.getLine() + "列" + "单元格:" + foo.getMsg())
+//                    .map(foo -> (List) Lists.newArrayList(foo))
+//                    .collect(Collectors.toList());
         }
         return output;
     }

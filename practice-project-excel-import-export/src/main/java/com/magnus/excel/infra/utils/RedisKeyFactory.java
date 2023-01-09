@@ -6,6 +6,7 @@ import com.magnus.excel.infra.common.enums.ExcelFlagEnum;
 import com.magnus.excel.infra.common.enums.ExcelSceneEnum;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class RedisKeyFactory {
 
@@ -14,10 +15,9 @@ public class RedisKeyFactory {
             Preconditions.checkNotNull(arg);
         }
 
-        String result = String.valueOf(Arrays.stream(prefix)
+        String result = Arrays.stream(prefix)
                 .map(Enum::name)
-                .reduce((a, b) -> a + "_" + b)
-        );
+                .collect(Collectors.joining("_"));
 
         return result;
     }
@@ -27,7 +27,7 @@ public class RedisKeyFactory {
             Preconditions.checkNotNull(arg);
         }
 
-        String result = String.valueOf(Arrays.stream(factors).reduce((a, b) -> a + "_" + b));
+        String result = String.join("_", factors);
         return result;
     }
 

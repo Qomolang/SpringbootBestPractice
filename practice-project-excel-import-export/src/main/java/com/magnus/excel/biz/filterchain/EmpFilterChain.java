@@ -1,13 +1,16 @@
 package com.magnus.excel.biz.filterchain;
 
 import com.google.common.base.Preconditions;
+import com.magnus.excel.biz.emp.EmpExcelBizConstants;
 import com.magnus.excel.biz.filterchain.filternode.ScaleFilterNode;
+import com.magnus.excel.infra.utils.EasyExcelUtils;
 import com.magnus.excel.model.error.importcheck.ImportErrorMsg;
 import com.magnus.excel.model.error.importcheck.ImportCheckResult;
 import com.magnus.excel.model.emp.EmpExcelEntity;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 /**
@@ -24,10 +27,13 @@ public class EmpFilterChain {
      */
     public ImportCheckResult<List<EmpExcelEntity>> doCheck(EmpContext empContext) {
         Preconditions.checkNotNull(empContext);
+        ByteArrayInputStream fileStream = empContext.getFileStream();
 
-        ImportCheckResult<List<EmpExcelEntity>> checkResult = new ImportCheckResult<>();
+        //文件流 -> Entity
+        List<EmpExcelEntity> empExcelEntityList = EasyExcelUtils.getExcelDataCellList(fileStream, EmpExcelEntity.class, 2);
 
-        boolean scaleFlag = scaleFilterNode.checkScale(null, 1);
+        //数量校验，最多不能超过xx条
+        boolean scaleFlag = scaleFilterNode.checkScale(empExcelEntityList, EmpExcelBizConstants.MAX_ENTITY_NUMBER);
         if (!scaleFlag) {
             ImportErrorMsg errorMsg = ImportErrorMsg.builder()
                     .plainErrorMsg("不能超过 xx 条")
@@ -35,6 +41,6 @@ public class EmpFilterChain {
             return ImportCheckResult.buildFailureResult(errorMsg);
         }
 
-        return checkResult;
+        return ImportCheckResult.buildSuccessResult(empExcelEntityList);
     }
 }

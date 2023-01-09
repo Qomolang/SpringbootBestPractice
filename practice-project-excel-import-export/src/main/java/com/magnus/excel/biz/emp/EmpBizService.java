@@ -153,6 +153,7 @@ public class EmpBizService {
 
 
         //6. 执行插入
+        empImportService.doImportAsync(tenantId, fileUrl);
 
     }
 

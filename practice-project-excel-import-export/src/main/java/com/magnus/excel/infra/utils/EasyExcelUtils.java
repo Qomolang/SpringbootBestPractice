@@ -67,6 +67,21 @@ public class EasyExcelUtils {
     }
 
     /**
+     * 单sheet 按模型读
+     * headNumber todo 测试传0 传1的场景
+     */
+    public static <T> List<T> getExcelDataCellList(InputStream inputStream, Class<T> clazz, int headNumber) {
+        return EasyExcel.read(inputStream)
+                //读取合并的单元格的信息
+                .extraRead(CellExtraTypeEnum.MERGE)
+                .head(clazz)
+                .headRowNumber(headNumber)
+                .sheet()
+                .doReadSync();
+    }
+
+
+    /**
      * 导出
      * 将所有数据以无格式、无表头的形式导出，且所有内容均处于第一格
      */

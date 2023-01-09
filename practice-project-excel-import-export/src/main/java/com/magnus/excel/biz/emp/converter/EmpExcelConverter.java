@@ -20,4 +20,6 @@ public interface EmpExcelConverter {
 
     List<EmpExcelEntity> records2ExcelEntity(List<Employee> records);
 
+    List<Employee> excelEntity2Records(List<EmpExcelEntity> records);
+
 }

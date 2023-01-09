@@ -1,6 +1,7 @@
 package com.magnus.excel.infra;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -9,6 +10,7 @@ import java.util.concurrent.*;
 /**
  * @author gaosong
  */
+@Service
 public class ExcelThreadService {
     private ExecutorService executor;
 
@@ -33,11 +35,11 @@ public class ExcelThreadService {
         }
     }
 
-    public <T> Future<T> submit(Callable<T> task){
+    public <T> Future<T> submit(Callable<T> task) {
         return executor.submit(task);
     }
 
-    public Future<?> submit(Runnable task){
+    public Future<?> submit(Runnable task) {
         return executor.submit(task);
     }
 
