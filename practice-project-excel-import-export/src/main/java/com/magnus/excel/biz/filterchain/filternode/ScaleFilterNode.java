@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 
 /**
+ * 条数校验node
  * @author gaosong
  */
 @Component
