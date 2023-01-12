@@ -73,13 +73,17 @@ public class ImportErrorHandlerService {
         //todo 有空看下类型系统
         if (CollectionUtils.isNotEmpty(dataFormatErrorMsgList)) {
             for (ImportErrorMsg.DataFormatErrorMsg foo : dataFormatErrorMsgList) {
-                String errMsgStr = "第" + foo.getRow() + "行" + "第" + foo.getLine() + "列" + "单元格:" + foo.getMsg();
+                String lineInfo = null;
+                if (foo.getLineIndex() != null) {
+                    lineInfo = "第" + foo.getLineIndex() + "列";
+                }
+                if (foo.getLineName() != null) {
+                    lineInfo = foo.getLineName() + "列";
+                }
+
+                String errMsgStr = "第" + foo.getRowIndex() + "行，" + lineInfo + "单元格:" + foo.getMsg();
                 output.add(Lists.newArrayList(errMsgStr));
             }
-//            output = dataFormatErrorMsgList.stream()
-//                    .map(foo -> "第" + foo.getRow() + "行" + "第" + foo.getLine() + "列" + "单元格:" + foo.getMsg())
-//                    .map(foo -> (List) Lists.newArrayList(foo))
-//                    .collect(Collectors.toList());
         }
         return output;
     }

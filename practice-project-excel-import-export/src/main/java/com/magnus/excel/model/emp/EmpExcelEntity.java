@@ -3,9 +3,9 @@ package com.magnus.excel.model.emp;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.magnus.excel.model.BaseExcelEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @author gaosong
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 public class EmpExcelEntity extends BaseExcelEntity {
 
     /**

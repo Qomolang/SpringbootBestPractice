@@ -27,8 +27,9 @@ public class ImportErrorMsg {
     @Data
     @Builder
     public static class DataFormatErrorMsg {
-        private Integer row;
-        private Integer line;
+        private Integer rowIndex;
+        private Integer lineIndex;
+        private String lineName;
         private String msg;
     }
 

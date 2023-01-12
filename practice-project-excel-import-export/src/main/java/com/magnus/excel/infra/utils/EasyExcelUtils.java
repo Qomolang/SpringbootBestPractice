@@ -5,7 +5,9 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.magnus.excel.infra.HeadListener;
+import com.magnus.excel.model.BaseExcelEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -70,14 +72,23 @@ public class EasyExcelUtils {
      * 单sheet 按模型读
      * headNumber todo 测试传0 传1的场景
      */
-    public static <T> List<T> getExcelDataCellList(InputStream inputStream, Class<T> clazz, int headNumber) {
-        return EasyExcel.read(inputStream)
+    public static <T extends BaseExcelEntity> List<T> getExcelDataCellList(InputStream inputStream, Class<T> clazz, int headNumber) {
+        List<T> excelEntityList = EasyExcel.read(inputStream)
                 //读取合并的单元格的信息
                 .extraRead(CellExtraTypeEnum.MERGE)
                 .head(clazz)
                 .headRowNumber(headNumber)
                 .sheet()
                 .doReadSync();
+
+        if (CollectionUtils.isNotEmpty(excelEntityList)) {
+            for (int i = 0; i < excelEntityList.size(); i++) {
+                T excelEntity = excelEntityList.get(i);
+                excelEntity.setRowNumber(i);
+            }
+        }
+
+        return excelEntityList;
     }
 
 

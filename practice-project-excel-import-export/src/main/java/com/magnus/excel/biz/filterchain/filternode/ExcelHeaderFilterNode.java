@@ -17,7 +17,11 @@ public class ExcelHeaderFilterNode {
     /**
      * 检查传入文件的表头和预设的表土是否一致
      */
-    public  Boolean checkExcelHeader(Set<String> inputExcelHeader, Set<String> defaultExcelHeader) {
-        return null;
+    public Boolean checkExcelHeader(Set<String> defaultExcelHeader, Set<String> inputExcelHeader) {
+        if (defaultExcelHeader == null) {
+            return false;
+        }
+
+        return defaultExcelHeader.equals(inputExcelHeader);
     }
 }
