@@ -1,17 +1,17 @@
-package com.magnus.excel.biz.filterchain;
+package com.magnus.excel.biz.emp;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import com.magnus.excel.biz.emp.EmpExcelBizConfig;
-import com.magnus.excel.biz.filterchain.filternode.ExcelHeaderFilterNode;
-import com.magnus.excel.biz.filterchain.filternode.ScaleFilterNode;
-import com.magnus.excel.biz.filterchain.filternode.emp.DuplicatedFilterNode;
-import com.magnus.excel.biz.filterchain.filternode.emp.FormatFilterNode;
+import com.magnus.excel.biz.filternode.ExcelHeaderFilterNode;
+import com.magnus.excel.biz.filternode.ScaleFilterNode;
+import com.magnus.excel.biz.filternode.emp.DuplicatedFilterNode;
+import com.magnus.excel.biz.filternode.emp.FormatFilterNode;
 import com.magnus.excel.infra.utils.EasyExcelUtils;
-import com.magnus.excel.infra.errorhandler.error.importcheck.ImportErrorMsg;
-import com.magnus.excel.infra.errorhandler.error.importcheck.ImportCheckResult;
-import com.magnus.excel.model.emp.EmpExcelEntity;
-import com.magnus.excel.model.emp.EmpHeaderConstants;
+import com.magnus.excel.infra.model.error.importcheck.ImportErrorMsg;
+import com.magnus.excel.infra.model.error.importcheck.ImportCheckResult;
+import com.magnus.excel.biz.model.emp.EmpContext;
+import com.magnus.excel.biz.model.emp.EmpExcelEntity;
+import com.magnus.excel.biz.model.emp.EmpHeaderConstants;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +51,7 @@ public class EmpFilterChain {
         fileStream.reset();
         Set<String> defaultHeaderSet = Sets.newHashSet(EmpHeaderConstants.MOBILE, EmpHeaderConstants.USER_NAME);
         List<Map<Integer, String>> headerLines = EasyExcelUtils.getExcelHeadCellList(fileStream, EmpExcelBizConfig.HEADER_LINE_NUMBER);
-        Set<String> inputHeaderSet = headerLines.get();
+        Set<String> inputHeaderSet = new HashSet<>(headerLines.get(EmpExcelBizConfig.HEADER_LINE_NUMBER - 1).values());
 
 
         //2.数量下限校验，excel不能为空（0）

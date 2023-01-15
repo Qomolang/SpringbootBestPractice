@@ -1,7 +1,7 @@
-package com.magnus.excel.model.emp;
+package com.magnus.excel.biz.model.emp;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.magnus.excel.model.BaseExcelEntity;
+import com.magnus.excel.biz.model.BaseExcelEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -5,7 +5,7 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.magnus.excel.infra.HeadListener;
-import com.magnus.excel.model.BaseExcelEntity;
+import com.magnus.excel.biz.model.BaseExcelEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;

@@ -1,4 +1,4 @@
-package com.magnus.excel.model;
+package com.magnus.excel.biz.model;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import lombok.AllArgsConstructor;

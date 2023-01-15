@@ -1,9 +1,9 @@
 package com.magnus.excel.infra.utils;
 
 import com.google.common.base.Preconditions;
-import com.magnus.excel.infra.enums.ExcelActionEnum;
-import com.magnus.excel.infra.enums.ExcelFlagEnum;
-import com.magnus.excel.infra.enums.ExcelSceneEnum;
+import com.magnus.excel.biz.model.ExcelActionEnum;
+import com.magnus.excel.biz.model.ExcelFlagEnum;
+import com.magnus.excel.biz.model.ExcelSceneEnum;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

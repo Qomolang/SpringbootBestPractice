@@ -1,11 +1,11 @@
-package com.magnus.excel.infra.errorhandler;
+package com.magnus.excel.infra;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.magnus.excel.infra.enums.ErrorHandleModeEnum;
+import com.magnus.excel.infra.model.enums.ErrorHandleModeEnum;
 import com.magnus.excel.infra.utils.EasyExcelUtils;
-import com.magnus.excel.infra.errorhandler.error.ImportResult;
-import com.magnus.excel.infra.errorhandler.error.importcheck.ImportErrorMsg;
+import com.magnus.excel.infra.model.error.ImportResult;
+import com.magnus.excel.infra.model.error.importcheck.ImportErrorMsg;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;

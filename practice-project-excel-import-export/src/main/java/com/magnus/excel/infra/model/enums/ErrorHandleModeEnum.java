@@ -1,4 +1,4 @@
-package com.magnus.excel.infra.enums;
+package com.magnus.excel.infra.model.enums;
 
 /**
  * @author gaosong

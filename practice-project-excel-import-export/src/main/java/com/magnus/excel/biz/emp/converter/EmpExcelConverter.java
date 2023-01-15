@@ -1,9 +1,7 @@
 package com.magnus.excel.biz.emp.converter;
 
 import com.magnus.domain.employee.model.Employee;
-import com.magnus.domain.org.model.Org;
-import com.magnus.excel.model.emp.EmpExcelEntity;
-import com.magnus.infrastructure.dao.org.model.OrgDO;
+import com.magnus.excel.biz.model.emp.EmpExcelEntity;
 import org.mapstruct.Mapper;
 
 import java.util.List;
