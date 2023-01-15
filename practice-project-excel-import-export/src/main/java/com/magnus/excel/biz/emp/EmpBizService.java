@@ -2,15 +2,18 @@ package com.magnus.excel.biz.emp;
 
 import com.google.common.collect.Lists;
 import com.magnus.domain.employee.model.Employee;
+import com.magnus.excel.api.ExcelImportResponse;
 import com.magnus.excel.biz.emp.exportexcel.EmpExportService;
 import com.magnus.excel.biz.emp.importexcel.EmpImportService;
 import com.magnus.excel.infra.ExcelThreadService;
 import com.magnus.excel.infra.constants.RedisFlagConstants;
 import com.magnus.excel.infra.enums.ExcelFlagEnum;
+import com.magnus.excel.infra.errorhandler.error.ImportResult;
 import com.magnus.excel.infra.utils.RedisKeyFactory;
 import com.magnus.excel.infra.enums.ExcelActionEnum;
 import com.magnus.excel.infra.enums.ExcelSceneEnum;
 import com.magnus.excel.model.emp.EmpExcelEntity;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -153,28 +156,51 @@ public class EmpBizService {
 
         //6. 执行插入
         empImportService.doImportAsync(tenantId, fileUrl);
-
     }
 
     /**
      * 轮询检查异步导入结果
      */
-    public void pollImportAsyncResult(Long tenantId, Long userId) {
-        //todo 看readme 调整消除缓存的位置
+    public ExcelImportResponse pollImportAsyncResult(Long tenantId, Long userId) {
+        ExcelImportResponse response = new ExcelImportResponse();
 
-        //1. 查该任务是否正在异步导出
+        //1. 查询导入标记，是否正在异步导入
+        String importStatusRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
+        String importStatusFlag = (String) redisTemplate.opsForValue().get(importStatusRedisKey);
+        //不为空，表明正在导入中
+        if (StringUtils.isNotBlank(importStatusFlag)) {
+            response.setIsImporting(true);
+            return response;
+        }
 
-        //2 false则返回“没有导出”
+        //2. 查询导入结果标记
+        String importResultRedisKey = RedisKeyFactory.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
+        ImportResult importResult = (ImportResult) redisTemplate.opsForValue().get(importResultRedisKey);
+        //导入状态为空，导入结果也为空，说明没有触发过导入
+        if (importResult == null) {
+            response.setIsImporting(false);
+            return response;
+        }
 
-        //3. 查询异步导出结果flag
+        //3. 错误处理
+        //普通错误不为空，说明导入结果失败
+        if (StringUtils.isNotBlank(importResult.getPlainErrorMsg())) {
+            response.setIsSuccess(false);
+            response.setPlainError(importResult.getPlainErrorMsg());
+        }
+        //数据格式错误不为空，也说明导入结果失败
+        if (StringUtils.isNotBlank(importResult.getErrorExcelLink())) {
+            response.setIsSuccess(false);
+            response.setErrorMsgDownloadUrl(importResult.getErrorExcelLink());
+        }
+        if (CollectionUtils.isNotEmpty(importResult.getDataFormatErrorMsgList())) {
+            response.setIsSuccess(false);
+            response.setDataFormatErrorMsgList(importResult.getDataFormatErrorMsgList());
+        }
 
-        //4. 为false 返回“正在导出”
-
-        //5. 当为true时，查询结果
-
-        //6. 销毁两个标记
-
-        //7. 返回
+        //4. 没有错误，说明成功
+        response.setIsSuccess(true);
+        return response;
     }
 
 }

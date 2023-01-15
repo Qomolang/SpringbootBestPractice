@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImportErrorMsg {
+public class ImportErrorMsg implements Serializable {
 
     /**
      * 1.表头错误等一句话错误
@@ -26,7 +27,9 @@ public class ImportErrorMsg {
 
     @Data
     @Builder
-    public static class DataFormatErrorMsg {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DataFormatErrorMsg implements Serializable {
         private Integer rowIndex;
         private Integer lineIndex;
         private String lineName;

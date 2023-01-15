@@ -41,7 +41,10 @@ public class EmpImportService {
         ByteArrayInputStream inputStream = this.getFileStream(tenantId, fileUrl);
 
         //2. File Stream -> ExcelEntity
-        ImportCheckResult<List<EmpExcelEntity>> importCheckResult = this.stream2ExcelEntity(inputStream);
+
+        ImportCheckResult<List<EmpExcelEntity>> importCheckResult = this.stream2ExcelEntity(EmpContext.builder()
+                .fileStream(inputStream)
+                .build());
 
         if (!importCheckResult.isSuccess()) {
             //3.1 转换失败 进入错误处理流程
@@ -88,13 +91,10 @@ public class EmpImportService {
     /**
      * 文件流 -> ExcelEntity
      */
-    public ImportCheckResult<List<EmpExcelEntity>> stream2ExcelEntity(ByteArrayInputStream fileStream) {
+    public ImportCheckResult<List<EmpExcelEntity>> stream2ExcelEntity(EmpContext empContext) {
 
         //责任链校验
-        ImportCheckResult<List<EmpExcelEntity>> importCheckResult = empFilterChain.doCheck(EmpContext.builder()
-                .fileStream(fileStream)
-                .build());
-
+        ImportCheckResult<List<EmpExcelEntity>> importCheckResult = empFilterChain.doCheck(empContext);
 
         return importCheckResult;
     }
