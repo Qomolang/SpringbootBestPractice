@@ -1,4 +1,4 @@
-package com.magnus.excel.biz.emp;
+package com.magnus.excel.biz.model.emp;
 
 /**
  * 业务专属常量字段

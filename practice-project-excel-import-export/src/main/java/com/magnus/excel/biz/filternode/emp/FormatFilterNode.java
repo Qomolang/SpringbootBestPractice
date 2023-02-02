@@ -5,6 +5,7 @@ import com.magnus.excel.infra.model.constants.RegexConstant;
 import com.magnus.excel.infra.model.error.importcheck.ImportErrorMsg.DataFormatErrorMsg;
 import com.magnus.excel.biz.model.emp.EmpExcelEntity;
 import com.magnus.excel.biz.model.emp.EmpHeaderConstants;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -22,15 +23,15 @@ public class FormatFilterNode {
         for (EmpExcelEntity empExcelEntity : empExcelEntityList) {
 
             //必填校验
-            DataFormatErrorMsg mustFilledInMsg = this.checkMustFilledIn(empExcelEntity);
-            if (mustFilledInMsg != null) {
-                result.add(mustFilledInMsg);
+            List<DataFormatErrorMsg> mustFilledInMsg = this.checkMustFilledIn(empExcelEntity);
+            if (CollectionUtils.isNotEmpty(mustFilledInMsg)) {
+                result.addAll(mustFilledInMsg);
             }
 
             //数据格式校验
-            DataFormatErrorMsg formatErrorMsg = this.checkContentFormat(empExcelEntity);
-            if (formatErrorMsg != null) {
-                result.add(formatErrorMsg);
+            List<DataFormatErrorMsg> formatErrorMsg = this.checkContentFormat(empExcelEntity);
+            if (CollectionUtils.isNotEmpty(formatErrorMsg)) {
+                result.addAll(formatErrorMsg);
             }
 
         }
@@ -41,50 +42,43 @@ public class FormatFilterNode {
     /**
      * 必填校验
      */
-    private DataFormatErrorMsg checkMustFilledIn(EmpExcelEntity empExcelEntity) {
-        DataFormatErrorMsg errorMsg = DataFormatErrorMsg.builder()
-                .rowIndex(empExcelEntity.getRowNumber())
-                .build();
-        boolean errorFlag = false;
+    private List<DataFormatErrorMsg> checkMustFilledIn(EmpExcelEntity empExcelEntity) {
+        List<DataFormatErrorMsg> output = new ArrayList<>();
+
         String mustFilledInMsg = "请填写必填项";
-
         if (StringUtils.isBlank(empExcelEntity.getMobile())) {
-            errorFlag = true;
-            errorMsg.setLineName(EmpHeaderConstants.MOBILE);
-            errorMsg.setMsg(mustFilledInMsg);
+            DataFormatErrorMsg errorMsg = DataFormatErrorMsg.builder()
+                    .rowIndex(empExcelEntity.getRowNumber())
+                    .lineName(EmpHeaderConstants.MOBILE)
+                    .msg(mustFilledInMsg)
+                    .build();
+            output.add(errorMsg);
         }
 
-        if (!errorFlag) {
-            return null;
-        }
-        return errorMsg;
+        return output;
 
     }
 
     /**
      * 数据格式校验
      */
-    private DataFormatErrorMsg checkContentFormat(EmpExcelEntity empExcelEntity) {
-        DataFormatErrorMsg errorMsg = DataFormatErrorMsg.builder()
-                .rowIndex(empExcelEntity.getRowNumber())
-                .build();
-        boolean errorFlag = false;
+    private List<DataFormatErrorMsg> checkContentFormat(EmpExcelEntity empExcelEntity) {
+        List<DataFormatErrorMsg> output = new ArrayList<>();
 
         //校验手机号
         String mobile = empExcelEntity.getMobile();
         if (StringUtils.isNotBlank(mobile)) {
             if (!mobile.matches(RegexConstant.NAME_REGEX)) {
-                errorFlag = true;
-                errorMsg.setLineName(EmpHeaderConstants.MOBILE);
-                errorMsg.setMsg("手机号格式错误");
+                DataFormatErrorMsg errorMsg = DataFormatErrorMsg.builder()
+                        .lineName(EmpHeaderConstants.MOBILE)
+                        .msg("手机号格式错误")
+                        .rowIndex(empExcelEntity.getRowNumber())
+                        .build();
+                output.add(errorMsg);
             }
         }
 
-        if (!errorFlag) {
-            return null;
-        }
-        return errorMsg;
-
+        return output;
     }
 
 }

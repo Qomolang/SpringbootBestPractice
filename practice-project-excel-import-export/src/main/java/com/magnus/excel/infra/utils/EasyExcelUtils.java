@@ -84,7 +84,7 @@ public class EasyExcelUtils {
         if (CollectionUtils.isNotEmpty(excelEntityList)) {
             for (int i = 0; i < excelEntityList.size(); i++) {
                 T excelEntity = excelEntityList.get(i);
-                excelEntity.setRowNumber(i);
+                excelEntity.setRowNumber(i + headNumber + 1);
             }
         }
 
