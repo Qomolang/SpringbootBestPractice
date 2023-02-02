@@ -18,7 +18,7 @@ import java.util.Map;
  * @author gaosong
  */
 @Slf4j
-public class EasyExcelUtils {
+public class EasyExcelOps {
 
     /**
      * 将输入流变为可重复读流
@@ -101,11 +101,11 @@ public class EasyExcelUtils {
 
         ExcelWriter excelWriter = EasyExcel.write(outputStream)
                 //cell内容策略 居左
-                .registerWriteHandler(CellStyleFactory.buildCellStyle())
+                .registerWriteHandler(CellStyleOps.buildCellStyle())
                 //行高 自动
-                .registerWriteHandler(CellStyleFactory.buildAutoHeightStyleStrategy())
+                .registerWriteHandler(CellStyleOps.buildAutoHeightStyleStrategy())
                 //行宽 固定
-                .registerWriteHandler(CellStyleFactory.buildFixedWidthStyleStrategy())
+                .registerWriteHandler(CellStyleOps.buildFixedWidthStyleStrategy())
                 .build();
 
         excelWriter.write(dataList, new WriteSheet())

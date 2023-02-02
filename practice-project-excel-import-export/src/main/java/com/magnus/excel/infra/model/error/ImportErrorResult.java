@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImportResult implements Serializable {
+public class ImportErrorResult implements Serializable {
 
     /**
      * 1.表头错误等一句话错误

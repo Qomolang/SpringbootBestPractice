@@ -3,7 +3,6 @@ package com.magnus.excel.biz.emp.exportexcel;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.magnus.domain.employee.model.Employee;
-import com.magnus.excel.infra.utils.CellStyleFactory;
 import com.magnus.excel.infra.tunnel.EmpTunnel;
 import com.magnus.excel.biz.model.emp.EmpExcelEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +29,7 @@ public class EmpExportService {
     /**
      * 获取数据库中的数据
      */
-    public List<Employee> getDbRecords(Long tenantId){
+    public List<Employee> getDbRecords(Long tenantId) {
         List<Employee> employees = empTunnel.listAllByTenantId(tenantId);
         return employees;
     }
@@ -38,7 +37,7 @@ public class EmpExportService {
     /**
      * 数据库records -> ExcelEntity
      */
-    public List<EmpExcelEntity> records2ExcelEntity(List<Employee> records){
+    public List<EmpExcelEntity> records2ExcelEntity(List<Employee> records) {
 
         return null;
     }
@@ -46,19 +45,21 @@ public class EmpExportService {
     /**
      * ExcelEntity -> File Stream
      */
-    public ByteArrayOutputStream excelEntity2FileStream(List<EmpExcelEntity> excelEntities){
+    public ByteArrayOutputStream excelEntity2FileStream(List<EmpExcelEntity> excelEntities) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         ExcelWriterBuilder excelWriterBuilder = EasyExcel.write(byteArrayOutputStream, EmpExcelEntity.class);
 
         //设置单元格模式
         excelWriterBuilder
-                //内容样式
-                .registerWriteHandler(CellStyleFactory.buildCellStyle())
-                //行高
-                .registerWriteHandler(CellStyleFactory.buildFixedHeightStyleStrategy())
-                //行宽
-                .registerWriteHandler(CellStyleFactory.buildFixedWidthStyleStrategy());
+//                //内容样式
+//                .registerWriteHandler(CellStyleOps.buildCellStyle())
+//                //行高
+//                .registerWriteHandler(CellStyleOps.buildFixedHeightStyleStrategy())
+//                //行宽
+//                .registerWriteHandler(CellStyleOps.buildFixedWidthStyleStrategy())
+                //todo 内容样式似乎会影响下拉框Handler 有空排查下
+                .registerWriteHandler(new EmpDropDownSheetWriteHandler());
 
         excelWriterBuilder
                 .sheet("模板")
@@ -79,7 +80,7 @@ public class EmpExportService {
         try {
             FileUtils.copyInputStreamToFile(inputStream, targetFile);
         } catch (IOException e) {
-            throw new RuntimeException("IO异常",e);
+            throw new RuntimeException("IO异常", e);
         }
 
         return targetFile.getAbsolutePath();

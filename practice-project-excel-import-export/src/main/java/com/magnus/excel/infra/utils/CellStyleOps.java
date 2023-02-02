@@ -17,7 +17,7 @@ import java.util.Iterator;
 /**
  * @author gaosong
  */
-public class CellStyleFactory {
+public class CellStyleOps {
 
     /**
      * 设置头和数据行的内容样式

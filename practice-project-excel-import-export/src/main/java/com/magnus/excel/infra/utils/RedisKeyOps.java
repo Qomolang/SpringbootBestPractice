@@ -8,7 +8,7 @@ import com.magnus.excel.biz.model.ExcelSceneEnum;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class RedisKeyFactory {
+public class RedisKeyOps {
 
     public static String buildPrefix(Enum... prefix) {
         for (Enum arg : prefix) {
@@ -40,5 +40,7 @@ public class RedisKeyFactory {
         String result = prefix + ":" + factor;
         return result;
     }
+
+
 
 }

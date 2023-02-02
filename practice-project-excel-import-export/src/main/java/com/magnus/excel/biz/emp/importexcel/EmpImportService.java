@@ -7,8 +7,8 @@ import com.magnus.excel.biz.model.emp.EmpContext;
 import com.magnus.excel.biz.emp.EmpFilterChain;
 import com.magnus.excel.infra.model.enums.ErrorHandleModeEnum;
 import com.magnus.excel.infra.tunnel.EmpTunnel;
-import com.magnus.excel.infra.utils.EasyExcelUtils;
-import com.magnus.excel.infra.model.error.ImportResult;
+import com.magnus.excel.infra.utils.EasyExcelOps;
+import com.magnus.excel.infra.model.error.ImportErrorResult;
 import com.magnus.excel.infra.model.error.importcheck.ImportErrorMsg;
 import com.magnus.excel.infra.model.error.importcheck.ImportCheckResult;
 import com.magnus.excel.biz.model.emp.EmpExcelEntity;
@@ -41,7 +41,6 @@ public class EmpImportService {
         ByteArrayInputStream inputStream = this.getFileStream(tenantId, fileUrl);
 
         //2. File Stream -> ExcelEntity
-
         ImportCheckResult<List<EmpExcelEntity>> importCheckResult = this.stream2ExcelEntity(EmpContext.builder()
                 .fileStream(inputStream)
                 .build());
@@ -51,8 +50,8 @@ public class EmpImportService {
             ImportErrorMsg importErrorMsg = importCheckResult.getErrorMsg();
             log.info("emp import fail excelErrorMsg:{}", importErrorMsg);
 
-            ImportResult importResult = importErrorHandlerService.handleImportErrorMsg(importErrorMsg, ErrorHandleModeEnum.FRONTEND_SHOWING);
-            log.info("emp import fail importResult:{}", importResult);
+            ImportErrorResult importErrorResult = importErrorHandlerService.handleImportErrorMsg(importErrorMsg, ErrorHandleModeEnum.FRONTEND_SHOWING);
+            log.info("emp import fail importResult:{}", importErrorResult);
 
         } else {
             //3.2 转换成功 准备导入
@@ -83,7 +82,7 @@ public class EmpImportService {
         }
 
         //2. 将流变为可重复读流
-        ByteArrayInputStream fileStream = EasyExcelUtils.repeatableStream(fileInputStream);
+        ByteArrayInputStream fileStream = EasyExcelOps.repeatableStream(fileInputStream);
 
         return fileStream;
     }

@@ -7,7 +7,7 @@ import com.magnus.excel.biz.filternode.ScaleFilterNode;
 import com.magnus.excel.biz.filternode.emp.DuplicatedFilterNode;
 import com.magnus.excel.biz.filternode.emp.FormatFilterNode;
 import com.magnus.excel.biz.model.emp.EmpExcelBizConfig;
-import com.magnus.excel.infra.utils.EasyExcelUtils;
+import com.magnus.excel.infra.utils.EasyExcelOps;
 import com.magnus.excel.infra.model.error.importcheck.ImportErrorMsg;
 import com.magnus.excel.infra.model.error.importcheck.ImportCheckResult;
 import com.magnus.excel.biz.model.emp.EmpContext;
@@ -46,12 +46,12 @@ public class EmpFilterChain {
         ByteArrayInputStream fileStream = empContext.getFileStream();
 
         //文件流 -> Entity
-        List<EmpExcelEntity> empExcelEntityList = EasyExcelUtils.getExcelDataCellList(fileStream, EmpExcelEntity.class, EmpExcelBizConfig.HEADER_LINE_NUMBER);
+        List<EmpExcelEntity> empExcelEntityList = EasyExcelOps.getExcelDataCellList(fileStream, EmpExcelEntity.class, EmpExcelBizConfig.HEADER_LINE_NUMBER);
 
         //1.表头校验
         fileStream.reset();
         Set<String> defaultHeaderSet = Sets.newHashSet(EmpHeaderConstants.MOBILE, EmpHeaderConstants.USER_NAME);
-        List<Map<Integer, String>> headerLines = EasyExcelUtils.getExcelHeadCellList(fileStream, EmpExcelBizConfig.HEADER_LINE_NUMBER);
+        List<Map<Integer, String>> headerLines = EasyExcelOps.getExcelHeadCellList(fileStream, EmpExcelBizConfig.HEADER_LINE_NUMBER);
         Set<String> inputHeaderSet = new HashSet<>(headerLines.get(EmpExcelBizConfig.HEADER_LINE_NUMBER - 1).values());
         excelHeaderFilterNode.checkExcelHeader(defaultHeaderSet, inputHeaderSet);
 

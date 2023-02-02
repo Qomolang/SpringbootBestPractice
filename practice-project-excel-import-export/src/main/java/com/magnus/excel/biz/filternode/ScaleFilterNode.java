@@ -11,7 +11,6 @@ import java.util.Collection;
  */
 @Component
 public class ScaleFilterNode {
-
     public <T> Boolean checkScale(Collection<T> input, long scale) {
         return CollectionUtils.size(input) < scale;
     }

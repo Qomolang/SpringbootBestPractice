@@ -3,8 +3,8 @@ package com.magnus.excel.infra;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.magnus.excel.infra.model.enums.ErrorHandleModeEnum;
-import com.magnus.excel.infra.utils.EasyExcelUtils;
-import com.magnus.excel.infra.model.error.ImportResult;
+import com.magnus.excel.infra.utils.EasyExcelOps;
+import com.magnus.excel.infra.model.error.ImportErrorResult;
 import com.magnus.excel.infra.model.error.importcheck.ImportErrorMsg;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -20,10 +20,10 @@ import java.util.List;
 @Service
 public class ImportErrorHandlerService {
 
-    public ImportResult handleImportErrorMsg(ImportErrorMsg importErrorMsg, ErrorHandleModeEnum handleMode) {
+    public ImportErrorResult handleImportErrorMsg(ImportErrorMsg importErrorMsg, ErrorHandleModeEnum handleMode) {
         Preconditions.checkNotNull(importErrorMsg);
 
-        ImportResult result = ImportResult.builder()
+        ImportErrorResult result = ImportErrorResult.builder()
                 .plainErrorMsg(importErrorMsg.getPlainErrorMsg())
                 .build();
 
@@ -57,7 +57,7 @@ public class ImportErrorHandlerService {
         List<List<Object>> errorMsg = this.convertErrorMsg(dataFormatErrorMsgList);
 
         //转换为文件流
-        ByteArrayOutputStream outputStream = EasyExcelUtils.writeStream(errorMsg);
+        ByteArrayOutputStream outputStream = EasyExcelOps.writeStream(errorMsg);
 
         return outputStream;
     }
