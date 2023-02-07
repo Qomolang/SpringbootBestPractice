@@ -1,4 +1,4 @@
-package com.magnus.infrastructure.common.enums;
+package com.magnus.infrastructure.codegenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
