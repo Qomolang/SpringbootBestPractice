@@ -4,15 +4,22 @@ package com.magnus.excel.biz.emp.exportexcel;
 import com.alibaba.excel.write.handler.SheetWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
+
+import java.util.List;
 
 /**
  * 导出时设置下拉框
  */
 @Slf4j
+@AllArgsConstructor
 public class EmpDropDownSheetWriteHandler implements SheetWriteHandler {
+
+    List<String> dropDownList;
 
     /**
      * 创建sheet页前的操作
@@ -26,6 +33,7 @@ public class EmpDropDownSheetWriteHandler implements SheetWriteHandler {
     }
 
     /**
+     * 单下拉框
      * 创建sheet保存下拉框选项，突破下拉框255的限制
      *
      * @param writeWorkbookHolder
@@ -38,7 +46,6 @@ public class EmpDropDownSheetWriteHandler implements SheetWriteHandler {
         DataValidationHelper helper = writeSheetHolder.getSheet().getDataValidationHelper();
 
         //下拉框候选值
-        String[] strings = {"北京市", "上海市", "深圳市"};
 
         //工作簿，代表一个excel的整个文档
         Workbook workbook = writeWorkbookHolder.getWorkbook();
@@ -48,19 +55,19 @@ public class EmpDropDownSheetWriteHandler implements SheetWriteHandler {
         //workbook.setSheetHidden(workbook.getSheetIndex(sheetName),true);
 
         //2.向下拉框选项列表sheet中写入选项值（为了防止下拉框的行数与隐藏域的行数相对应，将隐藏域加到结束行之后）
-        for (int i = 0, length = strings.length; i < length; i++) {
+        for (int i = 0, length = dropDownList.size(); i < length; i++) {
             proviceSheet
                     //行
                     .createRow(i)
                     //列，0即第一列
                     .createCell(0)
-                    .setCellValue(strings[i]);
+                    .setCellValue(dropDownList.get(i));
         }
 
         //3.Name代表a range of cells。以$A$1:$A$N为例，表示以A列1行到A列N行的数据
         Name rangeName = workbook.createName();
         rangeName.setNameName(sheetName);
-        rangeName.setRefersToFormula(sheetName + "!$A$1:$A$" + (strings.length));
+        rangeName.setRefersToFormula(sheetName + "!$A$1:$A$" + (dropDownList.size()));
 
         //4.设置下拉列表
         //下拉列表范围

@@ -2,6 +2,7 @@ package com.magnus.excel.biz.emp.exportexcel;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
+import com.google.common.collect.Lists;
 import com.magnus.domain.employee.model.Employee;
 import com.magnus.excel.infra.tunnel.EmpTunnel;
 import com.magnus.excel.biz.model.emp.EmpExcelEntity;
@@ -35,6 +36,13 @@ public class EmpExportService {
     }
 
     /**
+     * 获得单下拉框列表
+     */
+    public List<String> getDropDownList() {
+        return Lists.newArrayList("北京", "上海");
+    }
+
+    /**
      * 数据库records -> ExcelEntity
      */
     public List<EmpExcelEntity> records2ExcelEntity(List<Employee> records) {
@@ -59,7 +67,7 @@ public class EmpExportService {
 //                //行宽
 //                .registerWriteHandler(CellStyleOps.buildFixedWidthStyleStrategy())
                 //todo 内容样式似乎会影响下拉框Handler 有空排查下
-                .registerWriteHandler(new EmpDropDownSheetWriteHandler());
+                .registerWriteHandler(new EmpDropDownSheetWriteHandler(this.getDropDownList()));
 
         excelWriterBuilder
                 .sheet("模板")
