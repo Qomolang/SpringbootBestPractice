@@ -1,6 +1,6 @@
-package ${repositoryPackagePath};
+package com.magnus.domain.dept.repository;
 
-import ${domainEntityPackagePath}.${entity};
+import com.magnus.domain.dept.model.Dept;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.Collection;
 import java.util.List;
@@ -8,54 +8,53 @@ import java.util.Map;
 
 /**
  * <p>
- * ${table.comment!} repository类
+ *  repository类
  * get开头的方法为单个查询
  * list开头的方法为批量查询
  * </p>
  *
- * @author ${author}
- * @since ${date}
+ * @author gs
+ * @since 2023-02-25
  */
-<#if kotlin>
-interface ${entity}Repository
-<#else>
-public interface ${entity}Repository {
+public interface DeptRepository {
+    void addMemberSizeOne(Long id);
+
     /**
-     * 根据 ID 查找 ${table.comment!}
+     * 根据 ID 查找 
      * @param id
      * @return
      */
-    ${entity} getById(Long id);
+    Dept getById(Long id);
 
     /**
-     * 根据 ID 列表查找 ${table.comment!} 列表
+     * 根据 ID 列表查找  列表
      * @param ids
      * @return
      */
-    List<${entity}> listEntityByIds(Collection<Long> ids);
+    List<Dept> listEntityByIds(Collection<Long> ids);
 
     /**
-     * 分页查找 ${table.comment!} 列表
+     * 分页查找  列表
      * @param ids
      * @return
      */
-    Page<${entity}> listAllInPage(Long pageNumber, Long pageSize);
+    Page<Dept> listAllInPage(Long pageNumber, Long pageSize);
 
     /**
-     * 单条插入 ${table.comment!}
+     * 单条插入 
      *
      * @param domain
      * @return
      */
-    ${entity} create(${entity} domain);
+    Dept create(Dept domain);
 
     /**
-     * 批量插入 ${table.comment!}
+     * 批量插入 
      *
      * @param domains
      * @return
      */
-    List<${entity}> createBatch(List<${entity}> domains);
+    List<Dept> createBatch(List<Dept> domains);
 
     /**
      * 单个更新
@@ -63,7 +62,7 @@ public interface ${entity}Repository {
      * @param domain
      * @return
      */
-    boolean updateById(${entity} domain);
+    boolean updateById(Dept domain);
 
     /**
      * 批量更新
@@ -71,10 +70,10 @@ public interface ${entity}Repository {
      * @param domains
      * @return
      */
-    boolean updateBatchByIds(List<${entity}> domains);
+    boolean updateBatchByIds(List<Dept> domains);
 
     /**
-     * 根据 ID 删除某个 ${table.comment!}
+     * 根据 ID 删除某个 
      *
      * @param id
      * @return 删除是否成功
@@ -92,4 +91,3 @@ public interface ${entity}Repository {
     boolean deleteLogicallyByIds(Collection<Long> ids);
 
 }
-</#if>

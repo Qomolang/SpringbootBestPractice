@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.magnus.infrastructure.dao.dept.mapper.DeptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.magnus.infrastructure.dao.dept.model.DeptDO">
+        <id column="id" property="id"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
+        <result column="create_by" property="createBy"/>
+        <result column="modified_by" property="modifiedBy"/>
+        <result column="name" property="name"/>
+        <result column="member_size" property="memberSize"/>
+        <result column="org_id" property="orgId"/>
+        <result column="ext" property="ext"/>
+        <result column="is_deleted" property="deleteTag"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, gmt_create, gmt_modified, create_by, modified_by, name, member_size, org_id, ext, is_deleted
+    </sql>
+
+    <update id="addMemberSize" parameterType="java.lang.Long">
+        UPDATE dept SET member_size=member_size+1 WHERE id = #{id} AND is_deleted=0
+    </update>
+
+</mapper>

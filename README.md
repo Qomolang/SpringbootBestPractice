@@ -52,6 +52,22 @@ CREATE TABLE `org` (
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- gstest.dept definition
+
+CREATE TABLE `dept` (
+`id` bigint NOT NULL AUTO_INCREMENT,
+`gmt_create` timestamp NOT NULL,
+`gmt_modified` timestamp NOT NULL,
+`create_by` bigint NOT NULL,
+`modified_by` bigint NOT NULL,
+`name` varchar(512) NOT NULL,
+`member_size` bigint DEFAULT NULL,
+`org_id` varchar(100) NOT NULL,
+`ext` json DEFAULT NULL,
+`is_deleted` bigint NOT NULL DEFAULT '0',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 -- gstest.`user` definition
 
 CREATE TABLE `user` (
