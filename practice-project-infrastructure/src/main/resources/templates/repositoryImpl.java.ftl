@@ -95,11 +95,11 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     }
 
     @Override
-    public boolean updateById(Long domainId) {
+    public boolean updateById(${entity} domain) {
         ${entity}DO entityDO = cv.to${entity}DO(domain);
 
         return update(entityDO, Wrappers.<${entity}DO>lambdaQuery()
-                .eq(${entity}DO::getId, domainId)
+                .eq(${entity}DO::getId, domain.getId())
                 .eq(${entity}DO::getDeleteTag, 0)
         );
     }
