@@ -33,7 +33,6 @@ public class FormatFilterNode {
             if (CollectionUtils.isNotEmpty(formatErrorMsg)) {
                 result.addAll(formatErrorMsg);
             }
-
         }
 
         return result;

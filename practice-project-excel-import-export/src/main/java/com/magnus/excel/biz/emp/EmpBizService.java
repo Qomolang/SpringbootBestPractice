@@ -137,7 +137,7 @@ public class EmpBizService {
         //1, 校验权限
 
         //2. 校验是否已经正在导入，任务类型+唯一键确认
-        String importRedisKey = RedisKeyOps.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
+        String importRedisKey = EmpExcelCacheKeyFactory.buildImportStatusKey(tenantId, userId);
         String importingStatusFlag = (String) redisTemplate.opsForValue().get(importRedisKey);
 
         //2.1 未通过 直接抛出异常
@@ -149,12 +149,11 @@ public class EmpBizService {
         redisTemplate.opsForValue().set(importRedisKey, RedisFlagConstants.IMPORTING_STATUS_FLAG_VALUE);
 
         //删除用户上次导入结果
-        String resultKey = RedisKeyOps.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.RESULT, String.valueOf(tenantId), String.valueOf(userId));
+        String resultKey = EmpExcelCacheKeyFactory.buildImportResultKey(tenantId, userId);
         redisTemplate.delete(resultKey);
 
-
         //6. 执行插入
-        empImportService.doImportAsync(tenantId, fileUrl);
+        excelThreadService.submit(() -> empImportService.doImportAsync(tenantId, userId, fileUrl));
     }
 
     /**
@@ -164,7 +163,7 @@ public class EmpBizService {
         ExcelImportResponse response = new ExcelImportResponse();
 
         //1. 查询导入标记，是否正在异步导入
-        String importStatusRedisKey = RedisKeyOps.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
+        String importStatusRedisKey = EmpExcelCacheKeyFactory.buildImportStatusKey(tenantId, userId);
         String importStatusFlag = (String) redisTemplate.opsForValue().get(importStatusRedisKey);
         //不为空，表明正在导入中
         if (StringUtils.isNotBlank(importStatusFlag)) {
@@ -173,7 +172,7 @@ public class EmpBizService {
         }
 
         //2. 查询导入结果标记
-        String importResultRedisKey = RedisKeyOps.buildRedisKey(ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.STATUS, String.valueOf(tenantId), String.valueOf(userId));
+        String importResultRedisKey = EmpExcelCacheKeyFactory.buildImportResultKey(tenantId, userId);
         ImportErrorResult importErrorResult = (ImportErrorResult) redisTemplate.opsForValue().get(importResultRedisKey);
         //导入状态为空，导入结果也为空，说明没有触发过导入
         if (importErrorResult == null) {

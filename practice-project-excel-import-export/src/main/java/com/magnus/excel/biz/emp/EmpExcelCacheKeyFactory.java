@@ -17,4 +17,18 @@ public class EmpExcelCacheKeyFactory {
         );
     }
 
+    public static String buildImportStatusKey(Long tenantId, Long userId) {
+        return RedisKeyOps.buildRedisKey(
+                ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.STATUS,
+                String.valueOf(tenantId), String.valueOf(userId)
+        );
+    }
+
+    public static String buildImportResultKey(Long tenantId, Long userId) {
+        return RedisKeyOps.buildRedisKey(
+                ExcelSceneEnum.EMP, ExcelActionEnum.IMPORTING, ExcelFlagEnum.RESULT,
+                String.valueOf(tenantId), String.valueOf(userId)
+        );
+    }
+
 }

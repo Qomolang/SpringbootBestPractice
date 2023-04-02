@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.magnus.excel.biz.filternode.ExcelHeaderFilterNode;
 import com.magnus.excel.biz.filternode.ScaleFilterNode;
+import com.magnus.excel.biz.filternode.emp.BizPreFilterNode;
 import com.magnus.excel.biz.filternode.emp.DuplicatedFilterNode;
 import com.magnus.excel.biz.filternode.emp.FormatFilterNode;
 import com.magnus.excel.biz.model.emp.EmpExcelBizConfig;
@@ -35,6 +36,8 @@ public class EmpFilterChain {
     private DuplicatedFilterNode duplicatedFilterNode;
     @Resource
     private FormatFilterNode formatFilterNode;
+    @Resource
+    private BizPreFilterNode bizPreFilterNode;
 
     /**
      * true代表通过
@@ -72,11 +75,27 @@ public class EmpFilterChain {
             return ImportCheckResult.buildFailureResult(errorMsg);
         }
 
-        //4. 格式校验
+        //4，阻断性业务条件校验（无需可省略）
 
-        //5. 重复行校验
+        //5. 格式校验
+        List<ImportErrorMsg.DataFormatErrorMsg> formatErrorMsgList = formatFilterNode.checkFormat(empExcelEntityList);
+        if(CollectionUtils.isNotEmpty(formatErrorMsgList)){
+            errorMsgList.addAll(formatErrorMsgList);
+        }
 
-        //6. 业务前置校验
+        //6. 重复行校验
+        List<ImportErrorMsg.DataFormatErrorMsg> duplicatedErrorMsgList = duplicatedFilterNode.checkDuplicatedInfo(empExcelEntityList);
+        if(CollectionUtils.isNotEmpty(duplicatedErrorMsgList)){
+            errorMsgList.addAll(formatErrorMsgList);
+        }
+
+        //7. 值转换（无需可省略 需要的业务值由阻断性业务条件校验传来）
+
+        //8. 业务前置校验
+        bizPreFilterNode.checkBizRestriction(empExcelEntityList);
+        if(CollectionUtils.isNotEmpty(duplicatedErrorMsgList)){
+            errorMsgList.addAll(formatErrorMsgList);
+        }
 
         //错误排序
         if (CollectionUtils.isNotEmpty(errorMsgList)) {

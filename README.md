@@ -82,3 +82,17 @@ CREATE TABLE `user` (
 `is_deleted` bigint NOT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `demo` (
+`id` bigint NOT NULL AUTO_INCREMENT,
+`gmt_create` timestamp NOT NULL,
+`gmt_modified` timestamp NOT NULL,
+`create_by` bigint NOT NULL,
+`modified_by` bigint NOT NULL,
+`name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+`ext` json DEFAULT NULL,
+`enum` json DEFAULT NULL,
+`enum_int` json DEFAULT NULL,
+`is_deleted` bigint NOT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

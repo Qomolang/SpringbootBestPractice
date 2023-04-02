@@ -19,6 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 public class EmpDropDownSheetWriteHandler implements SheetWriteHandler {
 
+    /**
+     * 下拉框候选值
+     */
     List<String> dropDownList;
 
     /**
@@ -44,8 +47,6 @@ public class EmpDropDownSheetWriteHandler implements SheetWriteHandler {
 
         log.info("第{}个Sheet写入成功。", writeSheetHolder.getSheetNo());
         DataValidationHelper helper = writeSheetHolder.getSheet().getDataValidationHelper();
-
-        //下拉框候选值
 
         //工作簿，代表一个excel的整个文档
         Workbook workbook = writeWorkbookHolder.getWorkbook();
