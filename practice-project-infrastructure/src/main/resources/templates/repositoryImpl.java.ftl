@@ -95,25 +95,13 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     }
 
     @Override
-    public boolean updateById(${entity} domain) {
+    public boolean updateById(Long domainId) {
         ${entity}DO entityDO = cv.to${entity}DO(domain);
 
         return update(entityDO, Wrappers.<${entity}DO>lambdaQuery()
-                .eq(${entity}DO::getId, domain.getId())
+                .eq(${entity}DO::getId, domainId)
                 .eq(${entity}DO::getDeleteTag, 0)
         );
-    }
-
-    @Override
-    public boolean updateBatchByIds(List<${entity}> domains) {
-        //注意 批量更新不会考虑逻辑删字段
-        List<${entity}DO> entityDOs = cv.to${entity}DO(domains);
-        return updateBatchById(entityDOs);
-    }
-
-    @Override
-    public boolean deleteById(Long id) {
-        return super.removeById(id);
     }
 
     @Override
