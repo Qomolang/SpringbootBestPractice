@@ -1,0 +1,74 @@
+version: '3'
+services:
+  elasticsearch:
+    image: elasticsearch:7.14.0
+    restart: always
+    hostname: es
+    container_name: es7
+    volumes:
+      - ./es/data:/usr/share/elasticsearch/data
+      - ./es/plugins:/usr/share/elasticsearch/plugins
+      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - TZ="Asia/Shanghai"
+      - discovery.type=single-node
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    privileged: true
+
+  mysql:
+    hostname: mysql8
+    image: mysql:8
+    # network_mode: "host" # 如果需要容器使用宿主机IP(内网IP)，则可以配置此项
+    container_name: mysql8 # 指定容器名称，如果不设置此参数，则由系统自动生成
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # 设置utf8字符集
+    environment:
+      - TZ=Asia/Shanghai # 设置容器时区与宿主机保持一致
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./mysql/data:/var/lib/mysql # 映射数据库保存目录到宿主机，防止数据丢失
+      - ./mysql/my.cnf:/etc/mysql/my.cnf # 映射数据库配置文件
+      - ./mysql/conf.d:/etc/mysql/conf.d # 映射数据库配置文件
+      - ../sql:/etc/mysql/sql # 映射数据文件
+      - ..:/etc/mysql/bin # 映射数据文件
+    ports:
+      - "3388:3306"
+  logstash:
+    image: logstash:7.14.0
+    hostname: logstash
+    restart: always
+    container_name: logstash7
+    environment:
+      - TZ="Asia/Shanghai"
+    depends_on:
+      - elasticsearch
+      - mysql
+    #    links:
+    #      - es7
+    #      - mysql
+    volumes:
+      - ./logstash/config/jdbc.conf:/usr/share/logstash/config/jdbc.conf   #主配置文件
+      - ./logstash/jar/:/usr/share/logstash/jar/
+      - ./logstash/sql/:/usr/share/logstash/config/sql/
+    ports:
+      - "5044:5044"
+    privileged: true
+  redis:
+    hostname: redis
+    image: redis:5.0.0
+    container_name: redis
+    restart: always
+    command: redis-server /etc/redis.conf # 启动redis命令
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./redis/data:/data
+      - ./redis/redis.conf:/etc/redis.conf
+    ports:
+      - "6399:6379"

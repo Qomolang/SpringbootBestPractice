@@ -96,3 +96,21 @@ CREATE TABLE `demo` (
 `is_deleted` bigint NOT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+# 运行
+需要预先安装docker
+
+sh bin/start.sh # 启动docker
+sh bin/do_setup.sh # 初始化数据库, 需要等待mysql初始化完成，约10s
+如果想清理数据文件, 执行下面命令即可
+
+sh bin/cleanup.sh
+在初始化数据库完成后，启动项目，可以按照2.1的方式训练数据，也可以参照api文档从数据库拉取数据来训练
+
+# 构建镜像
+mvn clean package docker:build
+# 或者
+# docker pull xxxx:latest
+
+docker run -e PROFILES=demo -p 8000:8000 -d -v host-path-to-data-dir:/opt/data xxxx:latest
+# 暴露本机 8000 端口，启动docker
