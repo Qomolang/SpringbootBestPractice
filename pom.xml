@@ -38,6 +38,32 @@
     <!--  仅有开启dependencyManagement此标签后，该模块的子模块才能省略	-->
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>com.magnus</groupId>
+                <artifactId>practice-project-api</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.magnus</groupId>
+                <artifactId>practice-project-service</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.magnus</groupId>
+                <artifactId>practice-project-domain</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.magnus</groupId>
+                <artifactId>practice-project-advanced-demo</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>

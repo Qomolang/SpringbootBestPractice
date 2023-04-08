@@ -18,17 +18,20 @@
     </properties>
 
     <dependencies>
-
+        <!--   内部模块   -->
         <dependency>
             <groupId>com.magnus</groupId>
             <artifactId>practice-project-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.magnus</groupId>
             <artifactId>practice-project-api</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.magnus</groupId>
+            <artifactId>practice-project-advanced-demo</artifactId>
             <scope>compile</scope>
         </dependency>
 
@@ -76,12 +79,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.magnus</groupId>
-            <artifactId>practice-project-advanced-demo</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
 
         <!--        <dependency>-->
         <!--            <groupId>net.bytebuddy</groupId>-->
