@@ -99,7 +99,8 @@ public class EmpFilterChain {
 
         //错误排序
         if (CollectionUtils.isNotEmpty(errorMsgList)) {
-            errorMsgList.sort(Comparator.nullsFirst(Comparator.comparingInt(ImportErrorMsg.DataFormatErrorMsg::getRowIndex)));
+            errorMsgList.sort(Comparator.comparing(ImportErrorMsg.DataFormatErrorMsg::getRowIndex,
+                    Comparator.nullsFirst(Comparator.naturalOrder())));
         }
 
         //有错返回代错误结果，无错返回正确结果
