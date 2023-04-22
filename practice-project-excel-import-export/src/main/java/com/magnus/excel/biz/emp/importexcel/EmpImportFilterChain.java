@@ -1,4 +1,4 @@
-package com.magnus.excel.biz.emp;
+package com.magnus.excel.biz.emp.importexcel;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -26,7 +26,7 @@ import java.util.*;
  * @author gaosong
  */
 @Service
-public class EmpFilterChain {
+public class EmpImportFilterChain {
 
     @Resource
     private ScaleFilterNode scaleFilterNode;

@@ -67,7 +67,7 @@ public class EmpExportService {
 //                //行宽
 //                .registerWriteHandler(CellStyleOps.buildFixedWidthStyleStrategy())
                 //todo 内容样式似乎会影响下拉框Handler 有空排查下
-                .registerWriteHandler(new EmpDropDownSheetWriteHandler(this.getDropDownList()));
+                .registerWriteHandler(new EmpDropDownSingleSheetWriteHandler(this.getDropDownList()));
 
         excelWriterBuilder
                 .sheet("模板")

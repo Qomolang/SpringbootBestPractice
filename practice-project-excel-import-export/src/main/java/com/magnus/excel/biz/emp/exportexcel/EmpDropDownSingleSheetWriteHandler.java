@@ -5,7 +5,6 @@ import com.alibaba.excel.write.handler.SheetWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -17,7 +16,7 @@ import java.util.List;
  */
 @Slf4j
 @AllArgsConstructor
-public class EmpDropDownSheetWriteHandler implements SheetWriteHandler {
+public class EmpDropDownSingleSheetWriteHandler implements SheetWriteHandler {
 
     /**
      * 下拉框候选值
@@ -81,5 +80,6 @@ public class EmpDropDownSheetWriteHandler implements SheetWriteHandler {
         writeSheetHolder.getSheet().addValidationData(dataValidation);
 
     }
+
 }
 

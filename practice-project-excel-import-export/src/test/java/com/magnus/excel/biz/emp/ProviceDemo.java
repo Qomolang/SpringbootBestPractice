@@ -5,7 +5,8 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.WriteTable;
 import com.google.common.collect.Lists;
-import com.magnus.excel.biz.emp.exportexcel.EmpDropDownSheetWriteHandler;
+import com.magnus.excel.biz.emp.exportexcel.EmpDropDownSheetMultiWriteHandler;
+import com.magnus.excel.biz.emp.exportexcel.EmpDropDownSingleSheetWriteHandler;
 import org.junit.Test;
 
 import java.io.FileOutputStream;
@@ -24,7 +25,7 @@ public class ProviceDemo {
         OutputStream out = new FileOutputStream("demo.xlsx" + System.currentTimeMillis() + ".xlsx");
         ExcelWriter writer = EasyExcelFactory
                 .write(out)
-                .registerWriteHandler(new EmpDropDownSheetWriteHandler())
+                .registerWriteHandler(new EmpDropDownSheetMultiWriteHandler(Lists.newArrayList("abc")))
                 .build();
 
         // 动态添加表头，适用一些表头动态变化的场景

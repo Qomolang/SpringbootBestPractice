@@ -5,7 +5,6 @@ import com.magnus.excel.biz.emp.EmpExcelCacheKeyFactory;
 import com.magnus.excel.infra.ImportErrorHandlerService;
 import com.magnus.excel.biz.emp.converter.EmpExcelConverter;
 import com.magnus.excel.biz.model.emp.EmpContext;
-import com.magnus.excel.biz.emp.EmpFilterChain;
 import com.magnus.excel.infra.model.enums.ErrorHandleModeEnum;
 import com.magnus.excel.infra.tunnel.EmpTunnel;
 import com.magnus.excel.infra.utils.EasyExcelOps;
@@ -34,7 +33,7 @@ public class EmpImportService {
     @Resource
     private EmpExcelConverter cv;
     @Resource
-    private EmpFilterChain empFilterChain;
+    private EmpImportFilterChain empImportFilterChain;
     @Resource
     private EmpTunnel empTunnel;
     @Resource
@@ -127,7 +126,7 @@ public class EmpImportService {
     public ImportCheckResult<List<EmpExcelEntity>> stream2ExcelEntity(EmpContext empContext) {
 
         //责任链校验
-        ImportCheckResult<List<EmpExcelEntity>> importCheckResult = empFilterChain.doCheck(empContext);
+        ImportCheckResult<List<EmpExcelEntity>> importCheckResult = empImportFilterChain.doCheck(empContext);
 
         return importCheckResult;
     }
