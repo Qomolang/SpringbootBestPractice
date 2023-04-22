@@ -26,7 +26,7 @@
     <name>practice-project</name>
     <description>gaosong‘s springPractice</description>
     <properties>
-        <java.version>8</java.version>
+        <java.version>17</java.version>
         <spring-boot.version>2.6.7</spring-boot.version>
         <org.mapstruct.version>1.5.0.Beta1</org.mapstruct.version>
         <org.projectlombok.version>1.18.20</org.projectlombok.version>

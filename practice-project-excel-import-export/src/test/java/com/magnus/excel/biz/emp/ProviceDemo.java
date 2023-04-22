@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author gaosong
@@ -25,7 +26,7 @@ public class ProviceDemo {
         OutputStream out = new FileOutputStream("demo.xlsx" + System.currentTimeMillis() + ".xlsx");
         ExcelWriter writer = EasyExcelFactory
                 .write(out)
-                .registerWriteHandler(new EmpDropDownSheetMultiWriteHandler(Lists.newArrayList("abc")))
+                .registerWriteHandler(new EmpDropDownSheetMultiWriteHandler(Map.of(2,List.of("super","staff"))))
                 .build();
 
         // 动态添加表头，适用一些表头动态变化的场景
