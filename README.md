@@ -101,7 +101,7 @@ CREATE TABLE `demo` (
 `create_by` bigint NOT NULL,
 `modified_by` bigint NOT NULL,
 `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-`enum` varchar(32) DEFAULT NULL,
+`enum_string` varchar(32) DEFAULT NULL,
 `enum_int` smallint DEFAULT NULL,
 `is_deleted` bigint NOT NULL,
 `ext` json DEFAULT NULL,
