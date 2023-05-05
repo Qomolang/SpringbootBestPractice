@@ -1,12 +1,11 @@
 package com.magnus.infrastructure.codegenerator;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
+import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author gaosong
@@ -25,35 +24,106 @@ public class CommonOps {
      */
     private static final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * 生成dao层及domain层自定义文件
+     */
+    public static List<CustomFile> buildDaoAndDomainCustomFile(String serviceModelRootPath,
+                                                               String infraModelRootPath,
+                                                               String domainModelRootPath,
+                                                               String serviceDirRelativeModelPath,
+                                                               String doDirRelativeModelPath,
+                                                               String mapperXmlDirRelativeModelPath,
+                                                               String mapperDirRelativeModelPath,
+                                                               String domainEntityDirRelativeModelPath,
+                                                               String repositoryImplDirRelativeModelPath,
+                                                               String converterDirRelativeModelPath,
+                                                               String repositoryDirRelativeModelPath,
+                                                               String fileBaseName
+    ) {
+        List<CustomFile> output = new ArrayList<>();
+
+        output.add(new CustomFile.Builder()
+                .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "ReadService.java")
+                .templatePath("/templates" + "/readService.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java")
+                .templatePath("/templates" + "/do.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(infraModelRootPath + sp + mapperDirRelativeModelPath + sp + fileBaseName + "Mapper.java")
+                .templatePath("/templates" + "/mapper.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(infraModelRootPath + sp + mapperXmlDirRelativeModelPath + sp + fileBaseName + "Mapper.xml")
+                .templatePath("/templates" + "/mapper.xml.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + fileBaseName + ".java")
+                .templatePath("/templates" + "/domainEntity.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + repositoryDirRelativeModelPath + sp + fileBaseName + "Repository.java")
+                .templatePath("/templates" + "/repository.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + repositoryImplDirRelativeModelPath + sp + fileBaseName + "RepositoryImpl.java")
+                .templatePath("/templates" + "/repositoryImpl.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + converterDirRelativeModelPath + sp + fileBaseName + "Converter.java")
+                .templatePath("/templates" + "/converter.java.ftl")
+                .build());
+
+        return output;
+    }
 
     /**
-     * 决定是否生成service层及controller层
+     * 生成service层及controller层自定义文件
      */
-    public static Map<String, String> buildCustomHierarchy(String serviceModelRootPath,
-                                                            String serviceDirRelativeModelPath,
-                                                            String serviceConverterDirRelativeModelPath,
-                                                            String starterModelRootPath,
-                                                            String starterDirRelativeModelPath,
-                                                            String apiModelRootPath,
-                                                            String apiDirRelativeModelPath,
-                                                            String fileBaseName
+    public static List<CustomFile> buildServiceAndControllerCustomFile(String serviceModelRootPath,
+                                                                       String serviceDirRelativeModelPath,
+                                                                       String serviceConverterDirRelativeModelPath,
+                                                                       String starterModelRootPath,
+                                                                       String starterDirRelativeModelPath,
+                                                                       String apiModelRootPath,
+                                                                       String apiDirRelativeModelPath,
+                                                                       String fileBaseName
     ) {
-        Map<String, String> output = new HashMap<>();
+        List<CustomFile> output = new ArrayList<>();
 
         String judge = "y";
         if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
             return output;
         }
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "ReadService.java", "/templates" + "/readService.java.ftl");
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "WriteService.java", "/templates" + "/writeService.java.ftl");
-        output.put(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "BizService.java", "/templates" + "/bizService.java.ftl");
+        output.add(new CustomFile.Builder()
+                .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "ReadService.java")
+                .templatePath("/templates" + "/readService.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "WriteService.java")
+                .templatePath("/templates" + "/writeService.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "BizService.java")
+                .templatePath("/templates" + "/bizService.java.ftl")
+                .build());
 
         if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
             return output;
         }
-        output.put(starterModelRootPath + sp + starterDirRelativeModelPath + sp + fileBaseName + "Controller.java", "/templates" + "/controller.java.ftl");
-        output.put(apiModelRootPath + sp + apiDirRelativeModelPath + sp + fileBaseName + "ExampleRequest.java", "/templates" + "/request.java.ftl");
-        output.put(serviceModelRootPath + sp + serviceConverterDirRelativeModelPath + sp + fileBaseName + "ServiceConverter.java", "/templates" + "/serviceConverter.java.ftl");
+        output.add(new CustomFile.Builder()
+                .filePath(starterModelRootPath + sp + starterDirRelativeModelPath + sp + fileBaseName + "Controller.java")
+                .templatePath("/templates" + "/controller.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(apiModelRootPath + sp + apiDirRelativeModelPath + sp + fileBaseName + "ExampleRequest.java")
+                .templatePath("/templates" + "/request.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(serviceModelRootPath + sp + serviceConverterDirRelativeModelPath + sp + fileBaseName + "ServiceConverter.java")
+                .templatePath("/templates" + "/serviceConverter.java.ftl")
+                .build());
 
         return output;
     }

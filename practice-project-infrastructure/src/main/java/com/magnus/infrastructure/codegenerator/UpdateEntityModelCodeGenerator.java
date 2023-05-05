@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
@@ -12,10 +13,12 @@ import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Property;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -292,22 +295,22 @@ public final class UpdateEntityModelCodeGenerator {
                                 .put("requestPackagePath", getPackageName(requestDirRelativeModelPath))
                                 .build())
                         //自定义模板 key:生成文件绝对路径 value:模板名称
-                        .customFile(ImmutableMap.<String, String>builder()
-                                .put(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java", "/templates" + "/do.java.ftl")
-                                .put(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + fileBaseName + ".java", "/templates" + "/domainEntity.java.ftl")
-                                //可生成optional的的文件
+                        .customFile(Lists.newArrayList(new CustomFile.Builder()
+                                .filePath(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java")
+                                .templatePath("/templates" + "/do.java.ftl")
+                                .build(), new CustomFile.Builder()
+                                .filePath(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + fileBaseName + ".java")
+                                .templatePath("/templates" + "/domainEntity.java.ftl")
                                 .build())
-                )
-                .templateConfig(builder -> builder
-                        //禁掉默认会生成的controller
-                        .disable(TemplateType.CONTROLLER, TemplateType.CONTROLLER, TemplateType.ENTITY,
-                                TemplateType.MAPPER, TemplateType.SERVICE, TemplateType.SERVICEIMPL)
+                        ))
+                .templateConfig(builder -> builder.disable()
                 )
                 // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .templateEngine(new FreemarkerTemplateEngine() {
                     //重写该方法，以自定义输出路径
-                    protected void outputCustomFile(Map<String, String> customFile, TableInfo tableInfo, Map<String, Object> objectMap) {
-                        customFile.forEach((key, value) -> outputFile(new File(key), objectMap, value));
+                    @Override
+                    protected void outputCustomFile(List<CustomFile> customFileList, TableInfo tableInfo, Map<String, Object> objectMap) {
+                        customFileList.forEach(customFile -> outputFile(new File(customFile.getFilePath()), objectMap, customFile.getTemplatePath(), true));
                     }
                 })
                 .execute();

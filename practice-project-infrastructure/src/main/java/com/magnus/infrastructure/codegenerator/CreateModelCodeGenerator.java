@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -84,7 +86,17 @@ public final class CreateModelCodeGenerator {
      * @return
      */
     public CreateModelCodeGenerator globalConfig(Consumer<GlobalConfig.Builder> consumer) {
+        //配置项
         consumer.accept(this.globalConfigBuilder);
+
+        //个人恒定偏好项
+        globalConfigBuilder
+                .author("gs")
+                // 覆盖已生成文件
+                .fileOverride()
+                //默认生成完毕后会打开outputDir对应文件夹，关闭
+                .disableOpenDir();
+
         return this;
     }
 
@@ -107,14 +119,30 @@ public final class CreateModelCodeGenerator {
      */
     public CreateModelCodeGenerator strategyConfig(Consumer<StrategyConfig.Builder> consumer) {
         consumer.accept(this.strategyConfigBuilder);
+
+        strategyConfigBuilder.entityBuilder()
+                //！！！不要开启enableRemoveIsPrefix 与目前预处理部分冲突
+                //打开 entityLombokModel 标签
+                .enableLombok()
+                //打开 entityColumnConstant 标签
+                //.enableColumnConstant()
+                //打开 convert 标签
+                .enableTableFieldAnnotation()
+                .idType(IdType.AUTO)
+                .controllerBuilder()
+                //打开 restControllerStyle 标签
+                .enableRestStyle()
+                .mapperBuilder()
+                //开启该标签后，在xml文件中生成字段映射
+                .enableBaseResultMap()
+                //开启该标签后，在xml文件中生成通用查询结果列
+                .enableBaseColumnList();
+
         return this;
     }
 
     /**
      * 注入配置
-     *
-     * @param consumer 自定义注入配置
-     * @return
      */
     public CreateModelCodeGenerator injectionConfig(Consumer<InjectionConfig.Builder> consumer) {
         consumer.accept(this.injectionConfigBuilder);
@@ -123,20 +151,15 @@ public final class CreateModelCodeGenerator {
 
     /**
      * 模板配置
-     *
-     * @param consumer 自定义模板配置
-     * @return
      */
     public CreateModelCodeGenerator templateConfig(Consumer<TemplateConfig.Builder> consumer) {
         consumer.accept(this.templateConfigBuilder);
+
         return this;
     }
 
     /**
      * 模板引擎配置
-     *
-     * @param templateEngine 模板引擎
-     * @return
      */
     public CreateModelCodeGenerator templateEngine(AbstractTemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
@@ -159,7 +182,7 @@ public final class CreateModelCodeGenerator {
                 .execute(this.templateEngine);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String projectName = "practice-project";
         String basePackagePath = "com" + sp + "magnus";
 
@@ -213,8 +236,8 @@ public final class CreateModelCodeGenerator {
         String starterDirRelativeModelPath = starterModelRelativePath + sp + "api";
         String requestDirRelativeModelPath = apiModelRelativePath + sp + "model" + sp + "request" + sp + dirName;
 
-        //决定是否生成service层及controller层
-        Map<String, String> customFileMap = CommonOps.buildCustomHierarchy(serviceModelRootPath,
+        //生成service层及controller层
+        List<CustomFile> serviceAndControllerCustomFiles = CommonOps.buildServiceAndControllerCustomFile(serviceModelRootPath,
                 serviceDirRelativeModelPath,
                 serviceConverterDirRelativeModelPath,
                 starterModelRootPath,
@@ -223,15 +246,27 @@ public final class CreateModelCodeGenerator {
                 requestDirRelativeModelPath,
                 fileBaseName);
 
+        //生成dao层及domain层自定义文件
+        List<CustomFile> customFiles = buildDaoAndDomainCustomFile(serviceModelRootPath,
+                infraModelRootPath,
+                domainModelRootPath,
+                serviceDirRelativeModelPath,
+                doDirRelativeModelPath,
+                mapperXmlDirRelativeModelPath,
+                mapperDirRelativeModelPath,
+                domainEntityDirRelativeModelPath,
+                repositoryImplDirRelativeModelPath,
+                converterDirRelativeModelPath,
+                repositoryDirRelativeModelPath,
+                fileBaseName);
+
+        //可生成optional的的文件
+        customFiles.addAll(serviceAndControllerCustomFiles);
+
         CreateModelCodeGenerator.create(dBUrl, dBUserName, dBPassWord)
                 .globalConfig(builder -> builder
-                        .author("gs")
-                        // 覆盖已生成文件
-                        .fileOverride()
-                        //默认生成完毕后会打开outputDir对应文件夹，关闭
-                        .disableOpenDir()
                         //使用localdatatime 如果想用date可以指定为ONLY_DATE
-                        .dateType(DateType.TIME_PACK) // 默认的指定输出目录 如果packageConfig中没有指定某个生成类的目录，则采用此默认目录
+                        .dateType(DateType.TIME_PACK)
                 )
                 .strategyConfig(builder -> builder
                         //设置需要生成的表名
@@ -239,25 +274,9 @@ public final class CreateModelCodeGenerator {
                         .addTablePrefix(tablePrefix)
                         //打开模板中的 entityLombokModel 标签
                         .entityBuilder()
-                        //！！！不要开启enableRemoveIsPrefix 与目前预处理部分冲突
-                        //打开 entityLombokModel 标签
-                        .enableLombok()
-                        //打开 entityColumnConstant 标签
-                        //.enableColumnConstant()
-                        //打开 convert 标签
-                        .enableTableFieldAnnotation()
                         //给表字段添加填充
                         .addTableFills(new Property(doCreateTime, FieldFill.INSERT))
                         .addTableFills(new Property(doUpdateTime, FieldFill.INSERT_UPDATE))
-                        .idType(IdType.AUTO)
-                        .controllerBuilder()
-                        //打开 restControllerStyle 标签
-                        .enableRestStyle()
-                        .mapperBuilder()
-                        //开启该标签后，在xml文件中生成字段映射
-                        .enableBaseResultMap()
-                        //开启该标签后，在xml文件中生成通用查询结果列
-                        .enableBaseColumnList()
                 )
                 .injectionConfig(builder -> builder
                         //预处理
@@ -301,28 +320,15 @@ public final class CreateModelCodeGenerator {
                                 .put("requestPackagePath", getPackageName(requestDirRelativeModelPath))
                                 .build())
                         //自定义模板 key:生成文件绝对路径 value:模板名称
-                        .customFile(ImmutableMap.<String, String>builder()
-                                .put(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java", "/templates" + "/do.java.ftl")
-                                .put(infraModelRootPath + sp + mapperDirRelativeModelPath + sp + fileBaseName + "Mapper.java", "/templates" + "/mapper.java.ftl")
-                                .put(infraModelRootPath + sp + mapperXmlDirRelativeModelPath + sp + fileBaseName + "Mapper.xml", "/templates" + "/mapper.xml.ftl")
-                                .put(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + fileBaseName + ".java", "/templates" + "/domainEntity.java.ftl")
-                                .put(domainModelRootPath + sp + repositoryDirRelativeModelPath + sp + fileBaseName + "Repository.java", "/templates" + "/repository.java.ftl")
-                                .put(domainModelRootPath + sp + repositoryImplDirRelativeModelPath + sp + fileBaseName + "RepositoryImpl.java", "/templates" + "/repositoryImpl.java.ftl")
-                                .put(domainModelRootPath + sp + converterDirRelativeModelPath + sp + fileBaseName + "Converter.java", "/templates" + "/converter.java.ftl")
-                                //可生成optional的的文件
-                                .putAll(customFileMap)
-                                .build())
+                        .customFile(customFiles)
                 )
-                .templateConfig(builder -> builder
-                        //禁掉默认会生成的controller
-                        .disable(TemplateType.CONTROLLER, TemplateType.CONTROLLER, TemplateType.ENTITY,
-                                TemplateType.MAPPER, TemplateType.SERVICE, TemplateType.SERVICEIMPL)
-                )
+                .templateConfig(builder -> builder.disable())
                 // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .templateEngine(new FreemarkerTemplateEngine() {
                     //重写该方法，以自定义输出路径
-                    protected void outputCustomFile(Map<String, String> customFile, TableInfo tableInfo, Map<String, Object> objectMap) {
-                        customFile.forEach((key, value) -> outputFile(new File(key), objectMap, value));
+                    @Override
+                    protected void outputCustomFile(List<CustomFile> customFileList, TableInfo tableInfo, Map<String, Object> objectMap) {
+                        customFileList.forEach(customFile -> outputFile(new File(customFile.getFilePath()), objectMap, customFile.getTemplatePath(), false));
                     }
                 })
                 .execute();
