@@ -92,24 +92,32 @@ public class CommonOps {
     ) {
         List<CustomFile> output = new ArrayList<>();
 
-        String judge = "y";
-        if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
+        String yes = "y";
+        if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(yes)) {
             return output;
         }
-        output.add(new CustomFile.Builder()
-                .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "ReadService.java")
-                .templatePath("/templates" + "/readService.java.ftl")
-                .build());
-        output.add(new CustomFile.Builder()
-                .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "WriteService.java")
-                .templatePath("/templates" + "/writeService.java.ftl")
-                .build());
-        output.add(new CustomFile.Builder()
-                .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "BizService.java")
-                .templatePath("/templates" + "/bizService.java.ftl")
-                .build());
 
-        if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(judge)) {
+        if (scanner("是否按照读写分离生成service层(确认请输入y)").trim().equalsIgnoreCase(yes)) {
+            output.add(new CustomFile.Builder()
+                    .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "ReadService.java")
+                    .templatePath("/templates" + "/readService.java.ftl")
+                    .build());
+            output.add(new CustomFile.Builder()
+                    .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "WriteService.java")
+                    .templatePath("/templates" + "/writeService.java.ftl")
+                    .build());
+            output.add(new CustomFile.Builder()
+                    .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "BizService.java")
+                    .templatePath("/templates" + "/bizService.java.ftl")
+                    .build());
+        } else {
+            output.add(new CustomFile.Builder()
+                    .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "Service.java")
+                    .templatePath("/templates" + "/service.java.ftl")
+                    .build());
+        }
+
+        if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(yes)) {
             return output;
         }
         output.add(new CustomFile.Builder()
