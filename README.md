@@ -41,7 +41,7 @@ CREATE TABLE `employee` (
 `tenant_id` bigint NOT NULL,
 `nick_name` varchar(100) NOT NULL,
 `emp_code` varchar(512) NOT NULL,
-`is_deleted` bigint NOT NULL DEFAULT '0',
+`is_deleted` bigint NOT NULL DEFAULT '0' COMMENT '是否删除',
 PRIMARY KEY (`id`),
 UNIQUE KEY `employee_un` (`emp_code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -50,16 +50,16 @@ UNIQUE KEY `employee_un` (`emp_code`)
 
 CREATE TABLE `org` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` timestamp NOT NULL,
-`gmt_modified` timestamp NOT NULL,
-`create_by` bigint NOT NULL,
-`modified_by` bigint NOT NULL,
+`gmt_create` timestamp NOT NULL COMMENT '创建时间',
+`gmt_modified` timestamp NOT NULL COMMENT '修改时间',
+`create_by` bigint NOT NULL COMMENT '创建人',
+`modified_by` bigint NOT NULL COMMENT '修改人',
 `name` varchar(512) NOT NULL,
 `full_name` varchar(100) DEFAULT NULL,
 `corp_id` varchar(100) NOT NULL,
 `super_admin_uid` bigint NOT NULL,
 `ext` json DEFAULT NULL,
-`is_deleted` bigint NOT NULL DEFAULT '0',
+`is_deleted` bigint NOT NULL DEFAULT '0' COMMENT '是否删除',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -67,15 +67,15 @@ PRIMARY KEY (`id`)
 
 CREATE TABLE `dept` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` timestamp NOT NULL,
-`gmt_modified` timestamp NOT NULL,
-`create_by` bigint NOT NULL,
-`modified_by` bigint NOT NULL,
+`gmt_create` timestamp NOT NULL COMMENT '创建时间',
+`gmt_modified` timestamp NOT NULL COMMENT '修改时间',
+`create_by` bigint NOT NULL COMMENT '创建人',
+`modified_by` bigint NOT NULL COMMENT '修改人',
 `name` varchar(512) NOT NULL,
 `member_size` bigint DEFAULT NULL,
 `org_id` varchar(100) NOT NULL,
 `ext` json DEFAULT NULL,
-`is_deleted` bigint NOT NULL DEFAULT '0',
+`is_deleted` bigint NOT NULL DEFAULT '0' COMMENT '是否删除',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -83,27 +83,27 @@ PRIMARY KEY (`id`)
 
 CREATE TABLE `user` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` timestamp NOT NULL,
-`gmt_modified` timestamp NOT NULL,
-`create_by` bigint NOT NULL,
-`modified_by` bigint NOT NULL,
+`gmt_create` timestamp NOT NULL COMMENT '创建时间',
+`gmt_modified` timestamp NOT NULL COMMENT '修改时间',
+`create_by` bigint NOT NULL COMMENT '创建人',
+`modified_by` bigint NOT NULL COMMENT '修改人',
 `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
 `mobile` varchar(32) NOT NULL,
 `tag` json DEFAULT NULL,
-`is_deleted` bigint NOT NULL,
+`is_deleted` bigint NOT NULL DEFAULT '0' COMMENT '是否删除',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `demo` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` timestamp NOT NULL,
-`gmt_modified` timestamp NOT NULL,
-`create_by` bigint NOT NULL,
-`modified_by` bigint NOT NULL,
+`gmt_create` timestamp NOT NULL COMMENT '创建时间',
+`gmt_modified` timestamp NOT NULL COMMENT '修改时间',
+`create_by` bigint NOT NULL COMMENT '创建人',
+`modified_by` bigint NOT NULL COMMENT '修改人',
 `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
 `enum_string` varchar(32) DEFAULT NULL,
 `enum_int` smallint DEFAULT NULL,
-`is_deleted` bigint NOT NULL,
+`is_deleted` bigint NOT NULL DEFAULT '0' COMMENT '是否删除',
 `ext` json DEFAULT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
