@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 class ${entity}BizService
 <#else>
 @Service
-public class ${entity}BizService {
+public class ${entity}Service {
 
     @Resource
     private ${entity}Repository repository;
@@ -28,9 +28,9 @@ public class ${entity}BizService {
      * @param id
      * @return
      */
-    public ${entity} findOne${entity}ById(Long id){
+    public ${entity} getById(Long id){
         //todo 补充校验
-        return repository.findOneById(id);
+        return repository.getById(id);
     };
 
     /**

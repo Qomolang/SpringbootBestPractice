@@ -28,7 +28,7 @@ public class ${entity}ReadService {
      * @param id
      * @return
      */
-    public ${entity} get${entity}ById(Long id){
+    public ${entity} getById(Long id){
         //todo 补充校验
         return repository.getById(id);
     };
