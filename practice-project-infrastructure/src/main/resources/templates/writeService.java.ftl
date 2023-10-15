@@ -32,7 +32,7 @@ public class ${entity}WriteService {
     public ${entity} create${entity}(${entity} domain){
         //todo 补充校验
          return repository.create(domain);
-    };
+    }
 
     /**
      * 根据 ID 删除某个 ${table.comment!}
@@ -42,7 +42,7 @@ public class ${entity}WriteService {
      */
     public boolean delete${entity}ById(Long id){
         //todo 补充校验
-        return repository.deleteById(id);
-    };
+        return repository.deleteLogicallyById(id);
+    }
 }
 </#if>

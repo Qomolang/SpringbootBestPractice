@@ -33,7 +33,7 @@ public class ${entity}BizService {
     public ${entity} create${entity}(${entity} domain){
         //todo 补充校验
          return writeService.create${entity}(domain);
-    };
+    }
 
 }
 </#if>

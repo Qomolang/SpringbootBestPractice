@@ -31,7 +31,7 @@ public class ${entity}Service {
     public ${entity} getById(Long id){
         //todo 补充校验
         return repository.getById(id);
-    };
+    }
 
     /**
      * 保存 ${table.comment!}
@@ -42,7 +42,7 @@ public class ${entity}Service {
     public ${entity} create${entity}(${entity} domain){
         //todo 补充校验
          return repository.create(domain);
-    };
+    }
 
     /**
      * 根据 ID 删除某个 ${table.comment!}
@@ -52,7 +52,7 @@ public class ${entity}Service {
      */
     public boolean delete${entity}ById(Long id){
         //todo 补充校验
-        return repository.deleteById(id);
-    };
+        return repository.deleteLogicallyById(id);
+    }
 }
 </#if>

@@ -31,6 +31,6 @@ public class ${entity}ReadService {
     public ${entity} getById(Long id){
         //todo 补充校验
         return repository.getById(id);
-    };
+    }
 }
 </#if>
