@@ -43,10 +43,6 @@ public class CommonOps {
         List<CustomFile> output = new ArrayList<>();
 
         output.add(new CustomFile.Builder()
-                .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "ReadService.java")
-                .templatePath("/templates" + "/readService.java.ftl")
-                .build());
-        output.add(new CustomFile.Builder()
                 .filePath(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java")
                 .templatePath("/templates" + "/do.java.ftl")
                 .build());
