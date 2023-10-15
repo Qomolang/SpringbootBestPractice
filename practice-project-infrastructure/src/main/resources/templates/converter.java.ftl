@@ -29,7 +29,7 @@ public interface ${entity}Converter {
      * @param entityDO
      * @return
      */
-    List<${entity}> to${entity}(List<${entity}DO> entityDO);
+    List<${entity}> to${entity}(Collection<${entity}DO> entityDO);
 
     /**
      * ${entity}: Domain -> DO
@@ -45,6 +45,6 @@ public interface ${entity}Converter {
      * @param domain
      * @return
      */
-    List<${entity}DO> to${entity}DO(List<${entity}> domain);
+    List<${entity}DO> to${entity}DO(Collection<${entity}> domain);
 
 }

@@ -87,7 +87,7 @@ public class ${entity}RepositoryImpl extends ${superServiceImplClass}<${table.ma
     }
 
     @Override
-    public List<${entity}> createBatch(List<${entity}> domains) {
+    public List<${entity}> createBatch(Collection<${entity}> domains) {
         List<${entity}DO> entityDOs = cv.to${entity}DO(domains);
         saveBatch(entityDOs);
         //todo 有逻辑删标记字段，需要在这里赋值，或者在数据设置默认值

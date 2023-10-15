@@ -54,7 +54,7 @@ public interface ${entity}Repository {
      * @param domains
      * @return
      */
-    List<${entity}> createBatch(List<${entity}> domains);
+    List<${entity}> createBatch(Collection<${entity}> domains);
 
     /**
      * 单个更新
