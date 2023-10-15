@@ -36,7 +36,6 @@ public interface ${entity}Repository {
 
     /**
      * 分页查找 ${table.comment!} 列表
-     * @param ids
      * @return
      */
     Page<${entity}> listAllInPage(Long pageNumber, Long pageSize);
