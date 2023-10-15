@@ -40,10 +40,6 @@
             <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.magnus</groupId>
             <artifactId>practice-project-infrastructure</artifactId>
             <scope>compile</scope>
