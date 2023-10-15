@@ -93,11 +93,11 @@ public class CommonOps {
         List<CustomFile> output = new ArrayList<>();
 
         String yes = "y";
-        if (!scanner("是否生成service层(确认请输入y)").trim().equalsIgnoreCase(yes)) {
+        if (!scanner("是否生成service层(默认跳过，确认请输入y)").trim().equalsIgnoreCase(yes)) {
             return output;
         }
 
-        if (scanner("是否按照读写分离生成service层(确认请输入y)").trim().equalsIgnoreCase(yes)) {
+        if (scanner("是否按照读写分离生成service层(默认跳过，确认请输入y)").trim().equalsIgnoreCase(yes)) {
             output.add(new CustomFile.Builder()
                     .filePath(serviceModelRootPath + sp + serviceDirRelativeModelPath + sp + fileBaseName + "ReadService.java")
                     .templatePath("/templates" + "/readService.java.ftl")
@@ -117,7 +117,7 @@ public class CommonOps {
                     .build());
         }
 
-        if (!scanner("是否生成controller层(确认请输入y)").trim().equalsIgnoreCase(yes)) {
+        if (!scanner("是否生成controller层(默认跳过，确认请输入y)").trim().equalsIgnoreCase(yes)) {
             return output;
         }
         output.add(new CustomFile.Builder()
@@ -146,13 +146,13 @@ public class CommonOps {
         StringBuilder help = new StringBuilder();
         help.append("请输入 " + tip + ":");
         System.out.println(help.toString());
-        if (scanner.hasNext()) {
-            String ipt = scanner.next();
-            if (StringUtils.isNotBlank(ipt)) {
-                return ipt;
-            }
+        String ipt = scanner.nextLine();
+        if (StringUtils.isNotBlank(ipt)) {
+            return ipt;
+        } else {
+            return "";
         }
-        throw new MybatisPlusException("请输入正确的" + tip + "！");
+
     }
 
     /**

@@ -195,8 +195,8 @@ public final class CreateModelCodeGenerator {
 
         //表新生成的package名
         String tableName = scanner("表名");
-        String tablePrefix = scanner("去除表前缀（如忽略请直接回车）");
         String dirName = scanner("目录名");
+        String tablePrefix = scanner("去除表前缀（如忽略请直接回车）");
 
         //unix下如:/home/gs/github/mybatis-practice-project
         String projectPath = System.getProperty("user.dir");
