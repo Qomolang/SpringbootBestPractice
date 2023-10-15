@@ -66,22 +66,6 @@ public interface ${entity}Repository {
     boolean updateById(${entity} domain);
 
     /**
-     * 批量更新
-     *
-     * @param domains
-     * @return
-     */
-    boolean updateBatchByIds(List<${entity}> domains);
-
-    /**
-     * 根据 ID 删除某个 ${table.comment!}
-     *
-     * @param id
-     * @return 删除是否成功
-     */
-    boolean deleteById(Long id);
-
-    /**
      * 逻辑删
      */
     boolean deleteLogicallyById(Long id);
