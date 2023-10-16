@@ -163,9 +163,9 @@ public final class UpdateEntityModelCodeGenerator {
                 .execute(this.templateEngine);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String projectName = "practice-project";
-        String basePackagePath = "com" + sp + "magnus";
+        String basePackagePath = "com" + sp + "magnus" + sp + projectName.replace("-", "");
 
         String doCreateTime = DBTimeEnum.CreateTime.getCode();
         String doUpdateTime = DBTimeEnum.UpdateTIme.getCode();

@@ -184,7 +184,7 @@ public final class CreateModelCodeGenerator {
 
     public static void main(String[] args) {
         String projectName = "practice-project";
-        String basePackagePath = "com" + sp + "magnus";
+        String basePackagePath = "com" + sp + "magnus" + CommonOps.sp + projectName.replace("-", "");
 
         String doCreateTime = DBTimeEnum.CreateTime.getCode();
         String doUpdateTime = DBTimeEnum.UpdateTIme.getCode();
