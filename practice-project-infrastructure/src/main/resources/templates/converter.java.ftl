@@ -5,6 +5,7 @@ import ${doPackagePath}.${entity}DO;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.Collection;
 
 /**
 * ${entity} 转换器
