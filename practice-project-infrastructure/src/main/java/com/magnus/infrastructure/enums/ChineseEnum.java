@@ -1,4 +1,4 @@
-package com.magnus.infrastructure.constants.enums;
+package com.magnus.infrastructure.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
