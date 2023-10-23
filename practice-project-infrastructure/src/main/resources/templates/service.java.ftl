@@ -45,6 +45,18 @@ public class ${entity}Service {
     }
 
     /**
+     * 批量保存 ${table.comment!}
+     *
+     * @param domain
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public List<${entity}> createBatch(Collection<${entity}> domains) {
+        //todo 补充校验
+         return repository.createBatch(domain);
+    }
+
+    /**
      * 根据 ID 删除某个 ${table.comment!}
      *
      * @param id
