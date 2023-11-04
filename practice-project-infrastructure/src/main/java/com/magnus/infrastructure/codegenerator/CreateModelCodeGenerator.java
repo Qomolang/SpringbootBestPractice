@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 
 import java.io.File;
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -141,6 +142,19 @@ public final class CreateModelCodeGenerator {
         return this;
     }
 
+
+    /**
+     * 数据源配置
+     *
+     * @param consumer 自定义全局配置
+     * @return
+     */
+    public CreateModelCodeGenerator dataSourceConfig(Consumer<DataSourceConfig.Builder> consumer) {
+        consumer.accept(this.dataSourceConfigBuilder);
+        return this;
+    }
+
+
     /**
      * 注入配置
      */
@@ -183,15 +197,11 @@ public final class CreateModelCodeGenerator {
     }
 
     public static void main(String[] args) {
-        String projectName = "practice-project";
-        String basePackagePath = "com" + sp + "magnus" + CommonOps.sp + projectName.replace("-", "");
+        String projectName = GeneratorConfig.projectName;
+        String basePackagePath = GeneratorConfig.basePackagePath;
 
         String doCreateTime = DBTimeEnum.CreateTime.getCode();
         String doUpdateTime = DBTimeEnum.UpdateTIme.getCode();
-
-        String dBUrl = "jdbc:mysql://localhost:3306/gstest";
-        String dBUserName = "root";
-        String dBPassWord = "admin";
 
         //表新生成的package名
         String tableName = scanner("表名");
@@ -263,7 +273,16 @@ public final class CreateModelCodeGenerator {
         //可生成optional的的文件
         customFiles.addAll(serviceAndControllerCustomFiles);
 
-        CreateModelCodeGenerator.create(dBUrl, dBUserName, dBPassWord)
+        CreateModelCodeGenerator.create(GeneratorConfig.dBUrl, GeneratorConfig.dBUserName, GeneratorConfig.dBPassWord)
+                .dataSourceConfig(builder ->
+                        //默认情况下，mybatis-plus的生成器会将数据库DOUBLE类型会被转化为Object类型，转为java Double类型
+                        builder.typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
+                            int typeCode = metaInfo.getJdbcType().TYPE_CODE;
+                            if (typeCode == Types.DOUBLE) {
+                                return DbColumnType.DOUBLE;
+                            }
+                            return typeRegistry.getColumnType(metaInfo);
+                        }))
                 .globalConfig(builder -> builder
                         //使用localdatatime 如果想用date可以指定为ONLY_DATE
                         .dateType(DateType.TIME_PACK)

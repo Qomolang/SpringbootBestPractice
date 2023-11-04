@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 
 import java.io.File;
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -80,6 +81,18 @@ public final class UpdateEntityModelCodeGenerator {
     public static UpdateEntityModelCodeGenerator create(String url, String username, String password) {
         return new UpdateEntityModelCodeGenerator(new DataSourceConfig.Builder(url, username, password));
     }
+
+    /**
+     * 数据源配置
+     *
+     * @param consumer 自定义全局配置
+     * @return
+     */
+    public UpdateEntityModelCodeGenerator dataSourceConfig(Consumer<DataSourceConfig.Builder> consumer) {
+        consumer.accept(this.dataSourceConfigBuilder);
+        return this;
+    }
+
 
     /**
      * 全局配置
@@ -164,15 +177,11 @@ public final class UpdateEntityModelCodeGenerator {
     }
 
     public static void main(String[] args) {
-        String projectName = "practice-project";
-        String basePackagePath = "com" + sp + "magnus" + sp + projectName.replace("-", "");
+        String projectName = GeneratorConfig.projectName;
+        String basePackagePath = GeneratorConfig.basePackagePath;
 
         String doCreateTime = DBTimeEnum.CreateTime.getCode();
         String doUpdateTime = DBTimeEnum.UpdateTIme.getCode();
-
-        String dBUrl = "jdbc:mysql://localhost:3306/gstest";
-        String dBUserName = "root";
-        String dBPassWord = "admin";
 
         //表新生成的package名
         String tableName = scanner("表名");
@@ -217,7 +226,16 @@ public final class UpdateEntityModelCodeGenerator {
         String starterDirRelativeModelPath = starterModelRelativePath + sp + "api";
         String requestDirRelativeModelPath = apiModelRelativePath + sp + "model" + sp + "request" + sp + dirName;
 
-        UpdateEntityModelCodeGenerator.create(dBUrl, dBUserName, dBPassWord)
+        UpdateEntityModelCodeGenerator.create(GeneratorConfig.dBUrl, GeneratorConfig.dBUserName, GeneratorConfig.dBPassWord)
+                .dataSourceConfig(builder ->
+                        //默认情况下，mybatis-plus的生成器会将数据库DOUBLE类型会被转化为Object类型，转为java Double类型
+                        builder.typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
+                            int typeCode = metaInfo.getJdbcType().TYPE_CODE;
+                            if (typeCode == Types.DOUBLE) {
+                                return DbColumnType.DOUBLE;
+                            }
+                            return typeRegistry.getColumnType(metaInfo);
+                        }))
                 .globalConfig(builder -> builder
                         .author("gs")
                         // 覆盖已生成文件
