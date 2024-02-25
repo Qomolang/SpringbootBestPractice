@@ -33,8 +33,8 @@
 
 CREATE TABLE `employee` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` timestamp NOT NULL COMMENT '创建时间',
-`gmt_modified` timestamp NOT NULL COMMENT '修改时间',
+`gmt_create` datetime NOT NULL COMMENT '创建时间',
+`gmt_modified` datetime NOT NULL COMMENT '修改时间',
 `create_by` bigint NOT NULL COMMENT '创建人',
 `modified_by` bigint NOT NULL COMMENT '修改人',
 `user_id` bigint NOT NULL,
@@ -50,8 +50,8 @@ UNIQUE KEY `employee_un` (`emp_code`)
 
 CREATE TABLE `org` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` timestamp NOT NULL COMMENT '创建时间',
-`gmt_modified` timestamp NOT NULL COMMENT '修改时间',
+`gmt_create` datetime NOT NULL COMMENT '创建时间',
+`gmt_modified` datetime NOT NULL COMMENT '修改时间',
 `create_by` bigint NOT NULL COMMENT '创建人',
 `modified_by` bigint NOT NULL COMMENT '修改人',
 `name` varchar(512) NOT NULL,
@@ -67,8 +67,8 @@ PRIMARY KEY (`id`)
 
 CREATE TABLE `dept` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` timestamp NOT NULL COMMENT '创建时间',
-`gmt_modified` timestamp NOT NULL COMMENT '修改时间',
+`gmt_create` datetime NOT NULL COMMENT '创建时间',
+`gmt_modified` datetime NOT NULL COMMENT '修改时间',
 `create_by` bigint NOT NULL COMMENT '创建人',
 `modified_by` bigint NOT NULL COMMENT '修改人',
 `name` varchar(512) NOT NULL,
@@ -83,8 +83,8 @@ PRIMARY KEY (`id`)
 
 CREATE TABLE `user` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` timestamp NOT NULL COMMENT '创建时间',
-`gmt_modified` timestamp NOT NULL COMMENT '修改时间',
+`gmt_create` datetime NOT NULL COMMENT '创建时间',
+`gmt_modified` datetime NOT NULL COMMENT '修改时间',
 `create_by` bigint NOT NULL COMMENT '创建人',
 `modified_by` bigint NOT NULL COMMENT '修改人',
 `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
@@ -96,8 +96,8 @@ PRIMARY KEY (`id`)
 
 CREATE TABLE `demo` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` timestamp NOT NULL COMMENT '创建时间',
-`gmt_modified` timestamp NOT NULL COMMENT '修改时间',
+`gmt_create` datetime NOT NULL COMMENT '创建时间',
+`gmt_modified` datetime NOT NULL COMMENT '修改时间',
 `create_by` bigint NOT NULL COMMENT '创建人',
 `modified_by` bigint NOT NULL COMMENT '修改人',
 `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
