@@ -27,10 +27,8 @@ public class CommonOps {
     /**
      * 生成dao层及domain层自定义文件
      */
-    public static List<CustomFile> buildDaoAndDomainCustomFile(String serviceModelRootPath,
-                                                               String infraModelRootPath,
+    public static List<CustomFile> buildDaoAndDomainCustomFile(String infraModelRootPath,
                                                                String domainModelRootPath,
-                                                               String serviceDirRelativeModelPath,
                                                                String doDirRelativeModelPath,
                                                                String mapperXmlDirRelativeModelPath,
                                                                String mapperDirRelativeModelPath,
@@ -65,6 +63,104 @@ public class CommonOps {
         output.add(new CustomFile.Builder()
                 .filePath(domainModelRootPath + sp + repositoryImplDirRelativeModelPath + sp + fileBaseName + "RepositoryImpl.java")
                 .templatePath("/templates" + "/repositoryImpl.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + converterDirRelativeModelPath + sp + fileBaseName + "Converter.java")
+                .templatePath("/templates" + "/converter.java.ftl")
+                .build());
+
+        return output;
+    }
+
+    /**
+     * 生成dao层及domain层自定义文件
+     */
+    public static List<CustomFile> buildTkDaoAndDomainCustomFile(String infraModelRootPath,
+                                                               String domainModelRootPath,
+                                                               String doDirRelativeModelPath,
+                                                               String mapperXmlDirRelativeModelPath,
+                                                               String mapperDirRelativeModelPath,
+                                                               String domainEntityDirRelativeModelPath,
+                                                               String repositoryImplDirRelativeModelPath,
+                                                               String converterDirRelativeModelPath,
+                                                               String repositoryDirRelativeModelPath,
+                                                               String fileBaseName
+    ) {
+        List<CustomFile> output = new ArrayList<>();
+
+        output.add(new CustomFile.Builder()
+                .filePath(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java")
+                .templatePath("/templates/tk" + "/do.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(infraModelRootPath + sp + mapperDirRelativeModelPath + sp + fileBaseName + "Mapper.java")
+                .templatePath("/templates/tk" + "/mapper.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(infraModelRootPath + sp + mapperXmlDirRelativeModelPath + sp + fileBaseName + "Mapper.xml")
+                .templatePath("/templates/tk" + "/mapper.xml.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + fileBaseName + ".java")
+                .templatePath("/templates" + "/domainEntity.java.ftl")
+                .build());
+        //tk不提供Repository层
+        //output.add(new CustomFile.Builder()
+        //        .filePath(domainModelRootPath + sp + repositoryDirRelativeModelPath + sp + fileBaseName + "Repository.java")
+        //        .templatePath("/templates" + "/repository.java.ftl")
+        //        .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + repositoryImplDirRelativeModelPath + sp + fileBaseName + "RepositoryImpl.java")
+                .templatePath("/templates/tk" + "/repositoryImpl.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + converterDirRelativeModelPath + sp + fileBaseName + "Converter.java")
+                .templatePath("/templates" + "/converter.java.ftl")
+                .build());
+
+        return output;
+    }
+
+    /**
+     * 生成dao层及domain层自定义文件
+     */
+    public static List<CustomFile> buildVanillaDaoAndDomainCustomFile(String infraModelRootPath,
+                                                                 String domainModelRootPath,
+                                                                 String doDirRelativeModelPath,
+                                                                 String mapperXmlDirRelativeModelPath,
+                                                                 String mapperDirRelativeModelPath,
+                                                                 String domainEntityDirRelativeModelPath,
+                                                                 String repositoryImplDirRelativeModelPath,
+                                                                 String converterDirRelativeModelPath,
+                                                                 String repositoryDirRelativeModelPath,
+                                                                 String fileBaseName
+    ) {
+        List<CustomFile> output = new ArrayList<>();
+
+        output.add(new CustomFile.Builder()
+                .filePath(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java")
+                .templatePath("/templates/vanilla" + "/do.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(infraModelRootPath + sp + mapperDirRelativeModelPath + sp + fileBaseName + "Mapper.java")
+                .templatePath("/templates/vanilla" + "/mapper.java.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(infraModelRootPath + sp + mapperXmlDirRelativeModelPath + sp + fileBaseName + "Mapper.xml")
+                .templatePath("/templates/vanilla" + "/mapper.xml.ftl")
+                .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + fileBaseName + ".java")
+                .templatePath("/templates" + "/domainEntity.java.ftl")
+                .build());
+        //tk不提供Repository层
+        //output.add(new CustomFile.Builder()
+        //        .filePath(domainModelRootPath + sp + repositoryDirRelativeModelPath + sp + fileBaseName + "Repository.java")
+        //        .templatePath("/templates" + "/repository.java.ftl")
+        //        .build());
+        output.add(new CustomFile.Builder()
+                .filePath(domainModelRootPath + sp + repositoryImplDirRelativeModelPath + sp + fileBaseName + "RepositoryImpl.java")
+                .templatePath("/templates/vanilla" + "/repositoryImpl.java.ftl")
                 .build());
         output.add(new CustomFile.Builder()
                 .filePath(domainModelRootPath + sp + converterDirRelativeModelPath + sp + fileBaseName + "Converter.java")

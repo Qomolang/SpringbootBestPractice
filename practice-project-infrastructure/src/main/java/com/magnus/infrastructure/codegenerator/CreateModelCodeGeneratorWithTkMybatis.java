@@ -1,7 +1,5 @@
 package com.magnus.infrastructure.codegenerator;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
@@ -11,7 +9,6 @@ import com.baomidou.mybatisplus.generator.config.rules.DateType;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
-import com.baomidou.mybatisplus.generator.fill.Property;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
@@ -30,7 +27,7 @@ import static com.magnus.infrastructure.codegenerator.CommonOps.*;
  * @author L.cm, lanjerry
  * @since 2021-07-22
  */
-public final class CreateModelCodeGenerator {
+public final class CreateModelCodeGeneratorWithTkMybatis {
 
     /**
      * 数据源配置 Builder
@@ -67,7 +64,7 @@ public final class CreateModelCodeGenerator {
      */
     private AbstractTemplateEngine templateEngine;
 
-    private CreateModelCodeGenerator(DataSourceConfig.Builder dataSourceConfigBuilder) {
+    private CreateModelCodeGeneratorWithTkMybatis(DataSourceConfig.Builder dataSourceConfigBuilder) {
         this.dataSourceConfigBuilder = dataSourceConfigBuilder;
         this.globalConfigBuilder = new GlobalConfig.Builder();
         this.packageConfigBuilder = new PackageConfig.Builder();
@@ -76,8 +73,8 @@ public final class CreateModelCodeGenerator {
         this.templateConfigBuilder = new TemplateConfig.Builder();
     }
 
-    public static CreateModelCodeGenerator create(String url, String username, String password) {
-        return new CreateModelCodeGenerator(new DataSourceConfig.Builder(url, username, password));
+    public static CreateModelCodeGeneratorWithTkMybatis create(String url, String username, String password) {
+        return new CreateModelCodeGeneratorWithTkMybatis(new DataSourceConfig.Builder(url, username, password));
     }
 
     /**
@@ -86,7 +83,7 @@ public final class CreateModelCodeGenerator {
      * @param consumer 自定义全局配置
      * @return
      */
-    public CreateModelCodeGenerator globalConfig(Consumer<GlobalConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithTkMybatis globalConfig(Consumer<GlobalConfig.Builder> consumer) {
         //配置项
         consumer.accept(this.globalConfigBuilder);
 
@@ -107,7 +104,7 @@ public final class CreateModelCodeGenerator {
      * @param consumer 自定义包配置
      * @return
      */
-    public CreateModelCodeGenerator packageConfig(Consumer<PackageConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithTkMybatis packageConfig(Consumer<PackageConfig.Builder> consumer) {
         consumer.accept(this.packageConfigBuilder);
         return this;
     }
@@ -118,7 +115,7 @@ public final class CreateModelCodeGenerator {
      * @param consumer 自定义策略配置
      * @return
      */
-    public CreateModelCodeGenerator strategyConfig(Consumer<StrategyConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithTkMybatis strategyConfig(Consumer<StrategyConfig.Builder> consumer) {
         consumer.accept(this.strategyConfigBuilder);
 
         strategyConfigBuilder.entityBuilder()
@@ -129,7 +126,8 @@ public final class CreateModelCodeGenerator {
                 //.enableColumnConstant()
                 //打开 convert 标签
                 .enableTableFieldAnnotation()
-                .idType(IdType.AUTO)
+                //tk的id无类型
+                //.idType(IdType.AUTO)
                 .controllerBuilder()
                 //打开 restControllerStyle 标签
                 .enableRestStyle()
@@ -149,7 +147,7 @@ public final class CreateModelCodeGenerator {
      * @param consumer 自定义全局配置
      * @return
      */
-    public CreateModelCodeGenerator dataSourceConfig(Consumer<DataSourceConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithTkMybatis dataSourceConfig(Consumer<DataSourceConfig.Builder> consumer) {
         consumer.accept(this.dataSourceConfigBuilder);
         return this;
     }
@@ -158,7 +156,7 @@ public final class CreateModelCodeGenerator {
     /**
      * 注入配置
      */
-    public CreateModelCodeGenerator injectionConfig(Consumer<InjectionConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithTkMybatis injectionConfig(Consumer<InjectionConfig.Builder> consumer) {
         consumer.accept(this.injectionConfigBuilder);
         return this;
     }
@@ -166,7 +164,7 @@ public final class CreateModelCodeGenerator {
     /**
      * 模板配置
      */
-    public CreateModelCodeGenerator templateConfig(Consumer<TemplateConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithTkMybatis templateConfig(Consumer<TemplateConfig.Builder> consumer) {
         consumer.accept(this.templateConfigBuilder);
 
         return this;
@@ -175,7 +173,7 @@ public final class CreateModelCodeGenerator {
     /**
      * 模板引擎配置
      */
-    public CreateModelCodeGenerator templateEngine(AbstractTemplateEngine templateEngine) {
+    public CreateModelCodeGeneratorWithTkMybatis templateEngine(AbstractTemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
         return this;
     }
@@ -196,6 +194,13 @@ public final class CreateModelCodeGenerator {
                 .execute(this.templateEngine);
     }
 
+    /**
+     * 注意，不能保证百分百兼容tk，事实上仅在样板上做了少量修改
+     *
+     * 1. TableId-> Id，tk采用的@Id为Spring标准注解，无参数，因此去掉所有参数
+     * 2. TableFiled -> Column，tk采用的@Colunm是java标准注解JPA，TableFiled中数据库字段对应的参数名称指定为value，因此按照java注解规则可以省略，但Column中指定为name，因此必须指定，同时无填充方式，因此时间字段需指定
+     * 3. DO import的部分使用了硬编码
+     */
     public static void main(String[] args) {
         String projectName = GeneratorConfig.projectName;
         String basePackagePath = GeneratorConfig.basePackagePath;
@@ -258,7 +263,7 @@ public final class CreateModelCodeGenerator {
                 fileBaseName);
 
         //生成dao层及domain层自定义文件
-        List<CustomFile> customFiles = buildDaoAndDomainCustomFile(infraModuleRootPath,
+        List<CustomFile> customFiles = buildTkDaoAndDomainCustomFile(infraModuleRootPath,
                 domainModuleRootPath,
                 doDirRelativeModulePath,
                 mapperXmlDirRelativeModulePath,
@@ -272,7 +277,7 @@ public final class CreateModelCodeGenerator {
         //可生成optional的的文件
         customFiles.addAll(serviceAndControllerCustomFiles);
 
-        CreateModelCodeGenerator.create(GeneratorConfig.dBUrl, GeneratorConfig.dBUserName, GeneratorConfig.dBPassWord)
+        CreateModelCodeGeneratorWithTkMybatis.create(GeneratorConfig.dBUrl, GeneratorConfig.dBUserName, GeneratorConfig.dBPassWord)
                 .dataSourceConfig(builder ->
                         //默认情况下，mybatis-plus的生成器会将数据库DOUBLE类型会被转化为Object类型，转为java Double类型
                         builder.typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
@@ -292,9 +297,10 @@ public final class CreateModelCodeGenerator {
                         .addTablePrefix(tablePrefix)
                         //打开模板中的 entityLombokModel 标签
                         .entityBuilder()
+                        //tk字段无填充
                         //给表字段添加填充
-                        .addTableFills(new Property(doCreateTime, FieldFill.INSERT))
-                        .addTableFills(new Property(doUpdateTime, FieldFill.INSERT_UPDATE))
+                        //.addTableFills(new Property(doCreateTime, FieldFill.INSERT))
+                        //.addTableFills(new Property(doUpdateTime, FieldFill.INSERT_UPDATE))
                 )
                 .injectionConfig(builder -> builder
                         //预处理
