@@ -1,4 +1,4 @@
-package com.magnus.excel.biz.emp.converter;
+package com.magnus.excel.biz.service.emp.converter;
 
 import com.magnus.domain.employee.model.Employee;
 import com.magnus.excel.biz.model.emp.EmpExcelEntity;

@@ -1,6 +1,7 @@
 package com.magnus.excel.biz.emp;
 
 import com.magnus.ServiceApplication;
+import com.magnus.excel.biz.service.emp.EmpBizService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

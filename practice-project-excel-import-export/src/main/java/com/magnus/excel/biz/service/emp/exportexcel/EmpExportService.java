@@ -1,4 +1,4 @@
-package com.magnus.excel.biz.emp.exportexcel;
+package com.magnus.excel.biz.service.emp.exportexcel;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
