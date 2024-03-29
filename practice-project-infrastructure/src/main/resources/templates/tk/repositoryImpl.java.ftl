@@ -4,7 +4,6 @@ import ${doPackagePath}.${entity}DO;
 import ${domainEntityPackagePath}.${entity};
 import ${converterPackagePath}.${entity}Converter;
 import ${mapperPackagePath}.${table.mapperName};
-import ${repositoryPackagePath}.${entity}Repository;
 import ${superServiceImplClassPackage};
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;

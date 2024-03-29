@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import javax.persistence.Column;
 import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
 import lombok.experimental.Accessors;
 
 <#if swagger>

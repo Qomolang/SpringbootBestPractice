@@ -15,6 +15,6 @@ public class GeneratorConfig {
 
     public static String dBUrl = "jdbc:mysql://localhost:3306/gstest";
     public static String dBUserName = "root";
-    public static String dBPassWord = "admin";
+    public static String dBPassWord = "Admin123";
 
 }

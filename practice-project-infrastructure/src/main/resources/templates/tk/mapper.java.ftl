@@ -1,7 +1,7 @@
 package ${mapperPackagePath};
 
 import ${doPackagePath}.${entity}DO;
-import ${superMapperClassPackage};
+import tk.mybatis.mapper.common.Mapper;
 
 /**
  * <p>
