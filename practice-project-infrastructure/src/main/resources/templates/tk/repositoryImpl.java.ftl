@@ -37,7 +37,6 @@ public class ${entity}RepositoryImpl {
     @Resource
     private ${entity}Converter cv;
 
-    @Override
     public ${entity} getById(Long id) {
         //${entity}DO output = mapper.selectOne(new ${entity}DO().setId(id));
 
@@ -49,7 +48,6 @@ public class ${entity}RepositoryImpl {
         return cv.to${entity}(output);
     }
 
-    @Override
     public List<${entity}> listEntityByIds(Collection<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();
@@ -63,7 +61,6 @@ public class ${entity}RepositoryImpl {
         return cv.to${entity}(output);
     }
     
-    @Override
     public Page<${entity}> listAllInPage(Long pageNumber, Long pageSize) {
 
         Page<${entity}DO> page = new Page<>(pageNumber, pageSize);
@@ -81,7 +78,6 @@ public class ${entity}RepositoryImpl {
         return output;
     }
 
-    @Override
     public ${entity} create(${entity} domain) {
         ${entity}DO entityDO = cv.to${entity}DO(domain);
         save(entityDO);
@@ -89,7 +85,6 @@ public class ${entity}RepositoryImpl {
         return cv.to${entity}(entityDO);
     }
 
-    @Override
     public List<${entity}> createBatch(Collection<${entity}> domains) {
         List<${entity}DO> entityDOs = cv.to${entity}DO(domains);
         saveBatch(entityDOs);
@@ -97,7 +92,6 @@ public class ${entity}RepositoryImpl {
         return cv.to${entity}(entityDOs);
     }
 
-    @Override
     public boolean updateById(${entity} domain) {
         ${entity}DO entityDO = cv.to${entity}DO(domain);
 
@@ -107,7 +101,6 @@ public class ${entity}RepositoryImpl {
         );
     }
 
-    @Override
     public boolean deleteLogicallyById(Long id) {
 
         update(Wrappers.<${entity}DO>lambdaUpdate()
@@ -118,7 +111,6 @@ public class ${entity}RepositoryImpl {
         return true;
     }
 
-    @Override
     public boolean deleteLogicallyByIds(Collection<Long> ids) {
 
         update(Wrappers.<${entity}DO>lambdaUpdate()

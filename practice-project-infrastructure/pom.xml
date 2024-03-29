@@ -108,7 +108,7 @@
             <artifactId>spring-data-redis</artifactId>
         </dependency>
 
-        <!--tk mapper 本项目不适用，仅为了代码生成器兼容tk mapper项目而引入-->
+        <!--tk mapper 本项目不使用，仅为了代码生成器兼容tk mapper项目而引入-->
 <!--        <dependency>-->
 <!--            <groupId>tk.mybatis</groupId>-->
 <!--            <artifactId>mapper-spring-boot-starter</artifactId>-->
