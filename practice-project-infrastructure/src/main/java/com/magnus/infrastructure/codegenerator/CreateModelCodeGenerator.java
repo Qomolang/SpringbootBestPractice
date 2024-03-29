@@ -257,10 +257,8 @@ public final class CreateModelCodeGenerator {
                 fileBaseName);
 
         //生成dao层及domain层自定义文件
-        List<CustomFile> customFiles = buildDaoAndDomainCustomFile(serviceModelRootPath,
-                infraModelRootPath,
+        List<CustomFile> customFiles = buildDaoAndDomainCustomFile(infraModelRootPath,
                 domainModelRootPath,
-                serviceDirRelativeModelPath,
                 doDirRelativeModelPath,
                 mapperXmlDirRelativeModelPath,
                 mapperDirRelativeModelPath,

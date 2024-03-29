@@ -1,5 +1,7 @@
 package com.magnus.controller;
 
+import com.alibaba.cola.dto.PageResponse;
+import com.magnus.api.model.request.CommonPageRequest;
 import com.magnus.api.model.request.CommonRequest;
 import com.magnus.infrastructure.exception.catchlog.CatchAndLog;
 import com.magnus.infrastructure.remote.http.DemoHttpServiceRemote;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.ArrayList;
 
 @CatchAndLog
 @RestController
@@ -29,6 +32,11 @@ public class DemoController {
     @GetMapping("/test")
     public String test() {
         return "success";
+    }
+
+    @PostMapping("/page")
+    public PageResponse<String> test1(@RequestBody @Valid CommonPageRequest request) {
+        return PageResponse.of(new ArrayList<>(),10,10,1);
     }
 
     @GetMapping("/testerror")
