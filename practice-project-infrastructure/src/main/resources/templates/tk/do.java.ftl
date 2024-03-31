@@ -36,9 +36,7 @@ import lombok.experimental.Accessors;
     <#else>
 @EqualsAndHashCode(callSuper = false)
     </#if>
-    <#if chainModel>
 @Accessors(chain = true)
-    </#if>
 </#if>
 <#if table.convert>
 @Table(name = "${table.name}")

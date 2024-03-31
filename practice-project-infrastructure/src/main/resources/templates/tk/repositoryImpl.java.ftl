@@ -31,7 +31,7 @@ open class ${entity}RepositoryImpl : ${superServiceImplClass}<${table.mapperName
 
 }
 <#else>
-public class ${entity}RepositoryImpl {
+public class ${entity}Repository {
     @Resource
     private ${table.mapperName} mapper;
     @Resource
