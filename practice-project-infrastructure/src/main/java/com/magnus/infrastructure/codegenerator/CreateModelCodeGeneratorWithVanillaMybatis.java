@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Property;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 
@@ -31,7 +30,7 @@ import static com.magnus.infrastructure.codegenerator.CommonOps.*;
  * @author L.cm, lanjerry
  * @since 2021-07-22
  */
-public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
+public final class CreateModelCodeGeneratorWithVanillaMybatis {
 
     /**
      * 数据源配置 Builder
@@ -68,7 +67,7 @@ public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
      */
     private AbstractTemplateEngine templateEngine;
 
-    private UpdateEntityModelCodeGeneratorWithTkMybaits(DataSourceConfig.Builder dataSourceConfigBuilder) {
+    private CreateModelCodeGeneratorWithVanillaMybatis(DataSourceConfig.Builder dataSourceConfigBuilder) {
         this.dataSourceConfigBuilder = dataSourceConfigBuilder;
         this.globalConfigBuilder = new GlobalConfig.Builder();
         this.packageConfigBuilder = new PackageConfig.Builder();
@@ -77,21 +76,9 @@ public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
         this.templateConfigBuilder = new TemplateConfig.Builder();
     }
 
-    public static UpdateEntityModelCodeGeneratorWithTkMybaits create(String url, String username, String password) {
-        return new UpdateEntityModelCodeGeneratorWithTkMybaits(new DataSourceConfig.Builder(url, username, password));
+    public static CreateModelCodeGeneratorWithVanillaMybatis create(String url, String username, String password) {
+        return new CreateModelCodeGeneratorWithVanillaMybatis(new DataSourceConfig.Builder(url, username, password));
     }
-
-    /**
-     * 数据源配置
-     *
-     * @param consumer 自定义全局配置
-     * @return
-     */
-    public UpdateEntityModelCodeGeneratorWithTkMybaits dataSourceConfig(Consumer<DataSourceConfig.Builder> consumer) {
-        consumer.accept(this.dataSourceConfigBuilder);
-        return this;
-    }
-
 
     /**
      * 全局配置
@@ -99,8 +86,16 @@ public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
      * @param consumer 自定义全局配置
      * @return
      */
-    public UpdateEntityModelCodeGeneratorWithTkMybaits globalConfig(Consumer<GlobalConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithVanillaMybatis globalConfig(Consumer<GlobalConfig.Builder> consumer) {
+        //配置项
         consumer.accept(this.globalConfigBuilder);
+
+        //个人恒定偏好项
+        globalConfigBuilder
+                .author("gs")
+                //默认生成完毕后会打开outputDir对应文件夹，关闭
+                .disableOpenDir();
+
         return this;
     }
 
@@ -110,7 +105,7 @@ public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
      * @param consumer 自定义包配置
      * @return
      */
-    public UpdateEntityModelCodeGeneratorWithTkMybaits packageConfig(Consumer<PackageConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithVanillaMybatis packageConfig(Consumer<PackageConfig.Builder> consumer) {
         consumer.accept(this.packageConfigBuilder);
         return this;
     }
@@ -121,40 +116,65 @@ public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
      * @param consumer 自定义策略配置
      * @return
      */
-    public UpdateEntityModelCodeGeneratorWithTkMybaits strategyConfig(Consumer<StrategyConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithVanillaMybatis strategyConfig(Consumer<StrategyConfig.Builder> consumer) {
         consumer.accept(this.strategyConfigBuilder);
+
+        strategyConfigBuilder.entityBuilder()
+                //！！！不要开启enableRemoveIsPrefix 与目前预处理部分冲突
+                //覆盖已生成文件
+                //打开 entityLombokModel 标签
+                .enableLombok()
+                //打开 entityColumnConstant 标签
+                //.enableColumnConstant()
+                //打开 convert 标签
+                .enableTableFieldAnnotation()
+                .idType(IdType.AUTO)
+                .controllerBuilder()
+                //打开 restControllerStyle 标签
+                .enableRestStyle()
+                .mapperBuilder()
+                //开启该标签后，在xml文件中生成字段映射
+                .enableBaseResultMap()
+                //开启该标签后，在xml文件中生成通用查询结果列
+                .enableBaseColumnList();
+
         return this;
     }
 
+
     /**
-     * 注入配置
+     * 数据源配置
      *
-     * @param consumer 自定义注入配置
+     * @param consumer 自定义全局配置
      * @return
      */
-    public UpdateEntityModelCodeGeneratorWithTkMybaits injectionConfig(Consumer<InjectionConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithVanillaMybatis dataSourceConfig(Consumer<DataSourceConfig.Builder> consumer) {
+        consumer.accept(this.dataSourceConfigBuilder);
+        return this;
+    }
+
+
+    /**
+     * 注入配置
+     */
+    public CreateModelCodeGeneratorWithVanillaMybatis injectionConfig(Consumer<InjectionConfig.Builder> consumer) {
         consumer.accept(this.injectionConfigBuilder);
         return this;
     }
 
     /**
      * 模板配置
-     *
-     * @param consumer 自定义模板配置
-     * @return
      */
-    public UpdateEntityModelCodeGeneratorWithTkMybaits templateConfig(Consumer<TemplateConfig.Builder> consumer) {
+    public CreateModelCodeGeneratorWithVanillaMybatis templateConfig(Consumer<TemplateConfig.Builder> consumer) {
         consumer.accept(this.templateConfigBuilder);
+
         return this;
     }
 
     /**
      * 模板引擎配置
-     *
-     * @param templateEngine 模板引擎
-     * @return
      */
-    public UpdateEntityModelCodeGeneratorWithTkMybaits templateEngine(AbstractTemplateEngine templateEngine) {
+    public CreateModelCodeGeneratorWithVanillaMybatis templateEngine(AbstractTemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
         return this;
     }
@@ -184,48 +204,74 @@ public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
 
         //表新生成的package名
         String tableName = scanner("表名");
-        String tablePrefix = scanner("去除表前缀（如忽略请直接回车）");
         String dirName = scanner("目录名");
+        String tablePrefix = scanner("去除表前缀（如忽略请直接回车）");
 
         //unix下如:/home/gs/github/mybatis-practice-project
         String projectPath = System.getProperty("user.dir");
 
-        String infrastructureModelName = projectName + "-infrastructure";
-        String domainModelName = projectName + "-domain";
-        String serviceModelName = projectName + "-service";
-        String starterModelName = projectName + "-starter";
-        String apiModelName = projectName + "-api";
+        String infrastructureModuleName = projectName + "-infrastructure";
+        String domainModuleName = projectName + "-domain";
+        String serviceModuleName = projectName + "-service";
+        String starterModuleName = projectName + "-starter";
+        String apiModuleName = projectName + "-api";
 
-        String infraModelRootPath = projectPath + sp + infrastructureModelName;
-        String domainModelRootPath = projectPath + sp + domainModelName;
-        String serviceModelRootPath = projectPath + sp + serviceModelName;
-        String starterModelRootPath = projectPath + sp + starterModelName;
-        String apiModelRootPath = projectPath + sp + apiModelName;
+        String infraModuleRootPath = projectPath + sp + infrastructureModuleName;
+        String domainModuleRootPath = projectPath + sp + domainModuleName;
+        String serviceModuleRootPath = projectPath + sp + serviceModuleName;
+        String starterModuleRootPath = projectPath + sp + starterModuleName;
+        String apiModuleRootPath = projectPath + sp + apiModuleName;
 
         // src/main/java/com/projectName/infrastructure
-        String infraModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "infrastructure";
-        String domainModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "domain";
-        String serviceModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "service";
-        String starterModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "controller";
-        String apiModelRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "api";
+        // 各个模块的根目录，该目录即为该模块下第一层会展开目录的父目录
+        String infraModuleRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "infrastructure";
+        String domainModuleRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "domain";
+        String serviceModuleRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "service";
+        String starterModuleRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "controller";
+        String apiModuleRelativePath = srcMainJavaPath + sp + basePackagePath + sp + "api";
 
         String tableTempName = tableName.replace(tablePrefix, "");
         String fileBaseName = CaseUtils.toCamelCase(tableTempName, true, '_');
 
         //生成文件的路径
-        String doDirRelativeModelPath = infraModelRelativePath + sp + "dao" + sp + dirName + sp + "model";
-        String mapperDirRelativeModelPath = infraModelRelativePath + sp + "dao" + sp + dirName + sp + "mapper";
-        String mapperXmlDirRelativeModelPath = "src" + sp + "main" + sp + "resources" + sp + "mapper" + sp + dirName;
-        String domainEntityDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "model";
-        String repositoryDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "repository";
-        String repositoryImplDirRelativeModelPath = domainModelRelativePath + sp + dirName;
-        String converterDirRelativeModelPath = domainModelRelativePath + sp + dirName + sp + "converter";
-        String serviceDirRelativeModelPath = serviceModelRelativePath + sp + dirName;
-        String serviceConverterDirRelativeModelPath = serviceModelRelativePath + sp + dirName + sp + "converter";
-        String starterDirRelativeModelPath = starterModelRelativePath + sp + "api";
-        String requestDirRelativeModelPath = apiModelRelativePath + sp + "model" + sp + "request" + sp + dirName;
+        String doDirRelativeModulePath = infraModuleRelativePath + sp + "dao" + sp + dirName + sp + "model";
+        String mapperDirRelativeModulePath = infraModuleRelativePath + sp + "dao" + sp + dirName + sp + "mapper";
+        String mapperXmlDirRelativeModulePath = "src" + sp + "main" + sp + "resources" + sp + "mapper" + sp + dirName;
+        String domainEntityDirRelativeModulePath = domainModuleRelativePath + sp + dirName + sp + "model";
+        String repositoryDirRelativeModulePath = domainModuleRelativePath + sp + dirName + sp + "repository";
+        String repositoryImplDirRelativeModulePath = domainModuleRelativePath + sp + dirName;
+        String converterDirRelativeModulePath = domainModuleRelativePath + sp + dirName + sp + "converter";
+        String serviceDirRelativeModulePath = serviceModuleRelativePath + sp + dirName;
+        String serviceConverterDirRelativeModulePath = serviceModuleRelativePath + sp + dirName + sp + "converter";
+        String starterDirRelativeModulePath = starterModuleRelativePath + sp + "api";
+        String requestDirRelativeModulePath = apiModuleRelativePath + sp + "model" + sp + "request" + sp + dirName;
 
-        UpdateEntityModelCodeGeneratorWithTkMybaits.create(GeneratorConfig.dBUrl, GeneratorConfig.dBUserName, GeneratorConfig.dBPassWord)
+        //生成service层及controller层
+        List<CustomFile> serviceAndControllerCustomFiles = CommonOps.buildServiceAndControllerCustomFile(serviceModuleRootPath,
+                serviceDirRelativeModulePath,
+                serviceConverterDirRelativeModulePath,
+                starterModuleRootPath,
+                starterDirRelativeModulePath,
+                apiModuleRootPath,
+                requestDirRelativeModulePath,
+                fileBaseName);
+
+        //生成dao层及domain层自定义文件
+        List<CustomFile> customFiles = buildVanillaDaoAndDomainCustomFile(infraModuleRootPath,
+                domainModuleRootPath,
+                doDirRelativeModulePath,
+                mapperXmlDirRelativeModulePath,
+                mapperDirRelativeModulePath,
+                domainEntityDirRelativeModulePath,
+                repositoryImplDirRelativeModulePath,
+                converterDirRelativeModulePath,
+                repositoryDirRelativeModulePath,
+                fileBaseName);
+
+        //可生成optional的的文件
+        customFiles.addAll(serviceAndControllerCustomFiles);
+
+        CreateModelCodeGeneratorWithVanillaMybatis.create(GeneratorConfig.dBUrl, GeneratorConfig.dBUserName, GeneratorConfig.dBPassWord)
                 .dataSourceConfig(builder ->
                         //默认情况下，mybatis-plus的生成器会将数据库DOUBLE类型会被转化为Object类型，转为java Double类型
                         builder.typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {
@@ -236,11 +282,8 @@ public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
                             return typeRegistry.getColumnType(metaInfo);
                         }))
                 .globalConfig(builder -> builder
-                        .author("gs")
-                        //默认生成完毕后会打开outputDir对应文件夹，关闭
-                        .disableOpenDir()
                         //使用localdatatime 如果想用date可以指定为ONLY_DATE
-                        .dateType(DateType.TIME_PACK) // 默认的指定输出目录 如果packageConfig中没有指定某个生成类的目录，则采用此默认目录
+                        .dateType(DateType.TIME_PACK)
                 )
                 .strategyConfig(builder -> builder
                         //设置需要生成的表名
@@ -248,25 +291,9 @@ public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
                         .addTablePrefix(tablePrefix)
                         //打开模板中的 entityLombokModel 标签
                         .entityBuilder()
-                        //！！！不要开启enableRemoveIsPrefix 与目前预处理部分冲突
-                        //打开 entityLombokModel 标签
-                        .enableLombok()
-                        //打开 entityColumnConstant 标签
-                        //.enableColumnConstant()
-                        //打开 convert 标签
-                        .enableTableFieldAnnotation()
                         //给表字段添加填充
                         .addTableFills(new Property(doCreateTime, FieldFill.INSERT))
                         .addTableFills(new Property(doUpdateTime, FieldFill.INSERT_UPDATE))
-                        .idType(IdType.AUTO)
-                        .controllerBuilder()
-                        //打开 restControllerStyle 标签
-                        .enableRestStyle()
-                        .mapperBuilder()
-                        //开启该标签后，在xml文件中生成字段映射
-                        .enableBaseResultMap()
-                        //开启该标签后，在xml文件中生成通用查询结果列
-                        .enableBaseColumnList()
                 )
                 .injectionConfig(builder -> builder
                         //预处理
@@ -298,34 +325,27 @@ public final class UpdateEntityModelCodeGeneratorWithTkMybaits {
                         //自定义模板参数
                         .customMap(ImmutableMap.<String, Object>builder()
                                 //key ftl模板中参数名 value ftl模板参数值
-                                .put("doPackagePath", getPackageName(doDirRelativeModelPath))
-                                .put("mapperPackagePath", getPackageName(mapperDirRelativeModelPath))
-                                .put("domainEntityPackagePath", getPackageName(domainEntityDirRelativeModelPath))
-                                .put("repositoryPackagePath", getPackageName(repositoryDirRelativeModelPath))
-                                .put("repositoryImplPackagePath", getPackageName(repositoryImplDirRelativeModelPath))
-                                .put("converterPackagePath", getPackageName(converterDirRelativeModelPath))
-                                .put("servicePackagePath", getPackageName(serviceDirRelativeModelPath))
-                                .put("serviceConverterPackagePath", getPackageName(serviceConverterDirRelativeModelPath))
-                                .put("starterPackagePath", getPackageName(starterDirRelativeModelPath))
-                                .put("requestPackagePath", getPackageName(requestDirRelativeModelPath))
+                                .put("doPackagePath", getPackageName(doDirRelativeModulePath))
+                                .put("mapperPackagePath", getPackageName(mapperDirRelativeModulePath))
+                                .put("domainEntityPackagePath", getPackageName(domainEntityDirRelativeModulePath))
+                                .put("repositoryPackagePath", getPackageName(repositoryDirRelativeModulePath))
+                                .put("repositoryImplPackagePath", getPackageName(repositoryImplDirRelativeModulePath))
+                                .put("converterPackagePath", getPackageName(converterDirRelativeModulePath))
+                                .put("servicePackagePath", getPackageName(serviceDirRelativeModulePath))
+                                .put("serviceConverterPackagePath", getPackageName(serviceConverterDirRelativeModulePath))
+                                .put("starterPackagePath", getPackageName(starterDirRelativeModulePath))
+                                .put("requestPackagePath", getPackageName(requestDirRelativeModulePath))
                                 .build())
                         //自定义模板 key:生成文件绝对路径 value:模板名称
-                        .customFile(Lists.newArrayList(new CustomFile.Builder()
-                                .filePath(infraModelRootPath + sp + doDirRelativeModelPath + sp + fileBaseName + "DO.java")
-                                .templatePath("/templates" + "/tk" + "/do.java.ftl")
-                                .build(), new CustomFile.Builder()
-                                .filePath(domainModelRootPath + sp + domainEntityDirRelativeModelPath + sp + fileBaseName + ".java")
-                                .templatePath("/templates" + "/domainEntity.java.ftl")
-                                .build())
-                        ))
-                .templateConfig(builder -> builder.disable()
+                        .customFile(customFiles)
                 )
+                .templateConfig(builder -> builder.disable())
                 // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .templateEngine(new FreemarkerTemplateEngine() {
                     //重写该方法，以自定义输出路径
                     @Override
                     protected void outputCustomFile(List<CustomFile> customFileList, TableInfo tableInfo, Map<String, Object> objectMap) {
-                        customFileList.forEach(customFile -> outputFile(new File(customFile.getFilePath()), objectMap, customFile.getTemplatePath(), true));
+                        customFileList.forEach(customFile -> outputFile(new File(customFile.getFilePath()), objectMap, customFile.getTemplatePath(), GeneratorConfig.fileOverride));
                     }
                 })
                 .execute();

@@ -90,6 +90,7 @@ CREATE TABLE `user` (
 `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
 `mobile` varchar(32) NOT NULL,
 `tag` json DEFAULT NULL,
+`ext` json DEFAULT NULL,
 `is_deleted` bigint NOT NULL DEFAULT '0' COMMENT '是否删除',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

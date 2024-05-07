@@ -90,8 +90,6 @@ public final class CreateModelCodeGeneratorWithTkMybatis {
         //个人恒定偏好项
         globalConfigBuilder
                 .author("gs")
-                // 覆盖已生成文件
-                .fileOverride()
                 //默认生成完毕后会打开outputDir对应文件夹，关闭
                 .disableOpenDir();
 
@@ -352,7 +350,7 @@ public final class CreateModelCodeGeneratorWithTkMybatis {
                     //重写该方法，以自定义输出路径
                     @Override
                     protected void outputCustomFile(List<CustomFile> customFileList, TableInfo tableInfo, Map<String, Object> objectMap) {
-                        customFileList.forEach(customFile -> outputFile(new File(customFile.getFilePath()), objectMap, customFile.getTemplatePath(), false));
+                        customFileList.forEach(customFile -> outputFile(new File(customFile.getFilePath()), objectMap, customFile.getTemplatePath(), GeneratorConfig.fileOverride));
                     }
                 })
                 .execute();

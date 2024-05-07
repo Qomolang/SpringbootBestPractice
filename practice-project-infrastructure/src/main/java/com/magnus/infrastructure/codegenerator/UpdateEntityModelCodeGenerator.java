@@ -238,8 +238,6 @@ public final class UpdateEntityModelCodeGenerator {
                         }))
                 .globalConfig(builder -> builder
                         .author("gs")
-                        // 覆盖已生成文件
-                        .fileOverride()
                         //默认生成完毕后会打开outputDir对应文件夹，关闭
                         .disableOpenDir()
                         //使用localdatatime 如果想用date可以指定为ONLY_DATE
