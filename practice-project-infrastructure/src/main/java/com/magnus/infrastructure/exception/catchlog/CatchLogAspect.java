@@ -25,9 +25,20 @@ public class CatchLogAspect {
     /**
      * The syntax of pointcut : https://blog.csdn.net/zhengchao1991/article/details/53391244
      */
+
+    /**
+     * 类級別
+     */
     @Pointcut("@within(CatchAndLog) && execution(public * *(..))")
     public void pointcut() {
     }
+
+//    /**
+//     * 方法级别
+//     */
+//    @Pointcut("@annotation(CatchAndLog)")
+//    public void pointcut() {
+//    }
 
     @Around(value = "pointcut()")
     public Object around(ProceedingJoinPoint joinPoint) {

@@ -1,7 +1,7 @@
 package com.magnus.domain.user.repository;
 
 import com.magnus.domain.user.model.User;
-
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
  * </p>
  *
  * @author gs
- * @since 2022-09-08
+ * @since 2024-05-07
  */
 public interface UserRepository {
     /**
@@ -32,11 +32,17 @@ public interface UserRepository {
     List<User> listEntityByIds(Collection<Long> ids);
 
     /**
+     * 分页查找  列表
+     * @return
+     */
+    Page<User> listAllInPage(Long pageNumber, Long pageSize);
+
+    /**
      * 单条插入 
      *
      * @param domain
      * @return
-    */
+     */
     User create(User domain);
 
     /**
@@ -44,32 +50,16 @@ public interface UserRepository {
      *
      * @param domains
      * @return
-    */
-    List<User> createBatch(List<User> domains);
+     */
+    List<User> createBatch(Collection<User> domains);
 
     /**
      * 单个更新
      *
      * @param domain
      * @return
-    */
-    boolean updateById(User domain);
-
-    /**
-     * 批量更新
-     *
-     * @param domains
-     * @return
-    */
-    boolean updateBatchByIds(List<User> domains);
-
-    /**
-     * 根据 ID 删除某个 
-     *
-     * @param id
-     * @return 删除是否成功
      */
-    boolean deleteById(Long id);
+    boolean updateById(User domain);
 
     /**
      * 逻辑删

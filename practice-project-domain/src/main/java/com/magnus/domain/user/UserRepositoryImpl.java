@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -23,7 +24,7 @@ import java.util.List;
  * </p>
  *
  * @author gs
- * @since 2022-09-08
+ * @since 2024-05-07
  */
 @Repository
 public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implements UserRepository {
@@ -53,6 +54,24 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
 
         return cv.toUser(output);
     }
+    
+    @Override
+    public Page<User> listAllInPage(Long pageNumber, Long pageSize) {
+
+        Page<UserDO> page = new Page<>(pageNumber, pageSize);
+
+        Page<UserDO> pageResult = this.page(page, Wrappers.<UserDO>lambdaQuery()
+                .eq(UserDO::getDeleteTag, Boolean.FALSE));
+
+        if (pageResult == null) {
+            return new Page();
+        }
+
+        Page<User> output = Page.of(pageResult.getCurrent(), pageResult.getSize(), pageResult.getTotal());
+        output.setRecords(cv.toUser(pageResult.getRecords()));
+
+        return output;
+    }
 
     @Override
     public User create(User domain) {
@@ -63,7 +82,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     }
 
     @Override
-    public List<User> createBatch(List<User> domains) {
+    public List<User> createBatch(Collection<User> domains) {
         List<UserDO> entityDOs = cv.toUserDO(domains);
         saveBatch(entityDOs);
         //todo 有逻辑删标记字段，需要在这里赋值，或者在数据设置默认值
@@ -78,18 +97,6 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
                 .eq(UserDO::getId, domain.getId())
                 .eq(UserDO::getDeleteTag, 0)
         );
-    }
-
-    @Override
-    public boolean updateBatchByIds(List<User> domains) {
-        //注意 批量更新不会考虑逻辑删字段
-        List<UserDO> entityDOs = cv.toUserDO(domains);
-        return updateBatchById(entityDOs);
-    }
-
-    @Override
-    public boolean deleteById(Long id) {
-        return super.removeById(id);
     }
 
     @Override

@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author gs
- * @since 2022-10-29
+ * @since 2024-05-07
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -28,15 +28,27 @@ public class UserDO implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 创建时间
+     */
     @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
+    /**
+     * 修改时间
+     */
     @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 
+    /**
+     * 创建人
+     */
     @TableField("create_by")
     private Long createBy;
 
+    /**
+     * 修改人
+     */
     @TableField("modified_by")
     private Long modifiedBy;
 
@@ -49,6 +61,12 @@ public class UserDO implements Serializable {
     @TableField("tag")
     private String tag;
 
+    @TableField("ext")
+    private String ext;
+
+    /**
+     * 是否删除
+     */
     @TableField("is_deleted")
     private Long deleteTag;
 

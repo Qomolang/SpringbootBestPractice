@@ -10,13 +10,15 @@
         <result column="create_by" property="createBy" />
         <result column="modified_by" property="modifiedBy" />
         <result column="name" property="name" />
+        <result column="mobile" property="mobile" />
         <result column="tag" property="tag" />
+        <result column="ext" property="ext" />
         <result column="is_deleted" property="deleteTag" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, gmt_create, gmt_modified, create_by, modified_by, name, tag, is_deleted
+        id, gmt_create, gmt_modified, create_by, modified_by, name, mobile, tag, ext, is_deleted
     </sql>
 
 </mapper>
