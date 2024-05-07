@@ -1,7 +1,6 @@
 package ${mapperPackagePath};
 
-import ${doPackagePath}.${entity}DO;
-import tk.mybatis.mapper.common.Mapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -14,7 +13,8 @@ import tk.mybatis.mapper.common.Mapper;
 <#if kotlin>
 interface ${table.mapperName} : ${superMapperClass}<${entity}DO>
 <#else>
-public interface ${table.mapperName} extends $Mapper<${entity}DO> {
+@Mapper
+public interface ${table.mapperName} {
 
 }
 </#if>

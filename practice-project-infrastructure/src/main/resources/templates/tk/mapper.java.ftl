@@ -14,7 +14,7 @@ import tk.mybatis.mapper.common.Mapper;
 <#if kotlin>
 interface ${table.mapperName} : ${superMapperClass}<${entity}DO>
 <#else>
-public interface ${table.mapperName} extends $Mapper<${entity}DO> {
+public interface ${table.mapperName} extends Mapper<${entity}DO> {
 
 }
 </#if>
