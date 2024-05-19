@@ -98,7 +98,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         return cv.toUser(entityDOs);
     }
 
-    @CacheUpdate(name="userCache-", key="#user.userId", value="#user")
+    @CacheUpdate(name="userCache-", key="#domain.id", value="#domain")
     @Override
     public boolean updateById(User domain) {
         UserDO entityDO = cv.toUserDO(domain);
@@ -109,7 +109,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         );
     }
 
-    @CacheInvalidate(name="userCache-", key="#userId")
+    @CacheInvalidate(name="userCache-", key="#id")
     @Override
     public boolean deleteLogicallyById(Long id) {
 
