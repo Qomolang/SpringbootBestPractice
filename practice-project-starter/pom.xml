@@ -80,6 +80,11 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+        <!--      jet cache      -->
+        <dependency>
+            <groupId>com.alicp.jetcache</groupId>
+            <artifactId>jetcache-starter-redis-lettuce</artifactId>
+        </dependency>
 
         <!--        <dependency>-->
         <!--            <groupId>net.bytebuddy</groupId>-->

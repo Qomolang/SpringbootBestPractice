@@ -44,6 +44,10 @@
             <artifactId>practice-project-infrastructure</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.alicp.jetcache</groupId>
+            <artifactId>jetcache-starter-redis-lettuce</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

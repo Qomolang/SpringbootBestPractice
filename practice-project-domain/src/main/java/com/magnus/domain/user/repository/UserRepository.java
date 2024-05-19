@@ -1,5 +1,7 @@
 package com.magnus.domain.user.repository;
 
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.magnus.domain.user.model.User;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.Collection;

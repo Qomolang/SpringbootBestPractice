@@ -39,6 +39,6 @@ public class UserWriteService {
      */
     public boolean deleteUserById(Long id){
         //todo 补充校验
-        return repository.deleteById(id);
+        return repository.deleteLogicallyById(id);
     };
 }

@@ -1,5 +1,6 @@
 package com.magnus.domain.user.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.Builder;
@@ -19,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User  {
+public class User implements Serializable {
 
     private Long id;
 

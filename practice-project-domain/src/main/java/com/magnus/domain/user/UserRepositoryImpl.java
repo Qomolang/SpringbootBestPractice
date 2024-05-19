@@ -1,5 +1,9 @@
 package com.magnus.domain.user;
 
+import com.alicp.jetcache.anno.CacheInvalidate;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.CacheUpdate;
+import com.alicp.jetcache.anno.Cached;
 import com.magnus.infrastructure.dao.user.model.UserDO;
 import com.magnus.domain.user.model.User;
 import com.magnus.domain.user.converter.UserConverter;
@@ -32,6 +36,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     private UserConverter cv;
 
     @Override
+    @Cached(name="userCache-", key="#userId", expire = 3600, cacheType = CacheType.REMOTE)
     public User getById(Long id) {
         UserDO output = this.baseMapper.selectOne(Wrappers.<UserDO>lambdaQuery()
                 .eq(UserDO::getId, id)
@@ -54,7 +59,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
 
         return cv.toUser(output);
     }
-    
+
     @Override
     public Page<User> listAllInPage(Long pageNumber, Long pageSize) {
 
@@ -89,6 +94,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         return cv.toUser(entityDOs);
     }
 
+    @CacheUpdate(name="userCache-", key="#user.userId", value="#user")
     @Override
     public boolean updateById(User domain) {
         UserDO entityDO = cv.toUserDO(domain);
@@ -99,6 +105,7 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
         );
     }
 
+    @CacheInvalidate(name="userCache-", key="#userId")
     @Override
     public boolean deleteLogicallyById(Long id) {
 
