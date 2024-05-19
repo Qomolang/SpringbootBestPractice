@@ -35,8 +35,12 @@ public class UserRepositoryImpl extends ServiceImpl<UserMapper, UserDO> implemen
     @Resource
     private UserConverter cv;
 
+    /**
+     * 对于jetcache,key名称必须和参数名一致，否则不生效，为了避免更换参数名导致的异常，可以采用指定参数位置的方案
+     */
     @Override
-    @Cached(name="userCache-", key="#userId", expire = 3600, cacheType = CacheType.REMOTE)
+    @Cached(name="userCache-", key="#id", expire = 3600, cacheType = CacheType.REMOTE)
+    //@Cached(name="userCache-", key="args[0]", expire = 3600, cacheType = CacheType.REMOTE)
     public User getById(Long id) {
         UserDO output = this.baseMapper.selectOne(Wrappers.<UserDO>lambdaQuery()
                 .eq(UserDO::getId, id)
