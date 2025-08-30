@@ -12,8 +12,6 @@ import java.util.function.Function;
  * @author gaosong
  */
 public class PageOps {
-
-
     /**
      * 分页查，分多次查所有
      * 1.防止接口耗时太长
@@ -40,9 +38,29 @@ public class PageOps {
     }
 
     /**
-     * 适用于中间有一层处理了Page或者PageResponse，可以兼容sql分页和rpc分页
+     * 分页查，基于raw sql offset分页
+     * 适用于：function需要的参数是offset
      */
-    public static <R> List<R> listAllInPageByFunction2(Function<Long, List<R>> function) {
+    public static <R> List<R> listInPageByFunctionV2(Integer pageSize, Function<Long, List<R>> function) {
+        List<R> result = new ArrayList<>();
+        long pageNumber = 1L;
+        while (true) {
+            long offset = pageSize * (pageNumber - 1);
+            List<R> pageInfo = function.apply(offset);
+            if (CollectionUtils.isEmpty(pageInfo)) {
+                break;
+            }
+            result.addAll(pageInfo);
+            pageNumber++;
+        }
+        return result;
+    }
+
+    /**
+     * 与 listAllInPageByFunction 区别在于，入参和内部无Page类
+     * 适用于：中间有一层处理了Page（sqp），或PageResponse（rpc）
+     */
+    public static <R> List<R> listAllInPageByFunctionV3(Function<Long, List<R>> function) {
         List<R> result = new ArrayList<>();
         long pageNumber = 1L;
         while (true) {
@@ -70,5 +88,4 @@ public class PageOps {
         }
         return result;
     }
-
 }

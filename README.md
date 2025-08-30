@@ -1,5 +1,8 @@
 # SpringbootBestPractice
 
+## 项目启动
+启动 redis-server
+
 ## 通用功能
 1. 集成mybatis-plus，自动填充CreateTime、UpdateTime，DO可Enum完成映射，DO的ext可自动完成解析
 2. 集成mybatis-plus-generator，按照DDD生成结构

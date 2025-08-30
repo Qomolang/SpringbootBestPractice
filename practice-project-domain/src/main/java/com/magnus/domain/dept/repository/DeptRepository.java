@@ -35,7 +35,6 @@ public interface DeptRepository {
 
     /**
      * 分页查找  列表
-     * @param ids
      * @return
      */
     Page<Dept> listAllInPage(Long pageNumber, Long pageSize);
