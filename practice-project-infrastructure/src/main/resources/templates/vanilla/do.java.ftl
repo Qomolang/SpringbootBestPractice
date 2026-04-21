@@ -1,8 +1,5 @@
 package ${doPackagePath};
 
-<#list table.importPackages as pkg>
-import ${pkg};
-</#list>
 <#if swagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 <#if entityLombokModel>
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import java.io.Serializable;
+
     <#if chainModel>
 import lombok.experimental.Accessors;
     </#if>
@@ -35,7 +34,6 @@ import lombok.experimental.Accessors;
     </#if>
 </#if>
 <#if table.convert>
-@TableName("${table.name}")
 </#if>
 <#if swagger>
 @ApiModel(value="${entity}DO对象", description="${table.comment!}")

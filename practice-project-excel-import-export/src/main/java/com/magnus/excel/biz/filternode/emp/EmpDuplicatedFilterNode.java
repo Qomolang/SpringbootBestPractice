@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @author gaosong
  */
 @Component
-public class DuplicatedFilterNode {
+public class EmpDuplicatedFilterNode {
 
     /**
      * 校验不应重复的值 只校验excel内是否重复
@@ -36,6 +36,7 @@ public class DuplicatedFilterNode {
             }
         }
 
+        // 手机号重复
         for (Collection<Integer> value : excelMobileIndexMap.asMap().values()) {
             if (CollectionUtils.size(value) > 1) {
                 String duplicatedMobileRow = value.stream()
@@ -46,6 +47,10 @@ public class DuplicatedFilterNode {
                         .build());
             }
         }
+
+        // 不允许同一个acctId有不同的name
+
+        // 不允许有完全相同的两行？
 
         return result;
     }

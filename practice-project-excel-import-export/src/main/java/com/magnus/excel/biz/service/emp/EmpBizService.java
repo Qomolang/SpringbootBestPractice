@@ -126,6 +126,34 @@ public class EmpBizService {
     }
 
     /**
+     * 同步导入
+     */
+    public void importSync(Long tenantId, Long userId, String fileUrl) {
+
+        //1, 校验权限
+
+        //2. 校验是否已经正在导入，任务类型+唯一键确认
+        String importRedisKey = EmpExcelCacheKeyFactory.buildImportStatusKey(tenantId, userId);
+        String importingStatusFlag = (String) redisTemplate.opsForValue().get(importRedisKey);
+
+        //2.1 未通过 直接抛出异常
+        if (StringUtils.isNotBlank(importingStatusFlag)) {
+            throw new RuntimeException("正在导入中，请稍等");
+        }
+
+        //2.2 通过 打上导入标（如果发现用户已经在导入，不允许用户再次进行导入）
+        redisTemplate.opsForValue().set(importRedisKey, RedisFlagConstants.IMPORTING_STATUS_FLAG_VALUE);
+
+        //删除用户上次导入结果
+        String resultKey = EmpExcelCacheKeyFactory.buildImportResultKey(tenantId, userId);
+        redisTemplate.delete(resultKey);
+
+        //6. 执行插入
+        empImportService.doImportSync(tenantId, userId, fileUrl);
+
+    }
+
+    /**
      * 异步导入
      */
     public void importAsync(Long tenantId, Long userId, String fileUrl) {
@@ -138,7 +166,7 @@ public class EmpBizService {
 
         //2.1 未通过 直接抛出异常
         if (StringUtils.isNotBlank(importingStatusFlag)) {
-            throw new RuntimeException("正在导出中，请稍等");
+            throw new RuntimeException("正在导入中，请稍等");
         }
 
         //2.2 通过 打上导入标（如果发现用户已经在导入，不允许用户再次进行导入）
@@ -154,6 +182,7 @@ public class EmpBizService {
 
     /**
      * 轮询检查异步导入结果
+     * todo 步骤太长，加一个try-catch兜底，如果有问题，结果是是什么
      */
     public ExcelImportResponse pollImportAsyncResult(Long tenantId, Long userId) {
         ExcelImportResponse response = new ExcelImportResponse();

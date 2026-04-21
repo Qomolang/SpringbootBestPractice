@@ -39,8 +39,8 @@
 
 CREATE TABLE `employee` (
 `id` bigint NOT NULL AUTO_INCREMENT,
-`gmt_create` datetime NOT NULL COMMENT '创建时间',
-`gmt_modified` datetime NOT NULL COMMENT '修改时间',
+`gmt_create` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+`gmt_modified` datetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 `create_by` bigint NOT NULL COMMENT '创建人',
 `modified_by` bigint NOT NULL COMMENT '修改人',
 `user_id` bigint NOT NULL,

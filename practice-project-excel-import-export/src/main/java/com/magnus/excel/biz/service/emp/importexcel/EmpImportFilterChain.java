@@ -4,9 +4,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.magnus.excel.biz.filternode.ExcelHeaderFilterNode;
 import com.magnus.excel.biz.filternode.ScaleFilterNode;
-import com.magnus.excel.biz.filternode.emp.BizPreFilterNode;
-import com.magnus.excel.biz.filternode.emp.DuplicatedFilterNode;
-import com.magnus.excel.biz.filternode.emp.FormatFilterNode;
+import com.magnus.excel.biz.filternode.emp.EmpBizPreFilterNode;
+import com.magnus.excel.biz.filternode.emp.EmpDuplicatedFilterNode;
+import com.magnus.excel.biz.filternode.emp.EmpFormatFilterNode;
 import com.magnus.excel.biz.model.emp.EmpExcelBizConfig;
 import com.magnus.excel.infra.utils.EasyExcelOps;
 import com.magnus.excel.infra.model.error.importcheck.ImportErrorMsg;
@@ -33,11 +33,11 @@ public class EmpImportFilterChain {
     @Resource
     private ExcelHeaderFilterNode excelHeaderFilterNode;
     @Resource
-    private DuplicatedFilterNode duplicatedFilterNode;
+    private EmpDuplicatedFilterNode empDuplicatedFilterNode;
     @Resource
-    private FormatFilterNode formatFilterNode;
+    private EmpFormatFilterNode empFormatFilterNode;
     @Resource
-    private BizPreFilterNode bizPreFilterNode;
+    private EmpBizPreFilterNode empBizPreFilterNode;
 
     /**
      * true代表通过
@@ -48,7 +48,7 @@ public class EmpImportFilterChain {
         List<ImportErrorMsg.DataFormatErrorMsg> errorMsgList = new ArrayList<>();
         ByteArrayInputStream fileStream = empContext.getFileStream();
 
-        //文件流 -> Entity
+        //文件流 -> Entity // todo 目前表头必须和模板表头一模一样，包括hint，看下怎么能改进一下
         List<EmpExcelEntity> empExcelEntityList = EasyExcelOps.getExcelDataCellList(fileStream, EmpExcelEntity.class, EmpExcelBizConfig.HEADER_LINE_NUMBER);
 
         //1.表头校验
@@ -70,7 +70,7 @@ public class EmpImportFilterChain {
         boolean scaleFlag = scaleFilterNode.checkScale(empExcelEntityList, EmpExcelBizConfig.MAX_ENTITY_NUMBER);
         if (!scaleFlag) {
             ImportErrorMsg errorMsg = ImportErrorMsg.builder()
-                    .plainErrorMsg("不能超过 xx 条")
+                    .plainErrorMsg("不能超过 " + EmpExcelBizConfig.MAX_ENTITY_NUMBER + " 条")
                     .build();
             return ImportCheckResult.buildFailureResult(errorMsg);
         }
@@ -78,21 +78,19 @@ public class EmpImportFilterChain {
         //4，阻断性业务条件校验（无需可省略）
 
         //5. 格式校验
-        List<ImportErrorMsg.DataFormatErrorMsg> formatErrorMsgList = formatFilterNode.checkFormat(empExcelEntityList);
+        List<ImportErrorMsg.DataFormatErrorMsg> formatErrorMsgList = empFormatFilterNode.checkFormat(empExcelEntityList);
         if(CollectionUtils.isNotEmpty(formatErrorMsgList)){
             errorMsgList.addAll(formatErrorMsgList);
         }
 
         //6. 重复行校验
-        List<ImportErrorMsg.DataFormatErrorMsg> duplicatedErrorMsgList = duplicatedFilterNode.checkDuplicatedInfo(empExcelEntityList);
+        List<ImportErrorMsg.DataFormatErrorMsg> duplicatedErrorMsgList = empDuplicatedFilterNode.checkDuplicatedInfo(empExcelEntityList);
         if(CollectionUtils.isNotEmpty(duplicatedErrorMsgList)){
             errorMsgList.addAll(formatErrorMsgList);
         }
 
-        //7. 值转换（无需可省略 需要的业务值由阻断性业务条件校验传来）
-
-        //8. 业务前置校验
-        bizPreFilterNode.checkBizRestriction(empExcelEntityList);
+        //8. 业务前置校验及填充
+        empBizPreFilterNode.bizCheckAndFill(empExcelEntityList);
         if(CollectionUtils.isNotEmpty(duplicatedErrorMsgList)){
             errorMsgList.addAll(formatErrorMsgList);
         }

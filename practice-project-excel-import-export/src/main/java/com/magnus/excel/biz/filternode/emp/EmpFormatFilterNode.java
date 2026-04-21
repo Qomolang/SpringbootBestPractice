@@ -15,7 +15,7 @@ import java.util.List;
  * @author gaosong
  */
 @Component
-public class FormatFilterNode {
+public class EmpFormatFilterNode {
 
     public List<DataFormatErrorMsg> checkFormat(List<EmpExcelEntity> empExcelEntityList) {
         List<DataFormatErrorMsg> result = new ArrayList<>();
@@ -29,10 +29,10 @@ public class FormatFilterNode {
             }
 
             //数据格式校验
-            List<DataFormatErrorMsg> formatErrorMsg = this.checkContentFormat(empExcelEntity);
-            if (CollectionUtils.isNotEmpty(formatErrorMsg)) {
-                result.addAll(formatErrorMsg);
-            }
+//            List<DataFormatErrorMsg> formatErrorMsg = this.checkContentFormat(empExcelEntity);
+//            if (CollectionUtils.isNotEmpty(formatErrorMsg)) {
+//                result.addAll(formatErrorMsg);
+//            }
         }
 
         return result;
@@ -54,30 +54,39 @@ public class FormatFilterNode {
             output.add(errorMsg);
         }
 
-        return output;
-
-    }
-
-    /**
-     * 数据格式校验
-     */
-    private List<DataFormatErrorMsg> checkContentFormat(EmpExcelEntity empExcelEntity) {
-        List<DataFormatErrorMsg> output = new ArrayList<>();
-
-        //校验手机号
-        String mobile = empExcelEntity.getMobile();
-        if (StringUtils.isNotBlank(mobile)) {
-            if (!mobile.matches(RegexConstant.NAME_REGEX)) {
-                DataFormatErrorMsg errorMsg = DataFormatErrorMsg.builder()
-                        .lineName(EmpHeaderConstants.MOBILE)
-                        .msg("手机号格式错误")
-                        .rowIndex(empExcelEntity.getRowNumber())
-                        .build();
-                output.add(errorMsg);
-            }
+        if (StringUtils.isBlank(empExcelEntity.getUserName())) {
+            DataFormatErrorMsg errorMsg = DataFormatErrorMsg.builder()
+                    .rowIndex(empExcelEntity.getRowNumber())
+                    .lineName(EmpHeaderConstants.USER_NAME)
+                    .msg(mustFilledInMsg)
+                    .build();
+            output.add(errorMsg);
         }
 
         return output;
+
     }
+
+//    /**
+//     * 数据格式校验
+//     */
+//    private List<DataFormatErrorMsg> checkContentFormat(EmpExcelEntity empExcelEntity) {
+//        List<DataFormatErrorMsg> output = new ArrayList<>();
+//
+//        //校验手机号
+//        String mobile = empExcelEntity.getMobile();
+//        if (StringUtils.isNotBlank(mobile)) {
+//            if (!mobile.matches(RegexConstant.NAME_REGEX)) {
+//                DataFormatErrorMsg errorMsg = DataFormatErrorMsg.builder()
+//                        .lineName(EmpHeaderConstants.MOBILE)
+//                        .msg("手机号格式错误")
+//                        .rowIndex(empExcelEntity.getRowNumber())
+//                        .build();
+//                output.add(errorMsg);
+//            }
+//        }
+//
+//        return output;
+//    }
 
 }
